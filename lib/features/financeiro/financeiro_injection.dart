@@ -1,0 +1,99 @@
+import 'package:get_it/get_it.dart';
+
+import 'data/datasources/financeiro_memory_datasource.dart';
+import 'data/documentos/pdf_boleto_gateway.dart';
+import 'data/repositories/financeiro_repositories_impl.dart';
+import 'domain/repositories/boleto_impressao_gateway.dart';
+import 'domain/repositories/financeiro_repositories.dart';
+import 'domain/services/atualizacao_monetaria.dart';
+import 'domain/services/conciliacao_service.dart';
+import 'domain/usecases/boleto_usecases.dart';
+import 'domain/usecases/financeiro_usecases.dart';
+import 'domain/usecases/lancamento_usecases.dart';
+import 'presentation/viewmodels/boletos_viewmodel.dart';
+import 'presentation/viewmodels/conciliacao_viewmodel.dart';
+import 'presentation/viewmodels/contas_viewmodel.dart';
+import 'presentation/viewmodels/encargos_viewmodel.dart';
+import 'presentation/viewmodels/fluxo_caixa_viewmodel.dart';
+import 'presentation/viewmodels/lancamento_form_viewmodel.dart';
+
+void registrarFinanceiro(GetIt sl) {
+  // Dados
+  sl
+    ..registerLazySingleton(FinanceiroMemoryDataSource.new)
+    ..registerLazySingleton<LancamentoRepository>(
+      () => LancamentoRepositoryImpl(sl()),
+    )
+    ..registerLazySingleton<ContaBancariaRepository>(
+      () => ContaBancariaRepositoryImpl(sl()),
+    )
+    ..registerLazySingleton<ExtratoRepository>(
+      () => ExtratoRepositoryImpl(sl()),
+    )
+    ..registerLazySingleton<BoletoRepository>(() => BoletoRepositoryImpl(sl()))
+    ..registerLazySingleton<IndiceRepository>(() => IndiceRepositoryImpl(sl()))
+    ..registerLazySingleton<ConfiguracaoFinanceiraRepository>(
+      () => ConfiguracaoFinanceiraRepositoryImpl(sl()),
+    )
+    ..registerLazySingleton<BoletoImpressaoGateway>(PdfBoletoGateway.new)
+    // Serviços e casos de uso
+    ..registerFactory(() => const AtualizacaoMonetaria())
+    ..registerFactory(() => const ConciliacaoService())
+    ..registerFactory(() => ObservarLancamentos(sl()))
+    ..registerFactory(() => SalvarLancamento(sl()))
+    ..registerFactory(() => RemoverLancamento(sl()))
+    ..registerFactory(() => const CalcularEncargosLancamento())
+    ..registerFactory(() => BaixarLancamento(sl(), sl(), sl()))
+    ..registerFactory(() => EstornarBaixa(sl(), sl()))
+    ..registerFactory(() => CancelarLancamento(sl()))
+    ..registerFactory(() => ObservarContasBancarias(sl()))
+    ..registerFactory(() => ListarContasBancarias(sl()))
+    ..registerFactory(() => SalvarContaBancaria(sl()))
+    ..registerFactory(() => RemoverContaBancaria(sl(), sl(), sl()))
+    ..registerFactory(() => const CalcularFluxoCaixa())
+    ..registerFactory(() => ObservarExtrato(sl()))
+    ..registerFactory(() => SalvarLinhaExtrato(sl()))
+    ..registerFactory(() => RemoverLinhaExtrato(sl()))
+    ..registerFactory(() => ConciliarLinha(sl()))
+    ..registerFactory(() => DesfazerConciliacao(sl()))
+    ..registerFactory(() => ConciliarAutomaticamente(sl()))
+    ..registerFactory(() => ObservarIndices(sl()))
+    ..registerFactory(() => SalvarIndice(sl()))
+    ..registerFactory(() => RemoverIndice(sl()))
+    ..registerFactory(() => ObservarConfiguracaoFinanceira(sl()))
+    ..registerFactory(() => ObterConfiguracaoFinanceira(sl()))
+    ..registerFactory(() => SalvarConfiguracaoFinanceira(sl()))
+    ..registerFactory(() => ObservarBoletos(sl()))
+    ..registerFactory(() => EmitirBoleto(sl(), sl()))
+    ..registerFactory(() => CancelarBoleto(sl()))
+    ..registerFactory(() => ProcessarRetornoBancario(sl(), sl(), sl()))
+    ..registerFactory(() => ImprimirBoletoBancario(sl(), sl(), sl(), sl()))
+    // ViewModels
+    ..registerFactory(
+      () =>
+          ContasViewModel(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+    )
+    ..registerFactory(() => LancamentoFormViewModel(sl(), sl(), sl()))
+    ..registerFactory(() => FluxoCaixaViewModel(sl(), sl(), sl()))
+    ..registerFactory(
+      () => ConciliacaoViewModel(
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+      ),
+    )
+    ..registerFactory(
+      () => BoletosViewModel(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+    )
+    ..registerFactory(
+      () => EncargosViewModel(sl(), sl(), sl(), sl(), sl(), sl()),
+    );
+}

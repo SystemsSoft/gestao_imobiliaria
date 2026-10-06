@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import '../../features/auth/auth_injection.dart';
 import '../../features/contratos/contratos_injection.dart';
 import '../../features/crm/crm_injection.dart';
+import '../../features/financeiro/financeiro_injection.dart';
 import '../../features/home/home_injection.dart';
 import '../../features/locacao/locacao_injection.dart';
 import '../../features/temporada/temporada_injection.dart';
@@ -21,4 +22,5 @@ Future<void> configurarDependencias() async {
   registrarLocacao(sl);
   registrarVendas(sl);
   registrarTemporada(sl);
+  registrarFinanceiro(sl);
 }

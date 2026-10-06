@@ -4,15 +4,19 @@ class Encargos {
     this.multa = 0,
     this.juros = 0,
     this.desconto = 0,
+    this.correcao = 0,
     this.diasAtraso = 0,
   });
 
   final double multa;
   final double juros;
   final double desconto;
+
+  /// Atualização monetária pelo índice contratado.
+  final double correcao;
   final int diasAtraso;
 
-  double devido(double total) => total + multa + juros - desconto;
+  double devido(double total) => total + correcao + multa + juros - desconto;
 }
 
 double _arredondar(double v) => (v * 100).roundToDouble() / 100;
