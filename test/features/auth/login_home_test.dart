@@ -1,0 +1,55 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:marceloimob_gestao/core/di/injector.dart';
+import 'package:marceloimob_gestao/core/theme/app_theme.dart';
+import 'package:marceloimob_gestao/features/auth/presentation/pages/login_page.dart';
+import 'package:marceloimob_gestao/features/home/presentation/pages/home_page.dart';
+import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
+
+/// Tela alta o bastante para o botão ENTRAR ficar visível mesmo depois que
+/// a logo (carregada de forma assíncrona) aumenta a altura da página.
+void _telaGrande(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1200, 1600);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
+}
+
+void main() {
+  setUp(configurarDependencias);
+
+  testWidgets('login valida campos vazios', (tester) async {
+    _telaGrande(tester);
+    await tester.pumpWidget(
+      MaterialApp(theme: buildAppTheme(), home: const LoginPage()),
+    );
+    await tester.tap(find.text('ENTRAR'));
+    await tester.pump();
+    expect(find.text('Informe seu e-mail'), findsOneWidget);
+    expect(find.text('Informe sua senha'), findsOneWidget);
+  });
+
+  testWidgets('login válido abre a tela principal', (tester) async {
+    _telaGrande(tester);
+    await tester.pumpWidget(
+      MaterialApp(theme: buildAppTheme(), home: const LoginPage()),
+    );
+    await tester.enterText(find.byType(TextFormField).first, 'a@b.com');
+    await tester.enterText(find.byType(TextFormField).last, '123');
+    await tester.tap(find.text('ENTRAR'));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(find.byType(HomePage), findsOneWidget);
+  });
+
+  testWidgets('drawer lista os módulos', (tester) async {
+    _telaGrande(tester);
+    await tester.pumpWidget(
+      MaterialApp(theme: buildAppTheme(), home: const HomePage()),
+    );
+    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.pumpAndSettle();
+    for (final m in ModuloMenu.values) {
+      expect(find.text(m.label), findsWidgets);
+    }
+  });
+}
