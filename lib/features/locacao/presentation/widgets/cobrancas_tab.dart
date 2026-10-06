@@ -5,6 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/competencia_selector.dart';
 import '../../../../core/widgets/form_widgets.dart';
+import '../../../../core/widgets/pagamento_dialog.dart';
 import '../../domain/entities/cobranca.dart';
 import '../../domain/entities/locacao_enums.dart';
 import '../viewmodels/cobrancas_viewmodel.dart';
@@ -44,9 +45,12 @@ class _CobrancasTabState extends State<CobrancasTab> {
   }
 
   Future<void> _pagar(Cobranca c) async {
-    final r = await showDialog<({DateTime data, double valor})>(
-      context: context,
-      builder: (_) => _PagamentoDialog(vm: _vm, cobranca: c),
+    final r = await mostrarPagamentoDialog(
+      context,
+      valor: c.total,
+      vencimento: c.vencimento,
+      hoje: _vm.hoje,
+      simular: (data) => _vm.simularEncargos(c, data),
     );
     if (r != null) {
       await _acao(() => _vm.pagar(c, r.data, r.valor), 'Pagamento registrado.');
@@ -252,131 +256,6 @@ class _CobrancasTabState extends State<CobrancasTab> {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _PagamentoDialog extends StatefulWidget {
-  const _PagamentoDialog({required this.vm, required this.cobranca});
-
-  final CobrancasViewModel vm;
-  final Cobranca cobranca;
-
-  @override
-  State<_PagamentoDialog> createState() => _PagamentoDialogState();
-}
-
-class _PagamentoDialogState extends State<_PagamentoDialog> {
-  late DateTime _data = widget.vm.hoje;
-  final _valor = TextEditingController();
-  bool _valorEditado = false;
-
-  double get _devido {
-    final e = widget.vm.simularEncargos(widget.cobranca, _data);
-    return e?.devido(widget.cobranca.total) ?? widget.cobranca.total;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _valor.text = moneyToText(_devido);
-  }
-
-  @override
-  void dispose() {
-    _valor.dispose();
-    super.dispose();
-  }
-
-  void _mudarData(DateTime? d) {
-    if (d == null) return;
-    setState(() {
-      _data = d;
-      if (!_valorEditado) _valor.text = moneyToText(_devido);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final c = widget.cobranca;
-    final e = widget.vm.simularEncargos(c, _data);
-    Widget linha(String r, double v, {Color? cor}) => Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(r, style: const TextStyle(color: Colors.white70)),
-          ),
-          Text(
-            formatMoney(v),
-            style: TextStyle(color: cor, fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
-    return AlertDialog(
-      backgroundColor: AppColors.navy,
-      title: const Text('Registrar pagamento'),
-      content: SizedBox(
-        width: 420,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text('Vencimento: ${formatDate(c.vencimento)}'),
-            const SizedBox(height: 12),
-            DateField(
-              label: 'Data do pagamento',
-              value: _data,
-              onChanged: _mudarData,
-            ),
-            const SizedBox(height: 12),
-            linha('Valor da cobrança', c.total),
-            if (e != null && e.multa > 0)
-              linha('Multa', e.multa, cor: Colors.orangeAccent),
-            if (e != null && e.juros > 0)
-              linha(
-                'Juros (${e.diasAtraso} dia(s))',
-                e.juros,
-                cor: Colors.orangeAccent,
-              ),
-            if (e != null && e.desconto > 0)
-              linha(
-                'Desconto de pontualidade',
-                -e.desconto,
-                cor: Colors.greenAccent,
-              ),
-            const Divider(),
-            linha('Valor devido', _devido, cor: AppColors.gold),
-            const SizedBox(height: 12),
-            AppTextField(
-              label: 'Valor recebido',
-              controller: _valor,
-              prefixText: r'R$ ',
-              keyboardType: TextInputType.number,
-              inputFormatters: [CurrencyInputFormatter()],
-              onChanged: (_) => _valorEditado = true,
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar'),
-        ),
-        FilledButton(
-          style: FilledButton.styleFrom(
-            backgroundColor: AppColors.gold,
-            foregroundColor: AppColors.navyDark,
-          ),
-          onPressed: () => Navigator.pop(context, (
-            data: _data,
-            valor: parseMoney(_valor.text) ?? _devido,
-          )),
-          child: const Text('Confirmar'),
-        ),
-      ],
     );
   }
 }

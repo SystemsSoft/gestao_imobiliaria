@@ -5,21 +5,6 @@ import 'contrato_locacao.dart';
 import 'ir_mensal.dart';
 import 'linha_repasse.dart';
 
-/// Contrato já preenchido, pronto para impressão.
-class ContratoDocumento {
-  const ContratoDocumento({
-    required this.titulo,
-    required this.texto,
-    required this.assinaturas,
-  });
-
-  final String titulo;
-  final String texto;
-
-  /// Rótulos das linhas de assinatura (ex.: "LOCADOR: Fulano").
-  final List<String> assinaturas;
-}
-
 /// Dados para boleto e recibo de uma cobrança.
 class CobrancaDocumento {
   const CobrancaDocumento({

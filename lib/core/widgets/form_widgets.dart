@@ -143,10 +143,12 @@ class AppTextField extends StatelessWidget {
     Key? key,
     required String label,
     required TextEditingController controller,
+    ValueChanged<String>? onChanged,
   }) => AppTextField(
     key: key,
     label: label,
     controller: controller,
+    onChanged: onChanged,
     keyboardType: TextInputType.number,
     inputFormatters: [FilteringTextInputFormatter.digitsOnly],
   );

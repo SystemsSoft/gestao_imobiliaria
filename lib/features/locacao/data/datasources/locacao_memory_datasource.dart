@@ -4,25 +4,12 @@ import '../../../../core/data/memory_collection.dart';
 import '../../domain/entities/cobranca.dart';
 import '../../domain/entities/contrato_locacao.dart';
 import '../../domain/entities/despesa.dart';
-import '../../domain/entities/modelo_contrato.dart';
-import 'modelo_contrato_padrao.dart';
 
 /// Armazenamento em memória da locação, até existir um backend.
 class LocacaoMemoryDataSource {
-  LocacaoMemoryDataSource() {
-    modelos.upsert(
-      const ModeloContrato(
-        id: 'padrao-residencial',
-        nome: 'Locação residencial (padrão)',
-        texto: modeloContratoResidencial,
-      ),
-    );
-  }
-
   final contratos = MemoryCollection<ContratoLocacao>((e) => e.id);
   final despesas = MemoryCollection<Despesa>((e) => e.id);
   final cobrancas = MemoryCollection<Cobranca>((e) => e.id);
-  final modelos = MemoryCollection<ModeloContrato>((e) => e.id);
   int seqContrato = 0;
 
   final Map<String, DateTime> _repasses = {};

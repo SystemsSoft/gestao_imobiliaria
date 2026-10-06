@@ -3,7 +3,7 @@ import '../../../crm/domain/entities/contato.dart';
 import '../../../crm/domain/usecases/contato_usecases.dart';
 import '../../domain/entities/cobranca.dart';
 import '../../domain/entities/contrato_locacao.dart';
-import '../../domain/entities/encargos.dart';
+import '../../../../core/domain/encargos.dart';
 import '../../domain/entities/locacao_enums.dart';
 import '../../domain/usecases/cobranca_usecases.dart';
 import '../../domain/usecases/contrato_usecases.dart';

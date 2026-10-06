@@ -9,15 +9,16 @@ import 'package:marceloimob_gestao/features/crm/domain/repositories/imovel_repos
 import 'package:marceloimob_gestao/features/locacao/domain/entities/contrato_locacao.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/entities/despesa.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/entities/locacao_enums.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/modelo_contrato.dart';
+import 'package:marceloimob_gestao/features/contratos/domain/entities/modelo_contrato.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/repositories/cobranca_repository.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/repositories/despesa_repository.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/repositories/modelo_contrato_repository.dart';
+import 'package:marceloimob_gestao/features/contratos/domain/repositories/modelo_contrato_repository.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/services/tabela_ir.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/usecases/cobranca_usecases.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/usecases/contrato_usecases.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/usecases/imposto_renda.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/usecases/modelo_usecases.dart';
+import 'package:marceloimob_gestao/features/contratos/domain/usecases/modelo_usecases.dart';
+import 'package:marceloimob_gestao/features/locacao/domain/usecases/montar_contrato_locacao.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/usecases/repasse_usecases.dart';
 
 ContratoLocacao _contrato({
@@ -237,9 +238,11 @@ void main() {
   group('Modelos de contrato', () {
     test('preenche todos os campos do modelo padrão', () async {
       final k = await sl<SalvarContrato>()(_contrato());
-      final modelo = (await sl<ModeloContratoRepository>().listar()).single;
+      final modelo = (await sl<ModeloContratoRepository>().listar()).firstWhere(
+        (m) => m.tipo == TipoModelo.locacao,
+      );
       final contatos = await sl<ContatoRepository>().listar();
-      final doc = const PreencherModeloContrato()(
+      final doc = const MontarContratoLocacao()(
         modelo: modelo,
         contrato: k,
         contato: (id) => contatos.where((c) => c.id == id).firstOrNull,
@@ -257,11 +260,18 @@ void main() {
     test('rejeita campos desconhecidos e mantém ao menos um modelo', () async {
       expect(
         () => sl<SalvarModelo>()(
-          const ModeloContrato(id: 'x', nome: 'X', texto: '{{inexistente}}'),
+          const ModeloContrato(
+            id: 'x',
+            nome: 'X',
+            tipo: TipoModelo.locacao,
+            texto: '{{valor_venda}}',
+          ),
         ),
         throwsA(isA<DomainException>()),
       );
-      final unico = (await sl<ModeloContratoRepository>().listar()).single;
+      final unico = (await sl<ModeloContratoRepository>().listar()).firstWhere(
+        (m) => m.tipo == TipoModelo.locacao,
+      );
       expect(
         () => sl<RemoverModelo>()(unico.id),
         throwsA(isA<DomainException>()),

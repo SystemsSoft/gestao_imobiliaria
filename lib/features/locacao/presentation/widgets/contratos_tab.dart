@@ -6,7 +6,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../domain/entities/contrato_locacao.dart';
 import '../../domain/entities/locacao_enums.dart';
-import '../../domain/entities/modelo_contrato.dart';
+import '../../../contratos/domain/entities/modelo_contrato.dart';
 import '../pages/contrato_form_page.dart';
 import '../viewmodels/contratos_viewmodel.dart';
 

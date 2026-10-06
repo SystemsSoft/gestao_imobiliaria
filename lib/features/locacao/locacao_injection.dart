@@ -7,21 +7,18 @@ import 'domain/repositories/cobranca_repository.dart';
 import 'domain/repositories/contrato_locacao_repository.dart';
 import 'domain/repositories/despesa_repository.dart';
 import 'domain/repositories/documentos_locacao_gateway.dart';
-import 'domain/repositories/modelo_contrato_repository.dart';
 import 'domain/repositories/repasse_repository.dart';
 import 'domain/usecases/cobranca_usecases.dart';
 import 'domain/usecases/contrato_usecases.dart';
 import 'domain/usecases/despesa_usecases.dart';
 import 'domain/usecases/imposto_renda.dart';
 import 'domain/usecases/imprimir_documentos.dart';
-import 'domain/usecases/modelo_usecases.dart';
 import 'domain/usecases/repasse_usecases.dart';
 import 'presentation/viewmodels/cobrancas_viewmodel.dart';
 import 'presentation/viewmodels/contrato_form_viewmodel.dart';
 import 'presentation/viewmodels/contratos_viewmodel.dart';
 import 'presentation/viewmodels/despesas_viewmodel.dart';
 import 'presentation/viewmodels/imposto_renda_viewmodel.dart';
-import 'presentation/viewmodels/modelos_viewmodel.dart';
 import 'presentation/viewmodels/repasses_viewmodel.dart';
 
 void registrarLocacao(GetIt sl) {
@@ -36,9 +33,6 @@ void registrarLocacao(GetIt sl) {
     )
     ..registerLazySingleton<CobrancaRepository>(
       () => CobrancaRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<ModeloContratoRepository>(
-      () => ModeloContratoRepositoryImpl(sl()),
     )
     ..registerLazySingleton<RepasseRepository>(
       () => RepasseRepositoryImpl(sl()),
@@ -64,9 +58,6 @@ void registrarLocacao(GetIt sl) {
     ..registerFactory(() => ObservarRepassesRealizados(sl()))
     ..registerFactory(() => MarcarRepasse(sl()))
     ..registerFactory(CalcularResumoIrAnual.new)
-    ..registerFactory(() => ObservarModelos(sl()))
-    ..registerFactory(() => SalvarModelo(sl()))
-    ..registerFactory(() => RemoverModelo(sl()))
     ..registerFactory(() => ImprimirContrato(sl(), sl(), sl()))
     ..registerFactory(() => ImprimirBoleto(sl(), sl(), sl(), sl()))
     ..registerFactory(() => ImprimirRecibo(sl(), sl(), sl(), sl()))
@@ -108,6 +99,5 @@ void registrarLocacao(GetIt sl) {
     )
     ..registerFactory(
       () => ImpostoRendaViewModel(sl(), sl(), sl(), sl(), sl(), sl()),
-    )
-    ..registerFactory(() => ModelosViewModel(sl(), sl(), sl()));
+    );
 }

@@ -1,11 +1,9 @@
 import '../../domain/entities/cobranca.dart';
 import '../../domain/entities/contrato_locacao.dart';
 import '../../domain/entities/despesa.dart';
-import '../../domain/entities/modelo_contrato.dart';
 import '../../domain/repositories/cobranca_repository.dart';
 import '../../domain/repositories/contrato_locacao_repository.dart';
 import '../../domain/repositories/despesa_repository.dart';
-import '../../domain/repositories/modelo_contrato_repository.dart';
 import '../../domain/repositories/repasse_repository.dart';
 import '../datasources/locacao_memory_datasource.dart';
 
@@ -80,25 +78,6 @@ class CobrancaRepositoryImpl implements CobrancaRepository {
   @override
   Future<void> removerDoContrato(String contratoId) async =>
       _ds.cobrancas.removeWhere((e) => e.contratoId == contratoId);
-}
-
-class ModeloContratoRepositoryImpl implements ModeloContratoRepository {
-  const ModeloContratoRepositoryImpl(this._ds);
-  final LocacaoMemoryDataSource _ds;
-
-  @override
-  Stream<List<ModeloContrato>> observar() => _ds.modelos.watch();
-
-  @override
-  Future<List<ModeloContrato>> listar() async => _ds.modelos.all;
-
-  @override
-  Future<void> salvar(ModeloContrato modelo) async =>
-      _ds.modelos.upsert(modelo);
-
-  @override
-  Future<void> remover(String id) async =>
-      _ds.modelos.removeWhere((e) => e.id == id);
 }
 
 class RepasseRepositoryImpl implements RepasseRepository {

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
 import 'package:marceloimob_gestao/features/crm/domain/entities/imovel.dart';
+import 'package:marceloimob_gestao/features/contratos/data/documentos/pdf_contrato_gateway.dart';
+import 'package:marceloimob_gestao/features/contratos/domain/entities/contrato_documento.dart';
 import 'package:marceloimob_gestao/features/locacao/data/documentos/pdf_documentos_locacao_gateway.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/entities/cobranca.dart';
 import 'package:marceloimob_gestao/features/locacao/domain/entities/contrato_locacao.dart';
@@ -52,7 +54,7 @@ void main() {
 
   test('gera contrato, boleto e recibo', () async {
     ehPdf(
-      await gateway.gerarContrato(
+      await PdfContratoGateway().gerarContrato(
         const ContratoDocumento(
           titulo: 'CONTRATO DE LOCAÇÃO',
           texto: 'Cláusula 1ª – São Paulo, ação, opção.\n\nCláusula 2ª.',

@@ -5,7 +5,7 @@ import '../../../../core/utils/id.dart';
 import '../entities/cobranca.dart';
 import '../entities/contrato_locacao.dart';
 import '../entities/despesa.dart';
-import '../entities/encargos.dart';
+import '../../../../core/domain/encargos.dart';
 import '../entities/locacao_enums.dart';
 import '../repositories/cobranca_repository.dart';
 import '../repositories/contrato_locacao_repository.dart';
@@ -98,24 +98,14 @@ class CalcularEncargos {
     ContratoLocacao contrato,
     Cobranca cobranca,
     DateTime dataPagamento,
-  ) {
-    final pg = DateTime(
-      dataPagamento.year,
-      dataPagamento.month,
-      dataPagamento.day,
-    );
-    if (!pg.isAfter(cobranca.vencimento)) {
-      return Encargos(
-        desconto: min(contrato.descontoPontualidade, cobranca.total),
-      );
-    }
-    final dias = pg.difference(cobranca.vencimento).inDays;
-    return Encargos(
-      multa: arredondar(cobranca.total * contrato.multaAtraso / 100),
-      juros: arredondar(cobranca.total * contrato.jurosMes / 100 / 30 * dias),
-      diasAtraso: dias,
-    );
-  }
+  ) => calcularEncargos(
+    valor: cobranca.total,
+    vencimento: cobranca.vencimento,
+    pagamento: dataPagamento,
+    multaPercentual: contrato.multaAtraso,
+    jurosMesPercentual: contrato.jurosMes,
+    descontoPontualidade: contrato.descontoPontualidade,
+  );
 }
 
 class RegistrarPagamento {

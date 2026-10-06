@@ -10,8 +10,9 @@ import '../viewmodels/modelos_viewmodel.dart';
 /// Editor de modelo de contrato. Um [modelo] com id vazio cria um novo
 /// a partir do texto informado (usado em "Duplicar").
 class ModeloFormPage extends StatefulWidget {
-  const ModeloFormPage({super.key, this.modelo});
+  const ModeloFormPage({super.key, required this.tipo, this.modelo});
 
+  final TipoModelo tipo;
   final ModeloContrato? modelo;
 
   @override
@@ -19,7 +20,7 @@ class ModeloFormPage extends StatefulWidget {
 }
 
 class _ModeloFormPageState extends State<ModeloFormPage> {
-  final _vm = sl<ModelosViewModel>();
+  late final _vm = sl<ModelosViewModel>(param1: widget.tipo);
   late final _nome = TextEditingController(text: widget.modelo?.nome);
   late final _texto = TextEditingController(text: widget.modelo?.texto.trim());
 
@@ -50,6 +51,7 @@ class _ModeloFormPageState extends State<ModeloFormPage> {
       ModeloContrato(
         id: id.isEmpty ? gerarId() : id,
         nome: _nome.text.trim(),
+        tipo: widget.tipo,
         texto: _texto.text,
       ),
     );
@@ -68,7 +70,7 @@ class _ModeloFormPageState extends State<ModeloFormPage> {
       spacing: 6,
       runSpacing: 6,
       children: [
-        for (final e in camposModeloContrato.entries)
+        for (final e in _vm.campos.entries)
           Tooltip(
             message: e.value,
             child: ActionChip(

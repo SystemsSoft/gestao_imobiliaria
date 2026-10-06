@@ -6,32 +6,34 @@ import '../entities/cobranca.dart';
 import '../entities/contrato_locacao.dart';
 import '../entities/documentos.dart';
 import '../entities/locacao_enums.dart';
-import '../entities/modelo_contrato.dart';
+import '../../../contratos/domain/entities/modelo_contrato.dart';
+import '../../../contratos/domain/usecases/modelo_usecases.dart';
 import '../repositories/contrato_locacao_repository.dart';
 import '../repositories/documentos_locacao_gateway.dart';
-import 'modelo_usecases.dart';
+import 'montar_contrato_locacao.dart';
 
 class ImprimirContrato {
   const ImprimirContrato(
-    this._gateway,
+    this._imprimir,
     this._contatos,
     this._imoveis, [
-    this._preencher = const PreencherModeloContrato(),
+    this._montar = const MontarContratoLocacao(),
   ]);
-  final DocumentosLocacaoGateway _gateway;
+  final ImprimirContratoDocumento _imprimir;
   final ContatoRepository _contatos;
   final ImovelRepository _imoveis;
-  final PreencherModeloContrato _preencher;
+  final MontarContratoLocacao _montar;
 
   Future<void> call(ContratoLocacao contrato, ModeloContrato modelo) async {
     final contatos = await _contatos.listar();
-    final doc = _preencher(
-      modelo: modelo,
-      contrato: contrato,
-      contato: (id) => contatos.where((c) => c.id == id).firstOrNull,
-      imovel: await _imoveis.obter(contrato.imovelId),
+    await _imprimir(
+      _montar(
+        modelo: modelo,
+        contrato: contrato,
+        contato: (id) => contatos.where((c) => c.id == id).firstOrNull,
+        imovel: await _imoveis.obter(contrato.imovelId),
+      ),
     );
-    await _gateway.imprimirContrato(doc);
   }
 }
 

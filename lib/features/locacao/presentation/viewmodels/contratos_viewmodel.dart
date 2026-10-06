@@ -5,10 +5,10 @@ import '../../../crm/domain/usecases/contato_usecases.dart';
 import '../../../crm/domain/usecases/imovel_usecases.dart';
 import '../../domain/entities/contrato_locacao.dart';
 import '../../domain/entities/locacao_enums.dart';
-import '../../domain/entities/modelo_contrato.dart';
+import '../../../contratos/domain/entities/modelo_contrato.dart';
 import '../../domain/usecases/contrato_usecases.dart';
 import '../../domain/usecases/imprimir_documentos.dart';
-import '../../domain/usecases/modelo_usecases.dart';
+import '../../../contratos/domain/usecases/modelo_usecases.dart';
 
 class ContratosViewModel extends ViewModel {
   ContratosViewModel(
@@ -25,7 +25,7 @@ class ContratosViewModel extends ViewModel {
     });
     observar(observarContatos(), (l) => _contatos = l);
     observar(observarImoveis(), (l) => _imoveis = l);
-    observar(observarModelos(), (l) => modelos = l);
+    observar(observarModelos(TipoModelo.locacao), (l) => modelos = l);
   }
 
   final RemoverContrato _remover;

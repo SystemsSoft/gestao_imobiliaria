@@ -9,14 +9,16 @@ import '../viewmodels/modelos_viewmodel.dart';
 
 /// Modelos de contrato personalizáveis usados na impressão.
 class ModelosTab extends StatefulWidget {
-  const ModelosTab({super.key});
+  const ModelosTab({super.key, required this.tipo});
+
+  final TipoModelo tipo;
 
   @override
   State<ModelosTab> createState() => _ModelosTabState();
 }
 
 class _ModelosTabState extends State<ModelosTab> {
-  final _vm = sl<ModelosViewModel>();
+  late final _vm = sl<ModelosViewModel>(param1: widget.tipo);
 
   @override
   void dispose() {
@@ -24,9 +26,11 @@ class _ModelosTabState extends State<ModelosTab> {
     super.dispose();
   }
 
-  void _abrir([ModeloContrato? m]) => Navigator.of(
-    context,
-  ).push(MaterialPageRoute<void>(builder: (_) => ModeloFormPage(modelo: m)));
+  void _abrir([ModeloContrato? m]) => Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => ModeloFormPage(tipo: widget.tipo, modelo: m),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class _ModelosTabState extends State<ModelosTab> {
           children: [
             const Text(
               'Personalize o texto dos contratos. Use campos como '
-              '{{locatario_nome}} e {{valor_aluguel}}: eles são preenchidos '
+              '{{numero_contrato}} e {{imovel_endereco}}: eles são preenchidos '
               'automaticamente ao imprimir o contrato.',
               style: TextStyle(color: Colors.white70),
             ),
@@ -83,6 +87,7 @@ class _ModelosTabState extends State<ModelosTab> {
                         ModeloContrato(
                           id: '',
                           nome: '${m.nome} (cópia)',
+                          tipo: m.tipo,
                           texto: m.texto,
                         ),
                       ),

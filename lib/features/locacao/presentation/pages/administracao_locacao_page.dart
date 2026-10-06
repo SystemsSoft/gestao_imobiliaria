@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../contratos/domain/entities/modelo_contrato.dart';
+import '../../../contratos/presentation/widgets/modelos_tab.dart';
+import '../../../temporada/presentation/pages/temporada_page.dart';
 import '../widgets/cobrancas_tab.dart';
 import '../widgets/contratos_tab.dart';
 import '../widgets/despesas_tab.dart';
 import '../widgets/imposto_renda_tab.dart';
-import '../widgets/modelos_tab.dart';
 import '../widgets/repasses_tab.dart';
 
 /// Módulo "Administração de Locação".
@@ -15,7 +17,7 @@ class AdministracaoLocacaoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 6,
+      length: 7,
       child: Column(
         children: [
           Material(
@@ -41,6 +43,7 @@ class AdministracaoLocacaoPage extends StatelessWidget {
                   icon: Icon(Icons.calculate_outlined),
                   text: 'Imposto de Renda',
                 ),
+                Tab(icon: Icon(Icons.beach_access_outlined), text: 'Temporada'),
                 Tab(
                   icon: Icon(Icons.article_outlined),
                   text: 'Modelos de contrato',
@@ -56,7 +59,8 @@ class AdministracaoLocacaoPage extends StatelessWidget {
                 DespesasTab(),
                 RepassesTab(),
                 ImpostoRendaTab(),
-                ModelosTab(),
+                TemporadaPage(),
+                ModelosTab(tipo: TipoModelo.locacao),
               ],
             ),
           ),

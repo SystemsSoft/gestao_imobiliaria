@@ -4,6 +4,7 @@ import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../crm/presentation/pages/cadastros_crm_page.dart';
 import '../../../locacao/presentation/pages/administracao_locacao_page.dart';
+import '../../../vendas/presentation/pages/administracao_vendas_page.dart';
 import '../viewmodels/home_viewmodel.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   Widget _conteudo(ModuloMenu modulo) => switch (modulo) {
     ModuloMenu.cadastrosCrm => const CadastrosCrmPage(),
     ModuloMenu.locacao => const AdministracaoLocacaoPage(),
+    ModuloMenu.vendas => const AdministracaoVendasPage(),
     _ => Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
