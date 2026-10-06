@@ -7,7 +7,7 @@ class AppColors {
   static const blue = Color(0xFF0D3A8C);
   static const blueGlow = Color(0xFF2F7DE8);
   static const gold = Color(0xFFF5C432);
-  static const goldLight = Color(0xFFFFE27A);
+  static const goldLight = Color(0xFFEECD59);
   static const goldDark = Color(0xFFC8921A);
 }
 

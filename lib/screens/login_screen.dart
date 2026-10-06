@@ -82,15 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         _Logo(),
                         const SizedBox(height: 24),
                         _buildCard(context),
-                        const SizedBox(height: 24),
-                        Text(
-                          'CRECI 065655 RJ',
-                          style: TextStyle(
-                            color: AppColors.gold.withValues(alpha: 0.7),
-                            letterSpacing: 1.5,
-                            fontSize: 12,
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -177,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: TextButton(
                 onPressed: () {},
                 style: TextButton.styleFrom(
-                  foregroundColor: AppColors.goldLight,
+                  foregroundColor: const Color.fromARGB(255, 215, 188, 98),
                 ),
                 child: const Text('Esqueci minha senha'),
               ),
