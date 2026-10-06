@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../contratos/presentation/pages/contratos_relatorios_page.dart';
 import '../../../crm/presentation/pages/cadastros_crm_page.dart';
 import '../../../financeiro/presentation/pages/financeiro_page.dart';
+import '../../../fiscal/presentation/pages/fiscal_page.dart';
 import '../../../locacao/presentation/pages/administracao_locacao_page.dart';
 import '../../../vendas/presentation/pages/administracao_vendas_page.dart';
 import '../viewmodels/home_viewmodel.dart';
@@ -29,6 +31,8 @@ class _HomePageState extends State<HomePage> {
     ModuloMenu.locacao => const AdministracaoLocacaoPage(),
     ModuloMenu.vendas => const AdministracaoVendasPage(),
     ModuloMenu.financeiro => const FinanceiroPage(),
+    ModuloMenu.fiscal => const FiscalPage(),
+    ModuloMenu.contratosRelatorios => const ContratosRelatoriosPage(),
     _ => Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,

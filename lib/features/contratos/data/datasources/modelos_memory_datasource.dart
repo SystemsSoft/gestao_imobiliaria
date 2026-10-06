@@ -1,27 +1,23 @@
 import '../../../../core/data/memory_collection.dart';
 import '../../domain/entities/modelo_contrato.dart';
-import 'modelos_padrao.dart';
+import 'catalogo_modelos_prontos.dart';
 
-/// Modelos de contrato em memória, já com um modelo padrão de cada tipo.
+/// Meus modelos em memória. Começa com um modelo de locação e um de venda
+/// (cópias editáveis dos modelos prontos), usados na impressão dos contratos.
 class ModelosMemoryDataSource {
   ModelosMemoryDataSource() {
-    modelos
-      ..upsert(
-        const ModeloContrato(
-          id: 'padrao-locacao',
-          nome: 'Locação residencial (padrão)',
-          tipo: TipoModelo.locacao,
-          texto: modeloLocacaoResidencial,
-        ),
-      )
-      ..upsert(
-        const ModeloContrato(
-          id: 'padrao-venda',
-          nome: 'Promessa de compra e venda (padrão)',
-          tipo: TipoModelo.venda,
-          texto: modeloCompraVenda,
+    for (final id in [idProntoLocacaoResidencial, idProntoCompraVenda]) {
+      final p = catalogoModelosProntos.firstWhere((m) => m.id == id);
+      modelos.upsert(
+        p.comoRascunho().copyWith(
+          id: id == idProntoLocacaoResidencial
+              ? 'padrao-locacao'
+              : 'padrao-venda',
+          nome: '${p.nome} (padrão)',
+          atualizadoEm: DateTime(2026),
         ),
       );
+    }
   }
 
   final modelos = MemoryCollection<ModeloContrato>((e) => e.id);
