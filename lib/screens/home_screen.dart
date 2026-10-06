@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import 'crm/cadastros_crm_screen.dart';
 
 class _MenuItem {
   const _MenuItem(this.label, this.icon);
@@ -40,23 +41,25 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text(item.label),
       ),
       drawer: _buildDrawer(context),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(item.icon, size: 64, color: AppColors.gold),
-            const SizedBox(height: 16),
-            Text(
-              item.label,
-              style: const TextStyle(
-                color: AppColors.gold,
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
+      body: _selected == 0
+          ? const CadastrosCrmScreen()
+          : Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(item.icon, size: 64, color: AppColors.gold),
+                  const SizedBox(height: 16),
+                  Text(
+                    item.label,
+                    style: const TextStyle(
+                      color: AppColors.gold,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 

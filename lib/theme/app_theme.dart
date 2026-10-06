@@ -12,14 +12,15 @@ class AppColors {
 }
 
 ThemeData buildAppTheme() {
-  final scheme = ColorScheme.fromSeed(
-    seedColor: AppColors.gold,
-    brightness: Brightness.dark,
-  ).copyWith(
-    primary: AppColors.gold,
-    onPrimary: AppColors.navyDark,
-    surface: AppColors.navy,
-  );
+  final scheme =
+      ColorScheme.fromSeed(
+        seedColor: AppColors.gold,
+        brightness: Brightness.dark,
+      ).copyWith(
+        primary: AppColors.gold,
+        onPrimary: AppColors.navyDark,
+        surface: AppColors.navy,
+      );
 
   return ThemeData(
     useMaterial3: true,

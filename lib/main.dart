@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'screens/login_screen.dart';
 import 'screens/splash_screen.dart';
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
       title: 'Marcelo Bonifácio - Gestão',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
+      locale: const Locale('pt', 'BR'),
+      supportedLocales: const [Locale('pt', 'BR')],
+      localizationsDelegates: GlobalMaterialLocalizations.delegates,
       home: const _Root(),
     );
   }
