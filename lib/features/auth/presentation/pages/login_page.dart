@@ -196,16 +196,6 @@ class _Logo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 340,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.gold.withValues(alpha: 0.25),
-            blurRadius: 30,
-          ),
-        ],
-      ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(23),
         child: Image.asset(
