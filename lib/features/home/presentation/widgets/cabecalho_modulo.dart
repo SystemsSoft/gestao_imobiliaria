@@ -1,32 +1,35 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-import '../../../../core/config/empresa_info.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../viewmodels/home_viewmodel.dart';
 
-/// Cabeçalho da área logada: marca, módulo atual, avisos e usuário.
+/// Barra superior da área logada: menu, busca, avisos, data e usuário.
 class CabecalhoModulo extends StatelessWidget {
   const CabecalhoModulo({
     super.key,
     required this.vm,
     required this.onMenu,
     required this.onSair,
+    required this.onBuscar,
   });
 
   final HomeViewModel vm;
   final VoidCallback onMenu;
   final VoidCallback onSair;
+  final ValueChanged<String> onBuscar;
 
   @override
   Widget build(BuildContext context) {
     final largura = MediaQuery.sizeOf(context).width;
     final estreito = largura < 760;
-    final modulo = vm.selecionado;
     return Container(
-      height: estreito ? 76 : 112,
-      padding: EdgeInsets.symmetric(horizontal: estreito ? 8 : 28),
+      height: estreito ? 64 : 76,
+      padding: EdgeInsets.symmetric(horizontal: estreito ? 6 : 20),
       decoration: BoxDecoration(
+        color: AppColors.navyDark.withValues(alpha: 0.35),
         border: Border(
           bottom: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
@@ -36,53 +39,31 @@ class CabecalhoModulo extends StatelessWidget {
           IconButton(
             tooltip: 'Menu',
             onPressed: onMenu,
-            icon: const Icon(Icons.menu, color: Colors.white70),
+            icon: const Icon(Icons.menu, color: Colors.white),
           ),
-          const SizedBox(width: 4),
-          InkWell(
-            borderRadius: BorderRadius.circular(8),
-            onTap: onMenu,
-            child: _Marca(compacta: largura < 1000),
-          ),
-          if (!estreito) ...[
-            const SizedBox(width: 28),
-            Container(
-              width: 1,
-              height: 48,
-              color: Colors.white.withValues(alpha: 0.18),
-            ),
-            const SizedBox(width: 28),
-          ] else
-            const SizedBox(width: 10),
-          if (largura >= 520) ...[
-            Container(
-              width: estreito ? 38 : 50,
-              height: estreito ? 38 : 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
-                color: Colors.white.withValues(alpha: 0.04),
-              ),
-              child: Icon(
-                modulo.icon,
-                color: AppColors.gold,
-                size: estreito ? 20 : 26,
+          if (estreito) ...[
+            const SizedBox(width: 4),
+            Image.asset('assets/logo_icone.png', height: 38),
+            const Spacer(),
+          ] else ...[
+            const SizedBox(width: 16),
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 560),
+                  child: _Busca(onBuscar: onBuscar),
+                ),
               ),
             ),
-            SizedBox(width: estreito ? 10 : 18),
+            const SizedBox(width: 16),
           ],
-          Expanded(
-            child: Text(
-              modulo.label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: estiloTitulo(
-                tamanho: largura < 420 ? 17 : (estreito ? 20 : 30),
-              ),
-            ),
-          ),
           _Avisos(vm: vm),
-          SizedBox(width: estreito ? 4 : 20),
+          if (largura >= 1000) ...[
+            const SizedBox(width: 18),
+            _DataHora(agora: vm.agora),
+          ],
+          SizedBox(width: estreito ? 4 : 22),
           _Usuario(vm: vm, compacto: estreito, onSair: onSair),
         ],
       ),
@@ -90,53 +71,94 @@ class CabecalhoModulo extends StatelessWidget {
   }
 }
 
-/// Ícone da logo + nome, atividade e CRECI.
-class _Marca extends StatelessWidget {
-  const _Marca({required this.compacta});
+/// Busca global (por enquanto leva à listagem de cadastros).
+class _Busca extends StatelessWidget {
+  const _Busca({required this.onBuscar});
 
-  final bool compacta;
+  final ValueChanged<String> onBuscar;
 
   @override
   Widget build(BuildContext context) {
-    final icone = Image.asset(
-      'assets/logo_icone.png',
-      height: compacta ? 40 : 58,
+    final borda = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
     );
-    if (compacta) return icone;
+    return SizedBox(
+      height: 44,
+      child: TextField(
+        onSubmitted: onBuscar,
+        style: const TextStyle(fontSize: 14),
+        decoration: InputDecoration(
+          hintText: 'Buscar imóveis, clientes, contratos...',
+          hintStyle: const TextStyle(color: Colors.white60, fontSize: 14),
+          prefixIcon: const Icon(Icons.search, color: Colors.white70),
+          filled: true,
+          fillColor: AppColors.navyDark.withValues(alpha: 0.5),
+          contentPadding: EdgeInsets.zero,
+          border: borda,
+          enabledBorder: borda,
+          focusedBorder: borda.copyWith(
+            borderSide: const BorderSide(color: AppColors.gold),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Data por extenso e hora atual, atualizadas a cada minuto.
+class _DataHora extends StatefulWidget {
+  const _DataHora({required this.agora});
+
+  final DateTime agora;
+
+  @override
+  State<_DataHora> createState() => _DataHoraState();
+}
+
+class _DataHoraState extends State<_DataHora> {
+  late DateTime _agora = widget.agora;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => setState(() => _agora = DateTime.now()),
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hora =
+        '${_agora.hour.toString().padLeft(2, '0')}:${_agora.minute.toString().padLeft(2, '0')}';
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        icone,
+        const Icon(
+          Icons.calendar_today_outlined,
+          size: 24,
+          color: Colors.white,
+        ),
         const SizedBox(width: 10),
         Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              EmpresaInfo.nome.toUpperCase(),
-              style: const TextStyle(
-                color: AppColors.gold,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.3,
-              ),
+              dataPorExtensoCurta(_agora),
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             Text(
-              EmpresaInfo.atividade.toUpperCase(),
-              style: const TextStyle(
-                color: AppColors.goldLight,
-                fontSize: 13,
-                letterSpacing: 1,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              EmpresaInfo.creci.toUpperCase(),
-              style: const TextStyle(
-                color: AppColors.goldLight,
-                fontSize: 9,
-                fontWeight: FontWeight.w700,
-              ),
+              hora,
+              style: const TextStyle(fontSize: 12, color: Colors.white70),
             ),
           ],
         ),
@@ -199,18 +221,28 @@ class _Avisos extends StatelessWidget {
         child: Stack(
           clipBehavior: Clip.none,
           children: [
-            const Icon(Icons.notifications_none, size: 30, color: Colors.white),
+            const Icon(Icons.notifications_none, size: 28, color: Colors.white),
             if (pendentes.isNotEmpty)
               Positioned(
-                right: 1,
-                top: 1,
+                right: -2,
+                top: -3,
                 child: Container(
-                  width: 11,
-                  height: 11,
+                  constraints: const BoxConstraints(minWidth: 18),
+                  height: 18,
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: AppColors.gold,
-                    shape: BoxShape.circle,
+                    color: const Color(0xFFE53935),
+                    borderRadius: BorderRadius.circular(9),
                     border: Border.all(color: AppColors.navyDark, width: 1.5),
+                  ),
+                  child: Text(
+                    pendentes.length > 9 ? '9+' : '${pendentes.length}',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -266,8 +298,8 @@ class _Usuario extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 46,
-            height: 46,
+            width: 42,
+            height: 42,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 2),

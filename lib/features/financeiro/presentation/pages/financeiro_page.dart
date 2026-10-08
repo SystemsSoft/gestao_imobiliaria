@@ -9,11 +9,14 @@ import '../widgets/fluxo_caixa_tab.dart';
 
 /// Módulo "Financeiro".
 class FinanceiroPage extends StatelessWidget {
-  const FinanceiroPage({super.key});
+  const FinanceiroPage({super.key, this.abaInicial = 0});
+
+  final int abaInicial;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: abaInicial,
       length: 5,
       child: Column(
         children: [

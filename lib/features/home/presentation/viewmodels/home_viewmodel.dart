@@ -7,14 +7,16 @@ import '../../../equipe/domain/entities/usuario_sistema.dart';
 import '../../../equipe/domain/usecases/usuario_usecases.dart';
 
 enum ModuloMenu {
-  cadastrosCrm('Cadastros e CRM', Icons.home_outlined),
+  dashboard('Dashboard', Icons.home_outlined),
+  cadastrosCrm('Cadastros e CRM', Icons.person_outline),
   locacao('Administração de Locação', Icons.key_outlined),
   vendas('Administração de Vendas', Icons.sell_outlined),
-  financeiro('Financeiro', Icons.account_balance_wallet_outlined),
+  temporada('Locação por Temporada', Icons.calendar_month_outlined),
+  financeiro('Financeiro', Icons.attach_money),
   fiscal('Fiscal', Icons.receipt_long_outlined),
   contratosRelatorios('Contratos e Relatórios', Icons.description_outlined),
-  equipeSeguranca('Equipe e Segurança', Icons.admin_panel_settings_outlined),
-  personalizacao('Personalização', Icons.palette_outlined);
+  equipeSeguranca('Equipe e Segurança', Icons.shield_outlined),
+  personalizacao('Personalização', Icons.settings_outlined);
 
   const ModuloMenu(this.label, this.icon);
   final String label;
@@ -37,11 +39,13 @@ class HomeViewModel extends ViewModel {
   }
 
   final DateTime Function() _agora;
+
+  DateTime get agora => _agora();
   List<Evento> _eventos = const [];
   List<UsuarioSistema> _usuarios = const [];
   String? _usuarioAtualId;
 
-  ModuloMenu selecionado = ModuloMenu.cadastrosCrm;
+  ModuloMenu selecionado = ModuloMenu.dashboard;
 
   /// Aba inicial do módulo aberto e um contador para recriá-lo ao trocar.
   int abaInicial = 0;

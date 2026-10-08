@@ -31,7 +31,10 @@ class SalvarImovel {
       throw const DomainException('Selecione ao menos uma finalidade.');
     }
     final salvo = imovel.codigo.isEmpty
-        ? imovel.copyWith(codigo: await _repo.proximoCodigo())
+        ? imovel.copyWith(
+            codigo: await _repo.proximoCodigo(),
+            criadoEm: imovel.criadoEm ?? DateTime.now(),
+          )
         : imovel;
     await _repo.salvar(salvo);
     return salvo;

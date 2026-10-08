@@ -95,3 +95,24 @@ final phoneFormatter = DigitsMaskFormatter(
   (n) => n <= 10 ? '(##) ####-####' : '(##) #####-####',
   maxDigits: 11,
 );
+
+const _mesesExtenso = [
+  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', //
+  'agosto', 'setembro', 'outubro', 'novembro', 'dezembro',
+];
+
+/// "26 de abril de 2026".
+String dataPorExtensoCurta(DateTime d) =>
+    '${d.day} de ${_mesesExtenso[d.month - 1]} de ${d.year}';
+
+/// "há 5 min", "há 2 horas", "há 3 dias" ou a data.
+String tempoRelativo(DateTime quando, DateTime agora) {
+  final d = agora.difference(quando);
+  if (d.isNegative || d.inMinutes < 1) return 'agora';
+  if (d.inMinutes < 60) return 'há ${d.inMinutes} min';
+  if (d.inHours < 24) {
+    return 'há ${d.inHours} ${d.inHours == 1 ? 'hora' : 'horas'}';
+  }
+  if (d.inDays < 30) return 'há ${d.inDays} ${d.inDays == 1 ? 'dia' : 'dias'}';
+  return formatDate(quando);
+}

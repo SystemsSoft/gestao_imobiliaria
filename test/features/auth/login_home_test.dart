@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:marceloimob_gestao/core/di/injector.dart';
 import 'package:marceloimob_gestao/core/theme/app_theme.dart';
 import 'package:marceloimob_gestao/features/auth/presentation/pages/login_page.dart';
+import 'package:marceloimob_gestao/features/crm/presentation/pages/cadastros_crm_page.dart';
+import 'package:marceloimob_gestao/features/dashboard/presentation/pages/dashboard_page.dart';
 import 'package:marceloimob_gestao/features/home/presentation/pages/home_page.dart';
 import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
 
@@ -41,8 +43,25 @@ void main() {
     expect(find.byType(HomePage), findsOneWidget);
   });
 
-  testWidgets('drawer lista os módulos', (tester) async {
+  testWidgets('tela larga abre no dashboard com o menu fixo', (tester) async {
     _telaGrande(tester);
+    await tester.pumpWidget(
+      MaterialApp(theme: buildAppTheme(), home: const HomePage()),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(DashboardPage), findsOneWidget);
+    for (final m in ModuloMenu.values) {
+      expect(find.text(m.label), findsWidgets);
+    }
+    await tester.tap(find.text('Ver imóveis'));
+    await tester.pumpAndSettle();
+    expect(find.byType(CadastrosCrmPage), findsOneWidget);
+  });
+
+  testWidgets('tela estreita lista os módulos no drawer', (tester) async {
+    tester.view.physicalSize = const Size(400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(theme: buildAppTheme(), home: const HomePage()),
     );

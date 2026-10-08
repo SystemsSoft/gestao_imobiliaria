@@ -10,11 +10,14 @@ import '../widgets/usuarios_tab.dart';
 
 /// Módulo "Equipe e Segurança".
 class EquipeSegurancaPage extends StatelessWidget {
-  const EquipeSegurancaPage({super.key});
+  const EquipeSegurancaPage({super.key, this.abaInicial = 0});
+
+  final int abaInicial;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: abaInicial,
       length: 6,
       child: Column(
         children: [

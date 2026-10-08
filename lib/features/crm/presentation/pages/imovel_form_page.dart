@@ -235,6 +235,7 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
     }
     final ok = await _vm.salvar(
       Imovel(
+        criadoEm: widget.imovel?.criadoEm,
         id: _id,
         codigo: _codigo,
         titulo: _titulo.text.trim(),

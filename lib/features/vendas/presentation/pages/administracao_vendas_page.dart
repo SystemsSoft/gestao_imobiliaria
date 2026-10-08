@@ -9,11 +9,14 @@ import '../widgets/vendas_tab.dart';
 
 /// Módulo "Administração de Vendas".
 class AdministracaoVendasPage extends StatelessWidget {
-  const AdministracaoVendasPage({super.key});
+  const AdministracaoVendasPage({super.key, this.abaInicial = 0});
+
+  final int abaInicial;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: abaInicial,
       length: 4,
       child: Column(
         children: [

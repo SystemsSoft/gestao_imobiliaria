@@ -65,3 +65,12 @@ TextStyle estiloTitulo({double tamanho = 30, Color cor = Colors.white}) =>
       color: cor,
       letterSpacing: 0.2,
     );
+
+/// Fonte manuscrita para frases de destaque.
+TextStyle estiloManuscrito({double tamanho = 24, Color cor = AppColors.gold}) =>
+    GoogleFonts.dancingScript(
+      fontSize: tamanho,
+      fontWeight: FontWeight.w700,
+      color: cor,
+      height: 1.1,
+    );

@@ -64,6 +64,7 @@ class Imovel {
     this.localChaves = '',
     this.exclusividade = false,
     this.anexos = const [],
+    this.criadoEm,
   });
 
   final String id;
@@ -120,7 +121,10 @@ class Imovel {
 
   final List<Anexo> anexos;
 
-  Imovel copyWith({String? codigo}) => Imovel(
+  /// Data do cadastro no sistema.
+  final DateTime? criadoEm;
+
+  Imovel copyWith({String? codigo, DateTime? criadoEm}) => Imovel(
     id: id,
     codigo: codigo ?? this.codigo,
     titulo: titulo,
@@ -167,6 +171,7 @@ class Imovel {
     localChaves: localChaves,
     exclusividade: exclusividade,
     anexos: anexos,
+    criadoEm: criadoEm ?? this.criadoEm,
   );
 
   double? valorPara(Finalidade f) => switch (f) {
