@@ -65,15 +65,6 @@ class _LoginPageState extends State<LoginPage> {
               child: Container(
                 width: 360,
                 height: 360,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      AppColors.blueGlow.withValues(alpha: 0.55),
-                      Colors.transparent,
-                    ],
-                  ),
-                ),
               ),
             ),
             SafeArea(
