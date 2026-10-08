@@ -62,10 +62,7 @@ class _LoginPageState extends State<LoginPage> {
             Positioned(
               left: -120,
               bottom: -120,
-              child: Container(
-                width: 360,
-                height: 360,
-              ),
+              child: Container(width: 360, height: 360),
             ),
             SafeArea(
               child: Center(

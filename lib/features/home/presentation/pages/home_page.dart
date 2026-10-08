@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/widgets/visual_marca.dart';
+import '../../../auth/presentation/pages/login_page.dart';
 import '../../../contratos/presentation/pages/contratos_relatorios_page.dart';
 import '../../../crm/presentation/pages/cadastros_crm_page.dart';
 import '../../../equipe/presentation/pages/equipe_seguranca_page.dart';
@@ -10,6 +12,7 @@ import '../../../fiscal/presentation/pages/fiscal_page.dart';
 import '../../../locacao/presentation/pages/administracao_locacao_page.dart';
 import '../../../vendas/presentation/pages/administracao_vendas_page.dart';
 import '../viewmodels/home_viewmodel.dart';
+import '../widgets/cabecalho_modulo.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -28,7 +31,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _conteudo(ModuloMenu modulo) => switch (modulo) {
-    ModuloMenu.cadastrosCrm => const CadastrosCrmPage(),
+    ModuloMenu.cadastrosCrm => CadastrosCrmPage(abaInicial: _vm.abaInicial),
     ModuloMenu.locacao => const AdministracaoLocacaoPage(),
     ModuloMenu.vendas => const AdministracaoVendasPage(),
     ModuloMenu.financeiro => const FinanceiroPage(),
@@ -54,6 +57,15 @@ class _HomePageState extends State<HomePage> {
     ),
   };
 
+  final _scaffold = GlobalKey<ScaffoldState>();
+
+  void _sair() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const LoginPage()),
+      (_) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -61,13 +73,28 @@ class _HomePageState extends State<HomePage> {
       builder: (context, _) {
         final modulo = _vm.selecionado;
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: AppColors.navy,
-            foregroundColor: AppColors.gold,
-            title: Text(modulo.label),
-          ),
+          key: _scaffold,
+          backgroundColor: AppColors.navyDark,
           drawer: _buildDrawer(context),
-          body: KeyedSubtree(key: ValueKey(modulo), child: _conteudo(modulo)),
+          body: FundoMarca(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  CabecalhoModulo(
+                    vm: _vm,
+                    onMenu: () => _scaffold.currentState?.openDrawer(),
+                    onSair: _sair,
+                  ),
+                  Expanded(
+                    child: KeyedSubtree(
+                      key: ValueKey('${modulo.name}-${_vm.versao}'),
+                      child: _conteudo(modulo),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );

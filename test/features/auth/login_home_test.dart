@@ -46,7 +46,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(theme: buildAppTheme(), home: const HomePage()),
     );
-    await tester.tap(find.byTooltip('Open navigation menu'));
+    await tester.tap(find.byTooltip('Menu'));
     await tester.pumpAndSettle();
     for (final m in ModuloMenu.values) {
       expect(find.text(m.label), findsWidgets);

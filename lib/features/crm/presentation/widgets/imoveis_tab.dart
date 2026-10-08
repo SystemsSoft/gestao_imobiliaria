@@ -4,6 +4,7 @@ import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/form_widgets.dart';
+import '../../../../core/widgets/visual_marca.dart';
 import '../../domain/entities/enums.dart';
 import '../../domain/entities/imovel.dart';
 import '../pages/imovel_form_page.dart';
@@ -53,13 +54,10 @@ class _ImoveisTabState extends State<ImoveisTab> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                child: TextField(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+                child: CampoBusca(
+                  hint: 'Buscar por código, título, endereço...',
                   onChanged: _vm.buscar,
-                  decoration: const InputDecoration(
-                    hintText: 'Buscar por código, título, endereço...',
-                    prefixIcon: Icon(Icons.search),
-                  ),
                 ),
               ),
               FiltroChips<StatusImovel>(
@@ -67,6 +65,7 @@ class _ImoveisTabState extends State<ImoveisTab> {
                 selecionado: _vm.status,
                 labelOf: (s) => s.label,
                 onChanged: _vm.filtrarStatus,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
               ),
               Expanded(
                 child: !_vm.carregado
@@ -79,7 +78,7 @@ class _ImoveisTabState extends State<ImoveisTab> {
                             : 'Nenhum imóvel encontrado com esse filtro.',
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 88),
+                        padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
                         itemCount: lista.length,
                         itemBuilder: (_, i) => _ImovelCard(
                           imovel: lista[i],

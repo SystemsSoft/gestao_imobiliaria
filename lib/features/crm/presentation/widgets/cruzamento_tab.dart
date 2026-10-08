@@ -35,7 +35,7 @@ class _CruzamentoTabState extends State<CruzamentoTab> {
       listenable: _vm,
       builder: (context, _) {
         return ListView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
           children: [
             const Text(
               'O sistema compara o perfil de interesse de cada contato com os '

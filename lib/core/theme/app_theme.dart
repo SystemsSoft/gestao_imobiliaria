@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Identidade visual Marcelo Bonifácio: azul-marinho profundo + dourado.
 class AppColors {
@@ -55,3 +56,12 @@ ThemeData buildAppTheme() {
     ),
   );
 }
+
+/// Fonte serifada dos títulos de módulo (identidade elegante da marca).
+TextStyle estiloTitulo({double tamanho = 30, Color cor = Colors.white}) =>
+    GoogleFonts.playfairDisplay(
+      fontSize: tamanho,
+      fontWeight: FontWeight.w700,
+      color: cor,
+      letterSpacing: 0.2,
+    );

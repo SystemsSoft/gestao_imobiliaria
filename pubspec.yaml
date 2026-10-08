@@ -42,6 +42,7 @@ dependencies:
   pdf: ^3.12.0
   printing: ^5.14.3
   get_it: ^9.3.0
+  google_fonts: ^8.2.1
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,7 @@ flutter:
   assets:
     - assets/splash_marcelo_bonifacio.webm
     - assets/logo_marcelo_bonifacio.png
+    - assets/logo_icone.png
     - assets/fonts/Roboto-Regular.ttf
     - assets/fonts/Roboto-Bold.ttf
 

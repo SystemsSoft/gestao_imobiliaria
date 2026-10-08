@@ -382,6 +382,8 @@ class DateField extends StatelessWidget {
   }
 }
 
+/// Estado vazio: ícone em círculos concêntricos, título e orientação.
+/// A primeira linha de [message] é o título; as demais, a explicação.
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key, required this.icon, required this.message});
 
@@ -390,19 +392,73 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final linhas = message.split('\n');
+    final titulo = linhas.first;
+    final detalhe = linhas.skip(1).join('\n');
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: AppColors.gold.withValues(alpha: 0.6)),
-            const SizedBox(height: 12),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white70, fontSize: 15),
+            Container(
+              width: 156,
+              height: 156,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withValues(alpha: 0.07)),
+                color: Colors.white.withValues(alpha: 0.015),
+              ),
+              child: Container(
+                width: 116,
+                height: 116,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.blue.withValues(alpha: 0.35),
+                      AppColors.navyDark.withValues(alpha: 0.6),
+                    ],
+                  ),
+                  border: Border.all(
+                    color: AppColors.gold.withValues(alpha: 0.18),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.35),
+                      blurRadius: 24,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Icon(icon, size: 52, color: AppColors.gold),
+              ),
             ),
+            const SizedBox(height: 26),
+            Text(
+              titulo,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            if (detalhe.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                detalhe,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 16,
+                  height: 1.4,
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -464,8 +520,21 @@ FloatingActionButton goldFab({
     onPressed: onPressed,
     backgroundColor: AppColors.gold,
     foregroundColor: AppColors.navyDark,
-    icon: Icon(icon),
-    label: Text(label, style: const TextStyle(fontWeight: FontWeight.w700)),
+    elevation: 6,
+    extendedPadding: const EdgeInsets.symmetric(horizontal: 22),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    icon: Icon(icon, size: 26),
+    label: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+        ),
+        const SizedBox(width: 18),
+        const Icon(Icons.chevron_right, size: 22),
+      ],
+    ),
   );
 }
 
@@ -489,25 +558,76 @@ class FiltroChips<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 48,
+      height: 64,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: padding,
         children: [
           for (final o in <T?>[null, ...opcoes])
             Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: ChoiceChip(
-                label: Text(o == null ? 'Todos' : labelOf(o)),
-                selected: selecionado == o,
-                selectedColor: AppColors.gold,
-                labelStyle: TextStyle(
-                  color: selecionado == o ? AppColors.navyDark : Colors.white,
-                ),
-                onSelected: (_) => onChanged(o),
+              padding: const EdgeInsets.only(right: 12),
+              child: _ChipFiltro(
+                label: o == null ? 'Todos' : labelOf(o),
+                selecionado: selecionado == o,
+                onTap: () => onChanged(o),
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// Chip de filtro em formato de pílula; o selecionado fica dourado com ✓.
+class _ChipFiltro extends StatelessWidget {
+  const _ChipFiltro({
+    required this.label,
+    required this.selecionado,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selecionado;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Material(
+        color: selecionado
+            ? AppColors.gold
+            : AppColors.navy.withValues(alpha: 0.55),
+        shape: StadiumBorder(
+          side: BorderSide(
+            color: selecionado
+                ? AppColors.gold
+                : Colors.white.withValues(alpha: 0.22),
+          ),
+        ),
+        child: InkWell(
+          customBorder: const StadiumBorder(),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 11),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (selecionado) ...const [
+                  Icon(Icons.check, size: 18, color: AppColors.navyDark),
+                  SizedBox(width: 8),
+                ],
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: selecionado ? AppColors.navyDark : Colors.white,
+                    fontWeight: selecionado ? FontWeight.w700 : FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

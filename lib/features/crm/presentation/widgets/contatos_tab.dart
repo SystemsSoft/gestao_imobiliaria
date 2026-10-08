@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/form_widgets.dart';
+import '../../../../core/widgets/visual_marca.dart';
 import '../../domain/entities/contato.dart';
 import '../../domain/entities/enums.dart';
 import '../pages/contato_form_page.dart';
@@ -54,14 +55,10 @@ class _ContatosTabState extends State<ContatosTab> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
-                child: TextField(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+                child: CampoBusca(
+                  hint: 'Buscar por nome, telefone, e-mail ou CPF/CNPJ...',
                   onChanged: _vm.buscar,
-                  decoration: const InputDecoration(
-                    hintText:
-                        'Buscar por nome, telefone, e-mail ou CPF/CNPJ...',
-                    prefixIcon: Icon(Icons.search),
-                  ),
                 ),
               ),
               FiltroChips<PapelContato>(
@@ -69,6 +66,7 @@ class _ContatosTabState extends State<ContatosTab> {
                 selecionado: _vm.papel,
                 labelOf: (p) => p.label,
                 onChanged: _vm.filtrarPapel,
+                padding: const EdgeInsets.symmetric(horizontal: 24),
               ),
               Expanded(
                 child: !_vm.carregado
@@ -81,7 +79,7 @@ class _ContatosTabState extends State<ContatosTab> {
                             : 'Nenhum contato encontrado com esse filtro.',
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 88),
+                        padding: const EdgeInsets.fromLTRB(24, 8, 24, 100),
                         itemCount: lista.length,
                         itemBuilder: (_, i) => _ContatoCard(
                           contato: lista[i],

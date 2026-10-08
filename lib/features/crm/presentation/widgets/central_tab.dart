@@ -58,7 +58,7 @@ class _CentralTabState extends State<CentralTab> {
         builder: (context, _) {
           if (!_vm.carregado) return const SizedBox.shrink();
           return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 88),
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 100),
             children: [
               _Notificacoes(
                 atrasados: _vm.atrasados,
