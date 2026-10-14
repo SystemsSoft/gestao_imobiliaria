@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../contratos/domain/entities/modelo_contrato.dart';
 import '../../../contratos/presentation/widgets/modelos_tab.dart';
+import '../../../manutencao/domain/entities/manutencao.dart';
+import '../../../manutencao/presentation/widgets/manutencao_tab.dart';
 import '../widgets/comissoes_tab.dart';
 import '../widgets/recebimentos_tab.dart';
 import '../widgets/vendas_tab.dart';
@@ -17,7 +19,7 @@ class AdministracaoVendasPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: abaInicial,
-      length: 4,
+      length: 5,
       child: Column(
         children: [
           Material(
@@ -35,6 +37,7 @@ class AdministracaoVendasPage extends StatelessWidget {
                   text: 'Recebimentos',
                 ),
                 Tab(icon: Icon(Icons.percent), text: 'Comissões'),
+                Tab(icon: Icon(Icons.handyman_outlined), text: 'Manutenção'),
                 Tab(
                   icon: Icon(Icons.article_outlined),
                   text: 'Modelos de contrato',
@@ -48,6 +51,7 @@ class AdministracaoVendasPage extends StatelessWidget {
                 VendasTab(),
                 RecebimentosTab(),
                 ComissoesTab(),
+                ManutencaoTab(contexto: ContextoManutencao.venda),
                 ModelosTab(tipo: TipoModelo.venda),
               ],
             ),

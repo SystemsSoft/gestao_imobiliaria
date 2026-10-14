@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../contratos/domain/entities/modelo_contrato.dart';
 import '../../../contratos/presentation/widgets/modelos_tab.dart';
+import '../../../manutencao/domain/entities/manutencao.dart';
+import '../../../manutencao/presentation/widgets/manutencao_tab.dart';
 import '../widgets/cobrancas_tab.dart';
 import '../widgets/contratos_tab.dart';
 import '../widgets/despesas_tab.dart';
@@ -19,7 +21,7 @@ class AdministracaoLocacaoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: abaInicial,
-      length: 6,
+      length: 7,
       child: Column(
         children: [
           Material(
@@ -41,6 +43,7 @@ class AdministracaoLocacaoPage extends StatelessWidget {
                   icon: Icon(Icons.account_balance_outlined),
                   text: 'Repasses',
                 ),
+                Tab(icon: Icon(Icons.handyman_outlined), text: 'Manutenção'),
                 Tab(
                   icon: Icon(Icons.calculate_outlined),
                   text: 'Imposto de Renda',
@@ -59,6 +62,7 @@ class AdministracaoLocacaoPage extends StatelessWidget {
                 CobrancasTab(),
                 DespesasTab(),
                 RepassesTab(),
+                ManutencaoTab(contexto: ContextoManutencao.locacao),
                 ImpostoRendaTab(),
                 ModelosTab(tipo: TipoModelo.locacao),
               ],
