@@ -16,15 +16,17 @@ class ReservaRepositoryImpl implements ReservaRepository {
   Future<Reserva?> obter(String id) async => _ds.reservas.byId(id);
 
   @override
-  Future<void> salvar(Reserva reserva) async => _ds.reservas.upsert(reserva);
+  Future<Reserva> salvar(Reserva reserva) async {
+    final salva = reserva.numero.isEmpty
+        ? reserva.copyWith(
+            numero: 'RES-${(++_ds.seqReserva).toString().padLeft(4, '0')}',
+          )
+        : reserva;
+    _ds.reservas.upsert(salva);
+    return salva;
+  }
 
   @override
   Future<void> remover(String id) async =>
       _ds.reservas.removeWhere((e) => e.id == id);
-
-  @override
-  Future<String> proximoNumero() async {
-    _ds.seqReserva++;
-    return 'RES-${_ds.seqReserva.toString().padLeft(4, '0')}';
-  }
 }

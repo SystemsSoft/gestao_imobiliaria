@@ -17,6 +17,8 @@ class ServidorFalso {
   static const _numeradores = {
     'crm/imoveis': ('codigo', 'IM'),
     'locacao/contratos': ('numero', 'LOC'),
+    'vendas': ('numero', 'VEN'),
+    'temporada/reservas': ('numero', 'RES'),
   };
   final _sequencias = <String, int>{};
 
@@ -55,6 +57,16 @@ class ServidorFalso {
       );
     }
 
+    // Parcelas de uma venda: DELETE /vendas/{id}/parcelas
+    if (partes.length == 3 &&
+        partes[0] == 'vendas' &&
+        partes[2] == 'parcelas') {
+      colecao(
+        'vendas/parcelas',
+      ).removeWhere((_, v) => v['vendaId'] == partes[1]);
+      return http.Response('', 204);
+    }
+
     final temId = partes.last.length == 36 && partes.last.contains('-');
     final nome = (temId ? partes.sublist(0, partes.length - 1) : partes).join(
       '/',
@@ -69,6 +81,17 @@ class ServidorFalso {
           'limite': 500,
           'deslocamento': 0,
         });
+      case 'PUT' when id == null:
+        // Gravação em lote (lista com id em cada item).
+        final lote = (jsonDecode(r.body) as List).cast<Map<String, dynamic>>();
+        return _json([
+          for (final item in lote)
+            itens[item['id'] as String] = {
+              ...item,
+              'criadoEm': '2026-10-15T10:00:00',
+              'atualizadoEm': '2026-10-15T10:00:00',
+            },
+        ]);
       case 'PUT':
         final corpo = jsonDecode(r.body) as Map<String, dynamic>;
         final erro = recusar?.call(nome, corpo);
@@ -88,6 +111,9 @@ class ServidorFalso {
         return _json(itens[id], novo ? 201 : 200);
       case 'DELETE':
         itens.remove(id);
+        if (nome == 'vendas') {
+          colecao('vendas/parcelas').removeWhere((_, v) => v['vendaId'] == id);
+        }
         if (nome == 'locacao/contratos') {
           // Como o servidor: o contrato leva despesas e cobranças junto.
           for (final c in ['locacao/despesas', 'locacao/cobrancas']) {

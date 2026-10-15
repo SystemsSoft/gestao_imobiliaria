@@ -78,21 +78,21 @@ class SalvarVenda {
   Future<Venda> call(Venda v) async {
     _validar(v);
     final anterior = await _vendas.obter(v.id);
-    final salva = v.numero.isEmpty
-        ? v.copyWith(numero: await _vendas.proximoNumero())
-        : v;
-
-    if (anterior == null || _condicoesMudaram(anterior, v)) {
+    final regerar = anterior == null || _condicoesMudaram(anterior, v);
+    if (regerar) {
       final atuais = await _parcelas.daVenda(v.id);
       if (atuais.any((p) => p.status == StatusParcela.paga)) {
         throw const DomainException(
           'Há parcelas pagas: as condições de pagamento não podem ser alteradas.',
         );
       }
+    }
+    // A venda é gravada antes: as parcelas dependem dela (e do número).
+    final salva = await _vendas.salvar(v);
+    if (regerar) {
       await _parcelas.removerDaVenda(v.id);
       await _parcelas.salvarTodas(gerarParcelas(salva));
     }
-    await _vendas.salvar(salva);
     return salva;
   }
 

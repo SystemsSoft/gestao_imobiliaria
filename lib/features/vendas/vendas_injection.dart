@@ -1,7 +1,11 @@
 import 'package:get_it/get_it.dart';
 
+import '../../core/api/api_client.dart';
+import '../../core/api/status_conexao.dart';
+
 import 'data/datasources/vendas_memory_datasource.dart';
 import 'data/documentos/pdf_documentos_venda_gateway.dart';
+import 'data/repositories/vendas_api_repositories.dart';
 import 'data/repositories/vendas_repositories_impl.dart';
 import 'domain/repositories/documentos_venda_gateway.dart';
 import 'domain/repositories/parcela_repository.dart';
@@ -16,13 +20,25 @@ import 'presentation/viewmodels/venda_form_viewmodel.dart';
 import 'presentation/viewmodels/vendas_viewmodel.dart';
 
 void registrarVendas(GetIt sl) {
-  // Dados
+  // Dados: servidor quando há ApiClient registrado; senão, memória (testes).
+  if (sl.isRegistered<ApiClient>()) {
+    sl
+      ..registerLazySingleton(
+        () => VendasApiDataSource(sl(), sl<StatusConexao>()),
+      )
+      ..registerLazySingleton<VendaRepository>(() => VendaApiRepository(sl()))
+      ..registerLazySingleton<ParcelaRepository>(
+        () => ParcelaApiRepository(sl()),
+      );
+  } else {
+    sl
+      ..registerLazySingleton(VendasMemoryDataSource.new)
+      ..registerLazySingleton<VendaRepository>(() => VendaRepositoryImpl(sl()))
+      ..registerLazySingleton<ParcelaRepository>(
+        () => ParcelaRepositoryImpl(sl()),
+      );
+  }
   sl
-    ..registerLazySingleton(VendasMemoryDataSource.new)
-    ..registerLazySingleton<VendaRepository>(() => VendaRepositoryImpl(sl()))
-    ..registerLazySingleton<ParcelaRepository>(
-      () => ParcelaRepositoryImpl(sl()),
-    )
     ..registerLazySingleton<DocumentosVendaGateway>(
       PdfDocumentosVendaGateway.new,
     )

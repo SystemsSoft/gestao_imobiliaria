@@ -18,17 +18,19 @@ class VendaRepositoryImpl implements VendaRepository {
   Future<Venda?> obter(String id) async => _ds.vendas.byId(id);
 
   @override
-  Future<void> salvar(Venda venda) async => _ds.vendas.upsert(venda);
+  Future<Venda> salvar(Venda venda) async {
+    final salva = venda.numero.isEmpty
+        ? venda.copyWith(
+            numero: 'VEN-${(++_ds.seqVenda).toString().padLeft(4, '0')}',
+          )
+        : venda;
+    _ds.vendas.upsert(salva);
+    return salva;
+  }
 
   @override
   Future<void> remover(String id) async =>
       _ds.vendas.removeWhere((e) => e.id == id);
-
-  @override
-  Future<String> proximoNumero() async {
-    _ds.seqVenda++;
-    return 'VEN-${_ds.seqVenda.toString().padLeft(4, '0')}';
-  }
 }
 
 class ParcelaRepositoryImpl implements ParcelaRepository {

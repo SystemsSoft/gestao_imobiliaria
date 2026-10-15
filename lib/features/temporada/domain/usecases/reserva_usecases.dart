@@ -83,11 +83,8 @@ class SalvarReserva {
         );
       }
     }
-    final salva = r.numero.isEmpty
-        ? r.copyWith(numero: await _repo.proximoNumero())
-        : r;
-    await _repo.salvar(salva);
-    return salva;
+    // O servidor repete a checagem de conflito (dois usuários ao mesmo tempo).
+    return _repo.salvar(r);
   }
 }
 
