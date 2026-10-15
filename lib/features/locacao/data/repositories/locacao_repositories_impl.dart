@@ -89,6 +89,9 @@ class RepasseRepositoryImpl implements RepasseRepository {
   Stream<Map<String, DateTime>> observarRealizados() => _ds.watchRepasses();
 
   @override
+  Future<Map<String, DateTime>> realizados() async => _ds.repasses;
+
+  @override
   Future<void> marcar(
     String cobrancaId,
     String contatoId,

@@ -92,8 +92,8 @@ class _DesempenhoPainter extends CustomPainter {
         ),
         Paint()..color = AppColors.blueGlow,
       );
-      // Linha: média das duas séries, para acompanhar o topo das barras.
-      final ly = y((p.vendas + p.locacoes) / 2 + 2);
+      // Linha: média das duas séries.
+      final ly = y((p.vendas + p.locacoes) / 2);
       i == 0 ? linha.moveTo(cx, ly) : linha.lineTo(cx, ly);
 
       final cadaQuantos = max(1, (pontos.length / 6).ceil());
@@ -163,12 +163,20 @@ class _RoscaPainter extends CustomPainter {
       ..strokeWidth = 12
       ..color = Colors.white.withValues(alpha: 0.08);
     canvas.drawCircle(c, raio, base);
-    // Arco dourado proporcional à taxa (ampliado para leitura) e o restante em azul.
-    final fracao = (0.25 + taxa / 100 * 3).clamp(0.05, 0.95);
+    // Arco dourado proporcional à taxa e o restante em azul.
+    final fracao = (taxa / 100).clamp(0.0, 1.0);
     final arco = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 12
       ..strokeCap = StrokeCap.round;
+    if (fracao <= 0 || fracao >= 1) {
+      canvas.drawCircle(
+        c,
+        raio,
+        arco..color = fracao >= 1 ? AppColors.gold : AppColors.blueGlow,
+      );
+      return;
+    }
     canvas.drawArc(
       rect,
       -pi / 2,

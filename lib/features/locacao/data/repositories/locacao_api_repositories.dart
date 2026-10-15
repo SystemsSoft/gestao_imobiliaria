@@ -124,6 +124,12 @@ class RepasseApiRepository implements RepasseRepository {
       );
 
   @override
+  Future<Map<String, DateTime>> realizados() async => {
+    for (final r in await _ds.repasses.all())
+      chaveRepasse(r.cobrancaId, r.contatoId): r.data,
+  };
+
+  @override
   Future<void> marcar(
     String cobrancaId,
     String contatoId,

@@ -1,7 +1,11 @@
 import 'package:get_it/get_it.dart';
 
+import '../../core/api/api_client.dart';
+import '../../core/api/status_conexao.dart';
+
 import 'data/datasources/financeiro_memory_datasource.dart';
 import 'data/documentos/pdf_boleto_gateway.dart';
+import 'data/repositories/financeiro_api_repositories.dart';
 import 'data/repositories/financeiro_repositories_impl.dart';
 import 'domain/repositories/boleto_impressao_gateway.dart';
 import 'domain/repositories/financeiro_repositories.dart';
@@ -18,23 +22,49 @@ import 'presentation/viewmodels/fluxo_caixa_viewmodel.dart';
 import 'presentation/viewmodels/lancamento_form_viewmodel.dart';
 
 void registrarFinanceiro(GetIt sl) {
-  // Dados
+  // Dados: servidor quando há ApiClient registrado; senão, memória (testes).
+  if (sl.isRegistered<ApiClient>()) {
+    sl
+      ..registerLazySingleton(
+        () => FinanceiroApiDataSource(sl(), sl<StatusConexao>()),
+      )
+      ..registerLazySingleton<LancamentoRepository>(
+        () => LancamentoApiRepository(sl()),
+      )
+      ..registerLazySingleton<ContaBancariaRepository>(
+        () => ContaBancariaApiRepository(sl()),
+      )
+      ..registerLazySingleton<ExtratoRepository>(
+        () => ExtratoApiRepository(sl()),
+      )
+      ..registerLazySingleton<BoletoRepository>(() => BoletoApiRepository(sl()))
+      ..registerLazySingleton<IndiceRepository>(() => IndiceApiRepository(sl()))
+      ..registerLazySingleton<ConfiguracaoFinanceiraRepository>(
+        () => ConfiguracaoFinanceiraApiRepository(sl()),
+      );
+  } else {
+    sl
+      ..registerLazySingleton(FinanceiroMemoryDataSource.new)
+      ..registerLazySingleton<LancamentoRepository>(
+        () => LancamentoRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<ContaBancariaRepository>(
+        () => ContaBancariaRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<ExtratoRepository>(
+        () => ExtratoRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<BoletoRepository>(
+        () => BoletoRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<IndiceRepository>(
+        () => IndiceRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<ConfiguracaoFinanceiraRepository>(
+        () => ConfiguracaoFinanceiraRepositoryImpl(sl()),
+      );
+  }
   sl
-    ..registerLazySingleton(FinanceiroMemoryDataSource.new)
-    ..registerLazySingleton<LancamentoRepository>(
-      () => LancamentoRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<ContaBancariaRepository>(
-      () => ContaBancariaRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<ExtratoRepository>(
-      () => ExtratoRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<BoletoRepository>(() => BoletoRepositoryImpl(sl()))
-    ..registerLazySingleton<IndiceRepository>(() => IndiceRepositoryImpl(sl()))
-    ..registerLazySingleton<ConfiguracaoFinanceiraRepository>(
-      () => ConfiguracaoFinanceiraRepositoryImpl(sl()),
-    )
     ..registerLazySingleton<BoletoImpressaoGateway>(PdfBoletoGateway.new)
     // Serviços e casos de uso
     ..registerFactory(() => const AtualizacaoMonetaria())

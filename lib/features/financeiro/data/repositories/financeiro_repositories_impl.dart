@@ -84,14 +84,15 @@ class BoletoRepositoryImpl implements BoletoRepository {
   Future<List<BoletoBancario>> listar() async => _ds.boletos.all;
 
   @override
-  Future<void> salvar(BoletoBancario boleto) async =>
-      _ds.boletos.upsert(boleto);
-
-  @override
-  Future<String> proximoNossoNumero(String contaId) async {
-    final n = (_ds.sequenciaNossoNumero[contaId] ?? 0) + 1;
-    _ds.sequenciaNossoNumero[contaId] = n;
-    return n.toString().padLeft(10, '0');
+  Future<BoletoBancario> salvar(BoletoBancario boleto) async {
+    var salvo = boleto;
+    if (boleto.nossoNumero.isEmpty) {
+      final n = (_ds.sequenciaNossoNumero[boleto.contaId] ?? 0) + 1;
+      _ds.sequenciaNossoNumero[boleto.contaId] = n;
+      salvo = boleto.comNossoNumero(n.toString().padLeft(10, '0'));
+    }
+    _ds.boletos.upsert(salvo);
+    return salvo;
   }
 }
 

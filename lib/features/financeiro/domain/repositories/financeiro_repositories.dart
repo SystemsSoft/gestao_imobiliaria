@@ -31,10 +31,10 @@ abstract interface class ExtratoRepository {
 abstract interface class BoletoRepository {
   Stream<List<BoletoBancario>> observar();
   Future<List<BoletoBancario>> listar();
-  Future<void> salvar(BoletoBancario boleto);
 
-  /// Próximo nosso número da conta (sequencial, 10 dígitos).
-  Future<String> proximoNossoNumero(String contaId);
+  /// Grava e devolve o boleto; com nosso número vazio, quem grava atribui o
+  /// próximo da conta (sequencial, 10 dígitos).
+  Future<BoletoBancario> salvar(BoletoBancario boleto);
 }
 
 abstract interface class IndiceRepository {

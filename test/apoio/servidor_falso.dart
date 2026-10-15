@@ -57,6 +57,23 @@ class ServidorFalso {
       );
     }
 
+    if (partes.join('/') == 'contratos/modelos' && r.method == 'GET') {
+      return _json(colecao('contratos/modelos').values.toList());
+    }
+
+    if (partes.join('/') == 'fiscal/declarante') {
+      final d = colecao('fiscal');
+      if (r.method == 'PUT') {
+        d['declarante'] = jsonDecode(r.body) as Map<String, dynamic>;
+      }
+      return _json(d['declarante'] ?? {'nome': 'Marcelo Bonifácio'});
+    }
+
+    if (partes.isNotEmpty && partes[0] == 'financeiro') {
+      final especial = _financeiro(r, partes);
+      if (especial != null) return especial;
+    }
+
     // Parcelas de uma venda: DELETE /vendas/{id}/parcelas
     if (partes.length == 3 &&
         partes[0] == 'vendas' &&
@@ -98,6 +115,14 @@ class ServidorFalso {
         if (erro != null) return _json({'detail': erro}, 422);
         final novo = !itens.containsKey(id);
         final numerador = _numeradores[nome];
+        if (nome == 'financeiro/boletos' && corpo['nossoNumero'] == '') {
+          final conta = 'nosso-${corpo['contaId']}';
+          _sequencias[conta] = (_sequencias[conta] ?? 0) + 1;
+          corpo['nossoNumero'] = _sequencias[conta]!.toString().padLeft(
+            10,
+            '0',
+          );
+        }
         itens[id!] = {
           ...corpo,
           'id': id,
@@ -123,5 +148,40 @@ class ServidorFalso {
         return http.Response('', 204);
     }
     return http.Response('', 405);
+  }
+
+  /// Rotas do financeiro que não seguem o padrão coleção/{id}.
+  http.Response? _financeiro(http.Request r, List<String> partes) {
+    final recurso = partes.length > 1 ? partes[1] : '';
+    if (recurso == 'contas-bancarias' && r.method == 'GET') {
+      return _json(colecao('financeiro/contas-bancarias').values.toList());
+    }
+    if (recurso == 'indices') {
+      final indices = colecao('financeiro/indices');
+      if (r.method == 'GET') return _json(indices.values.toList());
+      if (r.method == 'DELETE') {
+        indices.remove('${partes[2]}-${partes[3]}-${partes[4]}');
+        return http.Response('', 204);
+      }
+      final corpo = jsonDecode(r.body) as Map<String, dynamic>;
+      return _json(
+        indices['${corpo['indice']}-${corpo['ano']}-${corpo['mes']}'] = corpo,
+      );
+    }
+    if (recurso == 'configuracao') {
+      final cfg = colecao('financeiro/configuracao');
+      if (r.method == 'PUT') {
+        cfg['config'] = jsonDecode(r.body) as Map<String, dynamic>;
+      }
+      return _json(
+        cfg['config'] ??
+            {
+              'multaPercentual': 2,
+              'jurosMesPercentual': 1,
+              'indicePadrao': 'nenhum',
+            },
+      );
+    }
+    return null;
   }
 }

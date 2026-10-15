@@ -1,7 +1,11 @@
 import 'package:get_it/get_it.dart';
 
+import '../../core/api/api_client.dart';
+import '../../core/api/status_conexao.dart';
+
 import 'data/datasources/modelos_memory_datasource.dart';
 import 'data/documentos/pdf_contrato_gateway.dart';
+import 'data/repositories/modelo_contrato_api_repository.dart';
 import 'data/repositories/modelo_contrato_repository_impl.dart';
 import 'data/repositories/modelos_prontos_repository_impl.dart';
 import 'domain/entities/modelo_contrato.dart';
@@ -15,11 +19,20 @@ import 'presentation/viewmodels/modelos_prontos_viewmodel.dart';
 import 'presentation/viewmodels/modelos_viewmodel.dart';
 
 void registrarContratos(GetIt sl) {
+  // "Meus modelos": servidor quando há ApiClient; senão, memória (testes).
+  // O catálogo de modelos prontos acompanha o app.
+  if (sl.isRegistered<ApiClient>()) {
+    sl.registerLazySingleton<ModeloContratoRepository>(
+      () => ModeloContratoApiRepository(sl(), sl<StatusConexao>()),
+    );
+  } else {
+    sl
+      ..registerLazySingleton(ModelosMemoryDataSource.new)
+      ..registerLazySingleton<ModeloContratoRepository>(
+        () => ModeloContratoRepositoryImpl(sl()),
+      );
+  }
   sl
-    ..registerLazySingleton(ModelosMemoryDataSource.new)
-    ..registerLazySingleton<ModeloContratoRepository>(
-      () => ModeloContratoRepositoryImpl(sl()),
-    )
     ..registerLazySingleton<ModelosProntosRepository>(
       () => const ModelosProntosRepositoryImpl(),
     )

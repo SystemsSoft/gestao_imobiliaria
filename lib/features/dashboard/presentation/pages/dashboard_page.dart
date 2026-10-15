@@ -542,6 +542,7 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
       child: Column(
         children: [
+          if (lista.isEmpty) const _ListaVazia('Nenhum compromisso agendado.'),
           for (final (i, c) in lista.indexed) ...[
             if (i > 0)
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.08)),
@@ -632,6 +633,7 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 8),
       child: Column(
         children: [
+          if (lista.isEmpty) const _ListaVazia('Nenhum imóvel cadastrado.'),
           for (final (i, im) in lista.indexed) ...[
             if (i > 0)
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.08)),
@@ -831,7 +833,8 @@ class _DashboardPageState extends State<DashboardPage> {
       final prefixo = dia == hoje
           ? 'Hoje'
           : (hoje.difference(dia).inDays == 1 ? 'Ontem' : formatDate(d));
-      return '$prefixo, ${_hora(d)}';
+      // Datas sem hora (ex.: data da venda) mostram só o dia.
+      return d.hour == 0 && d.minute == 0 ? prefixo : '$prefixo, ${_hora(d)}';
     }
 
     return DashCard(
@@ -842,6 +845,7 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
       child: Column(
         children: [
+          if (lista.isEmpty) const _ListaVazia('Nenhuma atividade ainda.'),
           for (final (i, a) in lista.indexed) ...[
             if (i > 0)
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.08)),
@@ -1190,4 +1194,18 @@ class _ChipFinalidade extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ListaVazia extends StatelessWidget {
+  const _ListaVazia(this.texto);
+
+  final String texto;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(vertical: 18),
+    child: Center(
+      child: Text(texto, style: const TextStyle(color: Colors.white60)),
+    ),
+  );
 }

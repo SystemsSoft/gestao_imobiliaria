@@ -30,6 +30,19 @@ class BoletoBancario {
   bool vencido(DateTime hoje) =>
       status == StatusBoleto.emitido && soData(hoje).isAfter(vencimento);
 
+  BoletoBancario comNossoNumero(String numero) => BoletoBancario(
+    id: id,
+    lancamentoId: lancamentoId,
+    contaId: contaId,
+    nossoNumero: numero,
+    valor: valor,
+    vencimento: vencimento,
+    emissao: emissao,
+    status: status,
+    dataPagamento: dataPagamento,
+    valorPago: valorPago,
+  );
+
   BoletoBancario copyWith({
     StatusBoleto? status,
     DateTime? dataPagamento,

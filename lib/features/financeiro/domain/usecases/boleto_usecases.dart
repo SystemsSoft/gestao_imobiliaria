@@ -41,13 +41,12 @@ class EmitirBoleto {
       id: gerarId(),
       lancamentoId: l.id,
       contaId: contaId,
-      nossoNumero: await _boletos.proximoNossoNumero(contaId),
+      nossoNumero: '', // atribuído por quem grava (servidor ou memória)
       valor: l.valor,
       vencimento: l.vencimento,
       emissao: DateTime.now(),
     );
-    await _boletos.salvar(boleto);
-    return boleto;
+    return _boletos.salvar(boleto);
   }
 }
 

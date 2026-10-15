@@ -41,6 +41,9 @@ class ParcelaRepositoryImpl implements ParcelaRepository {
   Stream<List<Parcela>> observar() => _ds.parcelas.watch();
 
   @override
+  Future<List<Parcela>> listar() async => _ds.parcelas.all;
+
+  @override
   Future<List<Parcela>> daVenda(String vendaId) async =>
       _ds.parcelas.all.where((p) => p.vendaId == vendaId).toList();
 

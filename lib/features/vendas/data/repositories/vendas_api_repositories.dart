@@ -68,6 +68,9 @@ class ParcelaApiRepository implements ParcelaRepository {
   Stream<List<Parcela>> observar() => _ds.parcelas.watch();
 
   @override
+  Future<List<Parcela>> listar() => _ds.parcelas.all();
+
+  @override
   Future<List<Parcela>> daVenda(String vendaId) async => [
     for (final p in await _ds.parcelas.all())
       if (p.vendaId == vendaId) p,
