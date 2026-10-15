@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../errors/domain_exception.dart';
+import 'sessao_api.dart';
 
 /// Falha de comunicação com o servidor, com mensagem pronta para o usuário.
 class ApiException extends DomainException {
@@ -15,17 +16,22 @@ class ApiException extends DomainException {
 /// Cliente JSON da API (`/api/v1`). Erros viram [ApiException] com a
 /// mensagem enviada pelo servidor (`detail`).
 class ApiClient {
-  ApiClient(String urlBase, {http.Client? cliente})
+  ApiClient(String urlBase, {http.Client? cliente, this.sessao})
     : _base = Uri.parse(urlBase.endsWith('/') ? urlBase : '$urlBase/'),
       _http = cliente ?? http.Client();
 
   final Uri _base;
   final http.Client _http;
 
+  /// Login atual; sem ele as requisições vão sem token.
+  final SessaoApi? sessao;
+
   static const _timeout = Duration(seconds: 20);
-  static const _cabecalhos = {
+
+  Map<String, String> get _cabecalhos => {
     'Content-Type': 'application/json; charset=utf-8',
     'Accept': 'application/json',
+    if (sessao?.token case final t?) 'Authorization': 'Bearer $t',
   };
 
   Uri _uri(String caminho, [Map<String, Object?>? query]) {
@@ -100,6 +106,11 @@ class ApiClient {
     final corpo = texto.isEmpty ? null : _decodificar(texto);
     if (r.statusCode >= 200 && r.statusCode < 300) return corpo;
     final detalhe = corpo is Map ? corpo['detail'] : null;
+    if (r.statusCode == 401) {
+      sessao?.expirou(
+        detalhe is String ? detalhe : 'Sua sessão expirou. Entre novamente.',
+      );
+    }
     throw ApiException(
       detalhe is String
           ? detalhe

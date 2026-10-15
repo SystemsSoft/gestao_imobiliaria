@@ -94,7 +94,8 @@ class UsuariosViewModel extends ViewModel {
     notificar();
   }
 
-  Future<bool> salvar(UsuarioSistema u) => executar(() => _salvar(u));
+  Future<bool> salvar(UsuarioSistema u, {String? senha}) =>
+      executar(() => _salvar(u, senha: senha));
   Future<bool> alternarAtivo(UsuarioSistema u) =>
       executar(() => _alternarAtivo(u));
   Future<bool> remover(UsuarioSistema u) => executar(() => _remover(u));

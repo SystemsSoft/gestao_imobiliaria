@@ -8,19 +8,24 @@ import '../../domain/entities/equipe_enums.dart';
 import '../../domain/entities/permissoes.dart';
 import '../../domain/entities/usuario_sistema.dart';
 
-/// Cria ou edita um usuário. Retorna o usuário preenchido ou null.
-Future<UsuarioSistema?> mostrarUsuarioDialog(
+/// Cria ou edita um usuário. Retorna o usuário preenchido (e a senha
+/// digitada, vazia = manter) ou null.
+Future<({UsuarioSistema usuario, String senha})?> mostrarUsuarioDialog(
   BuildContext context, {
   UsuarioSistema? usuario,
+  bool comLogin = false,
 }) => showDialog(
   context: context,
-  builder: (_) => _UsuarioDialog(usuario: usuario),
+  builder: (_) => _UsuarioDialog(usuario: usuario, comLogin: comLogin),
 );
 
 class _UsuarioDialog extends StatefulWidget {
-  const _UsuarioDialog({this.usuario});
+  const _UsuarioDialog({this.usuario, this.comLogin = false});
 
   final UsuarioSistema? usuario;
+
+  /// Com o servidor, o usuário entra com e-mail e senha.
+  final bool comLogin;
 
   @override
   State<_UsuarioDialog> createState() => _UsuarioDialogState();
@@ -32,13 +37,15 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
   late final _email = TextEditingController(text: _u?.email);
   late final _telefone = TextEditingController(text: _u?.telefone);
   late final _creci = TextEditingController(text: _u?.creci);
+  final _senha = TextEditingController();
+  bool _senhaOculta = true;
   late PerfilAcesso _perfil = _u?.perfil ?? PerfilAcesso.corretor;
   late bool _atendeFila = _u?.atendeNaFila ?? true;
   late bool _ativo = _u?.ativo ?? true;
 
   @override
   void dispose() {
-    for (final c in [_nome, _email, _telefone, _creci]) {
+    for (final c in [_nome, _email, _telefone, _creci, _senha]) {
       c.dispose();
     }
     super.dispose();
@@ -68,6 +75,26 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
                 controller: _email,
                 keyboardType: TextInputType.emailAddress,
               ),
+              if (widget.comLogin) ...[
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _senha,
+                  obscureText: _senhaOculta,
+                  decoration: InputDecoration(
+                    labelText: _u == null
+                        ? 'Senha de acesso * (mín. 8 caracteres)'
+                        : 'Nova senha (em branco = manter a atual)',
+                    suffixIcon: IconButton(
+                      tooltip: _senhaOculta ? 'Mostrar' : 'Ocultar',
+                      icon: Icon(
+                        _senhaOculta ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () =>
+                          setState(() => _senhaOculta = !_senhaOculta),
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 12),
               FieldRow(
                 children: [
@@ -129,9 +156,8 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
           ),
           onPressed: () {
             final mudouPerfil = _u == null || _perfil != _u!.perfil;
-            Navigator.pop(
-              context,
-              UsuarioSistema(
+            Navigator.pop(context, (
+              usuario: UsuarioSistema(
                 id: _u?.id ?? gerarId(),
                 nome: _nome.text.trim(),
                 email: _email.text.trim(),
@@ -145,7 +171,8 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
                 creci: _creci.text.trim(),
                 atendeNaFila: _atendeFila,
               ),
-            );
+              senha: _senha.text,
+            ));
           },
           child: const Text('Salvar'),
         ),

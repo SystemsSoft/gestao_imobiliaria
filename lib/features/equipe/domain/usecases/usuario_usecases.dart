@@ -75,8 +75,11 @@ class SalvarUsuario {
   final UsuarioRepository _repo;
   final RegistrarAtividade _registrar;
 
-  Future<void> call(UsuarioSistema u) async {
+  Future<void> call(UsuarioSistema u, {String? senha}) async {
     if (u.nome.trim().isEmpty) throw const DomainException('Informe o nome.');
+    if (senha != null && senha.isNotEmpty && senha.length < 8) {
+      throw const DomainException('A senha precisa de ao menos 8 caracteres.');
+    }
     if (!_email.hasMatch(u.email.trim())) {
       throw const DomainException('E-mail inválido.');
     }
@@ -89,7 +92,7 @@ class SalvarUsuario {
       throw const DomainException('Já existe um usuário com este e-mail.');
     }
     final novo = !todos.any((x) => x.id == u.id);
-    await _repo.salvar(u);
+    await _repo.salvar(u, senha: senha?.isEmpty ?? true ? null : senha);
     await _registrar(
       novo ? TipoAtividade.criacao : TipoAtividade.edicao,
       '${novo ? 'Criou' : 'Editou'} o usuário ${u.nome}',

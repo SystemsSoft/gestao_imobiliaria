@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/api/sessao_api.dart';
+
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
@@ -72,7 +74,7 @@ class _ChatTabState extends State<ChatTab> {
         }
         return Column(
           children: [
-            _simulacao(),
+            if (!sl.isRegistered<SessaoApi>()) _simulacao(),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, c) {

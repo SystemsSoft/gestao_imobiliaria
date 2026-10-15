@@ -37,7 +37,7 @@ class UsuarioRepositoryImpl implements UsuarioRepository {
   Future<UsuarioSistema?> obter(String id) async => _ds.usuarios.byId(id);
 
   @override
-  Future<void> salvar(UsuarioSistema usuario) async =>
+  Future<void> salvar(UsuarioSistema usuario, {String? senha}) async =>
       _ds.usuarios.upsert(usuario);
 
   @override
@@ -102,6 +102,9 @@ class UsuarioAtualRepositoryImpl implements UsuarioAtualRepository {
     _ds.usuarioAtualId = usuarioId;
     _ds.usuarioAtualChanges.add(usuarioId);
   }
+
+  @override
+  bool get permiteTrocar => true;
 }
 
 class AtividadeRepositoryImpl implements AtividadeRepository {

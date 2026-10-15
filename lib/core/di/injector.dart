@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 
 import '../api/api_client.dart';
+import '../api/sessao_api.dart';
 import '../api/status_conexao.dart';
 
 import '../../features/auth/auth_injection.dart';
@@ -25,7 +26,9 @@ Future<void> configurarDependencias({String? apiUrl}) async {
   await sl.reset();
   sl.registerLazySingleton(StatusConexao.new);
   if (apiUrl != null && apiUrl.isNotEmpty) {
-    sl.registerLazySingleton(() => ApiClient(apiUrl));
+    sl
+      ..registerLazySingleton(SessaoApi.new)
+      ..registerLazySingleton(() => ApiClient(apiUrl, sessao: sl()));
   }
   registrarAuth(sl);
   registrarHome(sl);

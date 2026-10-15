@@ -9,7 +9,9 @@ abstract interface class UsuarioRepository {
   Stream<List<UsuarioSistema>> observar();
   Future<List<UsuarioSistema>> listar();
   Future<UsuarioSistema?> obter(String id);
-  Future<void> salvar(UsuarioSistema usuario);
+
+  /// [senha]: obrigatória ao criar no servidor; ao editar, só para trocar.
+  Future<void> salvar(UsuarioSistema usuario, {String? senha});
   Future<void> remover(String id);
 }
 
@@ -32,6 +34,9 @@ abstract interface class UsuarioAtualRepository {
   Stream<String?> observar();
   Future<String?> obter();
   Future<void> definir(String usuarioId);
+
+  /// Sem servidor dá para simular outro usuário; com login, não.
+  bool get permiteTrocar;
 }
 
 abstract interface class AtividadeRepository {

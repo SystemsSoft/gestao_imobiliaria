@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/api/sessao_api.dart';
+
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
@@ -39,8 +41,17 @@ class _UsuariosTabState extends State<UsuariosTab> {
   }
 
   Future<void> _editar([UsuarioSistema? u]) async {
-    final novo = await mostrarUsuarioDialog(context, usuario: u);
-    if (novo != null) await _acao(() => _vm.salvar(novo), 'Usuário salvo.');
+    final r = await mostrarUsuarioDialog(
+      context,
+      usuario: u,
+      comLogin: sl.isRegistered<SessaoApi>(),
+    );
+    if (r != null) {
+      await _acao(
+        () => _vm.salvar(r.usuario, senha: r.senha),
+        'Usuário salvo.',
+      );
+    }
   }
 
   Future<void> _configurar() async {
