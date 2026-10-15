@@ -16,15 +16,18 @@ class ImovelRepositoryImpl implements ImovelRepository {
   Future<Imovel?> obter(String id) async => _ds.imoveis.byId(id);
 
   @override
-  Future<void> salvar(Imovel imovel) async => _ds.imoveis.upsert(imovel);
+  Future<Imovel> salvar(Imovel imovel) async {
+    final salvo = imovel.codigo.isEmpty
+        ? imovel.copyWith(
+            codigo: 'IM-${(++_ds.seqCodigoImovel).toString().padLeft(4, '0')}',
+            criadoEm: imovel.criadoEm ?? DateTime.now(),
+          )
+        : imovel;
+    _ds.imoveis.upsert(salvo);
+    return salvo;
+  }
 
   @override
   Future<void> remover(String id) async =>
       _ds.imoveis.removeWhere((e) => e.id == id);
-
-  @override
-  Future<String> proximoCodigo() async {
-    _ds.seqCodigoImovel++;
-    return 'IM-${_ds.seqCodigoImovel.toString().padLeft(4, '0')}';
-  }
 }

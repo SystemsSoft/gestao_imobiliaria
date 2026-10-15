@@ -18,7 +18,7 @@ class ListarImoveis {
 }
 
 /// Valida e salva o imóvel; imóveis novos (código vazio) recebem o próximo
-/// código sequencial.
+/// código sequencial de quem grava (servidor ou memória).
 class SalvarImovel {
   const SalvarImovel(this._repo);
   final ImovelRepository _repo;
@@ -30,14 +30,7 @@ class SalvarImovel {
     if (imovel.finalidades.isEmpty) {
       throw const DomainException('Selecione ao menos uma finalidade.');
     }
-    final salvo = imovel.codigo.isEmpty
-        ? imovel.copyWith(
-            codigo: await _repo.proximoCodigo(),
-            criadoEm: imovel.criadoEm ?? DateTime.now(),
-          )
-        : imovel;
-    await _repo.salvar(salvo);
-    return salvo;
+    return _repo.salvar(imovel);
   }
 }
 

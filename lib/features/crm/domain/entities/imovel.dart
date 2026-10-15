@@ -124,14 +124,18 @@ class Imovel {
   /// Data do cadastro no sistema.
   final DateTime? criadoEm;
 
-  Imovel copyWith({String? codigo, DateTime? criadoEm}) => Imovel(
+  Imovel copyWith({
+    String? codigo,
+    DateTime? criadoEm,
+    bool semProprietario = false,
+  }) => Imovel(
     id: id,
     codigo: codigo ?? this.codigo,
     titulo: titulo,
     finalidades: finalidades,
     tipo: tipo,
     status: status,
-    proprietarioId: proprietarioId,
+    proprietarioId: semProprietario ? null : proprietarioId,
     cep: cep,
     logradouro: logradouro,
     numero: numero,
@@ -173,6 +177,9 @@ class Imovel {
     anexos: anexos,
     criadoEm: criadoEm ?? this.criadoEm,
   );
+
+  /// Cópia sem o vínculo com o proprietário (contato excluído).
+  Imovel semProprietario() => copyWith(semProprietario: true);
 
   double? valorPara(Finalidade f) => switch (f) {
     Finalidade.venda => valorVenda,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/api/status_conexao.dart';
 import '../../../../core/config/empresa_info.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -142,6 +143,7 @@ class _HomePageState extends State<HomePage> {
                           onBuscar: (_) =>
                               _vm.selecionar(ModuloMenu.cadastrosCrm),
                         ),
+                        const _AvisoConexao(),
                         if (modulo != ModuloMenu.dashboard)
                           _TituloModulo(modulo: modulo),
                         Expanded(
@@ -242,6 +244,42 @@ class _Rodape extends StatelessWidget {
           const Text('Sistema de Gestão Imobiliária v1.0.0', style: estilo),
         ],
       ),
+    );
+  }
+}
+
+/// Faixa exibida quando os dados do servidor não puderam ser carregados.
+class _AvisoConexao extends StatelessWidget {
+  const _AvisoConexao();
+
+  @override
+  Widget build(BuildContext context) {
+    final status = sl<StatusConexao>();
+    return ListenableBuilder(
+      listenable: status,
+      builder: (context, _) {
+        final erro = status.erro;
+        if (erro == null) return const SizedBox.shrink();
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+          color: const Color(0xFFB3261E).withValues(alpha: 0.9),
+          child: Row(
+            children: [
+              const Icon(Icons.cloud_off, color: Colors.white),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(erro, style: const TextStyle(color: Colors.white)),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.white),
+                onPressed: status.tentarNovamente,
+                child: const Text('Tentar novamente'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

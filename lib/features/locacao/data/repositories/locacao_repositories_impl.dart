@@ -21,18 +21,19 @@ class ContratoLocacaoRepositoryImpl implements ContratoLocacaoRepository {
   Future<ContratoLocacao?> obter(String id) async => _ds.contratos.byId(id);
 
   @override
-  Future<void> salvar(ContratoLocacao contrato) async =>
-      _ds.contratos.upsert(contrato);
+  Future<ContratoLocacao> salvar(ContratoLocacao contrato) async {
+    final salvo = contrato.numero.isEmpty
+        ? contrato.copyWith(
+            numero: 'LOC-${(++_ds.seqContrato).toString().padLeft(4, '0')}',
+          )
+        : contrato;
+    _ds.contratos.upsert(salvo);
+    return salvo;
+  }
 
   @override
   Future<void> remover(String id) async =>
       _ds.contratos.removeWhere((e) => e.id == id);
-
-  @override
-  Future<String> proximoNumero() async {
-    _ds.seqContrato++;
-    return 'LOC-${_ds.seqContrato.toString().padLeft(4, '0')}';
-  }
 }
 
 class DespesaRepositoryImpl implements DespesaRepository {

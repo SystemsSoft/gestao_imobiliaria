@@ -43,6 +43,7 @@ dependencies:
   printing: ^5.14.3
   get_it: ^9.3.0
   google_fonts: ^8.2.1
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:

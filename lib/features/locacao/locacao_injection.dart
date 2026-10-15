@@ -1,7 +1,12 @@
 import 'package:get_it/get_it.dart';
 
+import '../../core/api/api_client.dart';
+import '../../core/api/status_conexao.dart';
+import 'data/datasources/locacao_api_datasource.dart';
+
 import 'data/datasources/locacao_memory_datasource.dart';
 import 'data/documentos/pdf_documentos_locacao_gateway.dart';
+import 'data/repositories/locacao_api_repositories.dart';
 import 'data/repositories/locacao_repositories_impl.dart';
 import 'domain/repositories/cobranca_repository.dart';
 import 'domain/repositories/contrato_locacao_repository.dart';
@@ -22,21 +27,41 @@ import 'presentation/viewmodels/imposto_renda_viewmodel.dart';
 import 'presentation/viewmodels/repasses_viewmodel.dart';
 
 void registrarLocacao(GetIt sl) {
-  // Dados
+  // Dados: servidor quando há ApiClient registrado; senão, memória (testes).
+  if (sl.isRegistered<ApiClient>()) {
+    sl
+      ..registerLazySingleton(
+        () => LocacaoApiDataSource(sl(), sl<StatusConexao>()),
+      )
+      ..registerLazySingleton<ContratoLocacaoRepository>(
+        () => ContratoLocacaoApiRepository(sl()),
+      )
+      ..registerLazySingleton<DespesaRepository>(
+        () => DespesaApiRepository(sl()),
+      )
+      ..registerLazySingleton<CobrancaRepository>(
+        () => CobrancaApiRepository(sl()),
+      )
+      ..registerLazySingleton<RepasseRepository>(
+        () => RepasseApiRepository(sl()),
+      );
+  } else {
+    sl
+      ..registerLazySingleton(LocacaoMemoryDataSource.new)
+      ..registerLazySingleton<ContratoLocacaoRepository>(
+        () => ContratoLocacaoRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<DespesaRepository>(
+        () => DespesaRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<CobrancaRepository>(
+        () => CobrancaRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<RepasseRepository>(
+        () => RepasseRepositoryImpl(sl()),
+      );
+  }
   sl
-    ..registerLazySingleton(LocacaoMemoryDataSource.new)
-    ..registerLazySingleton<ContratoLocacaoRepository>(
-      () => ContratoLocacaoRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<DespesaRepository>(
-      () => DespesaRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<CobrancaRepository>(
-      () => CobrancaRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<RepasseRepository>(
-      () => RepasseRepositoryImpl(sl()),
-    )
     ..registerLazySingleton<DocumentosLocacaoGateway>(
       PdfDocumentosLocacaoGateway.new,
     )

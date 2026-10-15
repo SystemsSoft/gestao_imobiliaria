@@ -38,6 +38,14 @@ class MemoryCollection<T> {
     _emit();
   }
 
+  /// Troca todo o conteúdo (ex.: dados recarregados do servidor).
+  void substituir(List<T> itens) {
+    _items
+      ..clear()
+      ..addAll(itens);
+    _emit();
+  }
+
   void clear() {
     _items.clear();
     _emit();

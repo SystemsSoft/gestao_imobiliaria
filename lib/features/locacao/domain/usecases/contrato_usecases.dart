@@ -11,7 +11,8 @@ class ObservarContratos {
   Stream<List<ContratoLocacao>> call() => _repo.observar();
 }
 
-/// Valida e salva o contrato; contratos novos recebem número sequencial.
+/// Valida e salva o contrato; contratos novos recebem número sequencial de
+/// quem grava (servidor ou memória).
 class SalvarContrato {
   const SalvarContrato(this._repo);
   final ContratoLocacaoRepository _repo;
@@ -43,11 +44,7 @@ class SalvarContrato {
         'O locatário não pode ser beneficiário do próprio contrato.',
       );
     }
-    final salvo = c.numero.isEmpty
-        ? c.copyWith(numero: await _repo.proximoNumero())
-        : c;
-    await _repo.salvar(salvo);
-    return salvo;
+    return _repo.salvar(c);
   }
 }
 
@@ -59,8 +56,8 @@ class RemoverContrato {
   final CobrancaRepository _cobrancas;
 
   Future<void> call(String id) async {
+    await _repo.remover(id);
     await _despesas.removerDoContrato(id);
     await _cobrancas.removerDoContrato(id);
-    await _repo.remover(id);
   }
 }
