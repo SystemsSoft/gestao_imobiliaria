@@ -1,5 +1,10 @@
 import 'package:get_it/get_it.dart';
 
+import '../../core/api/api_client.dart';
+import '../../core/api/sessao_api.dart';
+import '../../core/api/status_conexao.dart';
+import 'data/repositories/equipe_api_repositories.dart';
+
 import 'data/datasources/equipe_memory_datasource.dart';
 import 'data/repositories/equipe_repositories_impl.dart';
 import 'domain/repositories/equipe_repositories.dart';
@@ -17,32 +22,65 @@ import 'presentation/viewmodels/permissoes_viewmodel.dart';
 import 'presentation/viewmodels/usuarios_viewmodel.dart';
 
 void registrarEquipe(GetIt sl) {
+  // Dados: servidor quando há ApiClient registrado; senão, memória (testes).
+  if (sl.isRegistered<ApiClient>()) {
+    sl
+      ..registerLazySingleton(
+        () => EquipeApiDataSource(sl(), sl<SessaoApi>(), sl<StatusConexao>()),
+      )
+      ..registerLazySingleton<UsuarioRepository>(
+        () => UsuarioApiRepository(sl()),
+      )
+      ..registerLazySingleton<SessaoRepository>(() => SessaoApiRepository(sl()))
+      ..registerLazySingleton<ConfiguracaoSegurancaRepository>(
+        () => ConfiguracaoSegurancaApiRepository(sl()),
+      )
+      ..registerLazySingleton<UsuarioAtualRepository>(
+        () => UsuarioAtualApiRepository(sl()),
+      )
+      ..registerLazySingleton<AtividadeRepository>(
+        () => AtividadeApiRepository(sl()),
+      )
+      ..registerLazySingleton<FilaRepository>(() => FilaApiRepository(sl()))
+      ..registerLazySingleton<AtendimentoRepository>(
+        () => AtendimentoApiRepository(sl()),
+      )
+      ..registerLazySingleton<ComissaoEquipeRepository>(
+        () => ComissaoEquipeApiRepository(sl()),
+      )
+      ..registerLazySingleton<MensagemRepository>(
+        () => MensagemApiRepository(sl()),
+      );
+  } else {
+    sl
+      ..registerLazySingleton(EquipeMemoryDataSource.new)
+      ..registerLazySingleton<UsuarioRepository>(
+        () => UsuarioRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<SessaoRepository>(
+        () => SessaoRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<ConfiguracaoSegurancaRepository>(
+        () => ConfiguracaoSegurancaRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<UsuarioAtualRepository>(
+        () => UsuarioAtualRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<AtividadeRepository>(
+        () => AtividadeRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<FilaRepository>(() => FilaRepositoryImpl(sl()))
+      ..registerLazySingleton<AtendimentoRepository>(
+        () => AtendimentoRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<ComissaoEquipeRepository>(
+        () => ComissaoEquipeRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<MensagemRepository>(
+        () => MensagemRepositoryImpl(sl()),
+      );
+  }
   sl
-    // Dados
-    ..registerLazySingleton(EquipeMemoryDataSource.new)
-    ..registerLazySingleton<UsuarioRepository>(
-      () => UsuarioRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<SessaoRepository>(() => SessaoRepositoryImpl(sl()))
-    ..registerLazySingleton<ConfiguracaoSegurancaRepository>(
-      () => ConfiguracaoSegurancaRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<UsuarioAtualRepository>(
-      () => UsuarioAtualRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<AtividadeRepository>(
-      () => AtividadeRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<FilaRepository>(() => FilaRepositoryImpl(sl()))
-    ..registerLazySingleton<AtendimentoRepository>(
-      () => AtendimentoRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<ComissaoEquipeRepository>(
-      () => ComissaoEquipeRepositoryImpl(sl()),
-    )
-    ..registerLazySingleton<MensagemRepository>(
-      () => MensagemRepositoryImpl(sl()),
-    )
     // Casos de uso
     ..registerFactory(() => const FilaService())
     ..registerFactory(() => ObservarUsuarios(sl()))

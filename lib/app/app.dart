@@ -5,6 +5,9 @@ import '../core/theme/app_theme.dart';
 import '../features/auth/presentation/pages/login_page.dart';
 import '../features/splash/presentation/pages/splash_page.dart';
 
+/// Permite voltar ao login de qualquer tela (ex.: sessão expirada).
+final navegadorGlobal = GlobalKey<NavigatorState>();
+
 class MarceloImobApp extends StatelessWidget {
   const MarceloImobApp({super.key});
 
@@ -12,6 +15,7 @@ class MarceloImobApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Marcelo Bonifácio - Gestão',
+      navigatorKey: navegadorGlobal,
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       locale: const Locale('pt', 'BR'),

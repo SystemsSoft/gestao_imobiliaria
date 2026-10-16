@@ -5,6 +5,7 @@ import '../../../../core/config/empresa_info.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/visual_marca.dart';
+import '../../../auth/domain/usecases/entrar.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../contratos/presentation/pages/contratos_relatorios_page.dart';
 import '../../../crm/presentation/pages/cadastros_crm_page.dart';
@@ -51,7 +52,10 @@ class _HomePageState extends State<HomePage> {
       ModuloMenu.financeiro => FinanceiroPage(abaInicial: aba),
       ModuloMenu.fiscal => const FiscalPage(),
       ModuloMenu.contratosRelatorios => const ContratosRelatoriosPage(),
-      ModuloMenu.equipeSeguranca => EquipeSegurancaPage(abaInicial: aba),
+      ModuloMenu.equipeSeguranca => EquipeSegurancaPage(
+        abaInicial: aba,
+        completo: _vm.equipeCompleta,
+      ),
       ModuloMenu.personalizacao => Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -94,7 +98,9 @@ class _HomePageState extends State<HomePage> {
     _vm.selecionar(modulo, aba: aba);
   }
 
-  void _sair() {
+  Future<void> _sair() async {
+    await sl<Sair>()();
+    if (!mounted) return;
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute<void>(builder: (_) => const LoginPage()),
       (_) => false,
@@ -111,6 +117,7 @@ class _HomePageState extends State<HomePage> {
         final menuFixo = largura >= _larguraMenuFixo;
         final menu = MenuLateral(
           selecionado: modulo,
+          modulos: _vm.modulosPermitidos,
           onSelecionar: (m) {
             if (!menuFixo) Navigator.of(context).pop();
             _vm.selecionar(m);

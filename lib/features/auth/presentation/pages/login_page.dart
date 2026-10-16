@@ -6,7 +6,10 @@ import '../../../home/presentation/pages/home_page.dart';
 import '../viewmodels/login_viewmodel.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({super.key, this.aviso});
+
+  /// Mensagem mostrada ao abrir (ex.: sessão expirada).
+  final String? aviso;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -17,6 +20,21 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _vm = sl<LoginViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    final aviso = widget.aviso;
+    if (aviso != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(aviso)));
+        }
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -158,7 +176,25 @@ class _LoginPageState extends State<LoginPage> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {},
+                onPressed: () => showDialog<void>(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    backgroundColor: AppColors.navy,
+                    title: const Text('Esqueceu a senha?'),
+                    content: const Text(
+                      'Peça a um administrador para definir uma nova senha em '
+                      'Equipe e Segurança > Usuários.\n\n'
+                      'Se você é o administrador, rode no servidor:\n'
+                      'python gerenciar.py criar-admin',
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Entendi'),
+                      ),
+                    ],
+                  ),
+                ),
                 style: TextButton.styleFrom(
                   foregroundColor: const Color.fromARGB(255, 215, 188, 98),
                 ),

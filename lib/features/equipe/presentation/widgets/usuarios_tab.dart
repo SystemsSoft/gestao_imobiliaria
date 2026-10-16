@@ -146,7 +146,7 @@ class _UsuariosTabState extends State<UsuariosTab> {
         ),
         Text(
           'Sessões sem atividade por ${_vm.config.inatividadeMinutos} minutos deixam de contar como conectadas. '
-          'Em rede, as conexões serão registradas pelo servidor; aqui aparecem as deste computador.',
+          '${sl.isRegistered<SessaoApi>() ? 'Encerrar desconecta o usuário: na próxima ação ele volta ao login.' : 'Sem servidor, aparecem só as conexões deste computador.'}',
           style: const TextStyle(color: Colors.white54, fontSize: 12),
         ),
         for (final s in sessoes) _sessao(s),

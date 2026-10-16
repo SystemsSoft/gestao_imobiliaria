@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:marceloimob_gestao/core/api/api_client.dart';
+import 'package:marceloimob_gestao/core/api/sessao_api.dart';
 
 /// Servidor falso que imita a API: guarda o JSON recebido em PUT /{id},
 /// devolve nas listagens e gera os campos do servidor (datas, códigos).
@@ -10,6 +11,13 @@ class ServidorFalso {
   /// Coleção ('crm/imoveis') → id → registro.
   final colecoes = <String, Map<String, Map<String, dynamic>>>{};
   final requisicoes = <String>[];
+
+  /// Cabeçalho Authorization da última requisição.
+  String? ultimoToken;
+
+  /// Força uma resposta de erro (ex.: 401, 403) para caminhos que começam
+  /// com a chave.
+  final erros = <String, (int, String)>{};
 
   /// Recusa a gravação com esta mensagem (422) quando devolve não nulo.
   String? Function(String colecao, Map<String, dynamic> corpo)? recusar;
@@ -22,8 +30,11 @@ class ServidorFalso {
   };
   final _sequencias = <String, int>{};
 
-  ApiClient cliente() =>
-      ApiClient('http://servidor', cliente: MockClient(responder));
+  ApiClient cliente({SessaoApi? sessao}) => ApiClient(
+    'http://servidor',
+    cliente: MockClient(responder),
+    sessao: sessao,
+  );
 
   Map<String, Map<String, dynamic>> colecao(String nome) =>
       colecoes.putIfAbsent(nome, () => {});
@@ -36,7 +47,19 @@ class ServidorFalso {
 
   Future<http.Response> responder(http.Request r) async {
     requisicoes.add('${r.method} ${r.url.path}');
+    ultimoToken = r.headers['Authorization'];
     final partes = r.url.pathSegments.skip(2).toList(); // sem api/v1
+    final caminho = partes.join('/');
+    for (final e in erros.entries) {
+      if (caminho.startsWith(e.key)) {
+        return _json({'detail': e.value.$2}, e.value.$1);
+      }
+    }
+    if (partes.isNotEmpty && partes[0] == 'auth') return _auth(r, partes[1]);
+    if (partes.isNotEmpty && partes[0] == 'equipe') {
+      final especial = _equipe(r, partes);
+      if (especial != null) return especial;
+    }
 
     // Repasses: /locacao/repasses/{cobrancaId}/{contatoId}
     if (partes.length >= 2 && partes[1] == 'repasses') {
@@ -115,6 +138,8 @@ class ServidorFalso {
         if (erro != null) return _json({'detail': erro}, 422);
         final novo = !itens.containsKey(id);
         final numerador = _numeradores[nome];
+        if (nome == 'equipe/comissoes/regras') corpo['usuarioId'] = id;
+        corpo.remove('senha'); // como o servidor: a senha nunca volta
         if (nome == 'financeiro/boletos' && corpo['nossoNumero'] == '') {
           final conta = 'nosso-${corpo['contaId']}';
           _sequencias[conta] = (_sequencias[conta] ?? 0) + 1;
@@ -180,6 +205,65 @@ class ServidorFalso {
               'jurosMesPercentual': 1,
               'indicePadrao': 'nenhum',
             },
+      );
+    }
+    return null;
+  }
+
+  /// Login: aceita a senha "senha-certa" para qualquer e-mail.
+  http.Response _auth(http.Request r, String acao) {
+    switch (acao) {
+      case 'entrar':
+        final corpo = jsonDecode(r.body) as Map<String, dynamic>;
+        if (corpo['senha'] != 'senha-certa') {
+          return _json({'detail': 'E-mail ou senha incorretos.'}, 422);
+        }
+        return _json({
+          'token': 'token-de-teste',
+          'sessaoId': 'sessao-1',
+          'usuario': {
+            'id': 'u-admin',
+            'nome': 'Admin',
+            'email': corpo['email'],
+          },
+        });
+      case 'sair':
+      case 'alterar-senha':
+        return http.Response('', 204);
+    }
+    return http.Response('', 404);
+  }
+
+  /// Rotas da equipe que devolvem lista simples ou substituem tudo.
+  http.Response? _equipe(http.Request r, List<String> partes) {
+    final nome = partes.join('/');
+    const listas = {
+      'equipe/usuarios',
+      'equipe/sessoes',
+      'equipe/atividades',
+      'equipe/fila',
+      'equipe/atendimentos',
+      'equipe/comissoes/regras',
+      'equipe/comissoes',
+      'equipe/mensagens',
+    };
+    if (r.method == 'GET' && listas.contains(nome)) {
+      return _json(colecao(nome).values.toList());
+    }
+    if (nome == 'equipe/fila' && r.method == 'PUT') {
+      final fila = (jsonDecode(r.body) as List).cast<Map<String, dynamic>>();
+      colecao(nome)
+        ..clear()
+        ..addAll({for (final i in fila) i['usuarioId'] as String: i});
+      return _json(fila);
+    }
+    if (nome == 'equipe/configuracao') {
+      final cfg = colecao(nome);
+      if (r.method == 'PUT') {
+        cfg['config'] = jsonDecode(r.body) as Map<String, dynamic>;
+      }
+      return _json(
+        cfg['config'] ?? {'limiteSessoes': 5, 'inatividadeMinutos': 30},
       );
     }
     return null;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/presentation/view_model.dart';
 import '../../../crm/domain/entities/evento.dart';
 import '../../../crm/domain/usecases/evento_usecases.dart';
+import '../../../equipe/domain/entities/equipe_enums.dart';
 import '../../../equipe/domain/entities/usuario_sistema.dart';
 import '../../../equipe/domain/usecases/usuario_usecases.dart';
 
@@ -53,6 +54,39 @@ class HomeViewModel extends ViewModel {
 
   UsuarioSistema? get usuario =>
       _usuarios.where((u) => u.id == _usuarioAtualId).firstOrNull;
+
+  /// Módulos do menu que o usuário pode ver (o servidor também confere).
+  List<ModuloMenu> get modulosPermitidos {
+    final p = usuario?.permissoes;
+    if (p == null) return ModuloMenu.values;
+    return ModuloMenu.values.where((m) {
+      final s = _permissaoDo(m);
+      return s == null || p.pode(s, AcaoPermissao.visualizar);
+    }).toList();
+  }
+
+  /// Usuários, permissões, atividades e comissões da equipe.
+  bool get equipeCompleta =>
+      usuario?.permissoes.pode(
+        ModuloSistema.equipeSeguranca,
+        AcaoPermissao.visualizar,
+      ) ??
+      true;
+
+  /// Permissão que libera o item do menu (null = sempre visível).
+  static ModuloSistema? _permissaoDo(ModuloMenu m) => switch (m) {
+    ModuloMenu.dashboard => null,
+    ModuloMenu.cadastrosCrm => ModuloSistema.cadastrosCrm,
+    // Temporada usa a permissão de Locação.
+    ModuloMenu.locacao || ModuloMenu.temporada => ModuloSistema.locacao,
+    ModuloMenu.vendas => ModuloSistema.vendas,
+    ModuloMenu.financeiro => ModuloSistema.financeiro,
+    ModuloMenu.fiscal => ModuloSistema.fiscal,
+    ModuloMenu.contratosRelatorios => ModuloSistema.contratosRelatorios,
+    // Todos usam a fila e o chat; o restante depende da permissão.
+    ModuloMenu.equipeSeguranca => null,
+    ModuloMenu.personalizacao => ModuloSistema.personalizacao,
+  };
 
   /// Compromissos da agenda atrasados ou de hoje, ainda não concluídos.
   List<Evento> get pendentes {

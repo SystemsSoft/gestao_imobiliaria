@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../../core/api/sessao_api.dart';
+import '../../../../core/di/injector.dart';
+import '../../../auth/presentation/widgets/alterar_senha_dialog.dart';
+
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../viewmodels/home_viewmodel.dart';
@@ -272,19 +276,33 @@ class _Usuario extends StatelessWidget {
       tooltip: 'Conta',
       color: AppColors.navy,
       offset: const Offset(0, 56),
-      onSelected: (v) =>
-          v == 'sair' ? onSair() : vm.selecionar(ModuloMenu.equipeSeguranca),
-      itemBuilder: (_) => const [
-        PopupMenuItem(
-          value: 'equipe',
-          child: ListTile(
-            dense: true,
-            contentPadding: EdgeInsets.zero,
-            leading: Icon(Icons.admin_panel_settings_outlined),
-            title: Text('Equipe e Segurança'),
+      onSelected: (v) => switch (v) {
+        'sair' => onSair(),
+        'senha' => mostrarAlterarSenhaDialog(context),
+        _ => vm.selecionar(ModuloMenu.equipeSeguranca),
+      },
+      itemBuilder: (_) => [
+        if (sl.isRegistered<SessaoApi>())
+          const PopupMenuItem(
+            value: 'senha',
+            child: ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.key_outlined),
+              title: Text('Alterar senha'),
+            ),
           ),
-        ),
-        PopupMenuItem(
+        if (vm.modulosPermitidos.contains(ModuloMenu.equipeSeguranca))
+          const PopupMenuItem(
+            value: 'equipe',
+            child: ListTile(
+              dense: true,
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(Icons.admin_panel_settings_outlined),
+              title: Text('Equipe e Segurança'),
+            ),
+          ),
+        const PopupMenuItem(
           value: 'sair',
           child: ListTile(
             dense: true,

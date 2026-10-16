@@ -10,7 +10,11 @@ class MenuLateral extends StatelessWidget {
     super.key,
     required this.selecionado,
     required this.onSelecionar,
+    this.modulos = ModuloMenu.values,
   });
+
+  /// Módulos que o usuário pode ver.
+  final List<ModuloMenu> modulos;
 
   final ModuloMenu selecionado;
   final ValueChanged<ModuloMenu> onSelecionar;
@@ -43,7 +47,7 @@ class MenuLateral extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
               children: [
-                for (final m in ModuloMenu.values)
+                for (final m in modulos)
                   _ItemMenu(
                     modulo: m,
                     selecionado: m == selecionado,
