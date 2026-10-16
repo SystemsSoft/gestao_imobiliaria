@@ -10,7 +10,7 @@ class UsuariosViewModel extends ViewModel {
     ObservarUsuarios observarUsuarios,
     ObservarSessoes observarSessoes,
     ObservarConfiguracaoSeguranca observarConfig,
-    ObservarUsuarioAtual observarAtual,
+    this._observarAtual,
     this._salvar,
     this._alternarAtivo,
     this._remover,
@@ -24,9 +24,10 @@ class UsuariosViewModel extends ViewModel {
     });
     observar(observarSessoes(), (l) => _sessoes = l);
     observar(observarConfig(), (c) => config = c);
-    observar(observarAtual(), (id) => usuarioAtualId = id);
+    observar(_observarAtual(), (id) => usuarioAtualId = id);
   }
 
+  final ObservarUsuarioAtual _observarAtual;
   final SalvarUsuario _salvar;
   final AlternarAtivoUsuario _alternarAtivo;
   final RemoverUsuario _remover;
@@ -56,8 +57,15 @@ class UsuariosViewModel extends ViewModel {
           .toList()
         ..sort((a, b) => b.inicio.compareTo(a.inicio));
 
-  /// Quantos usuários estão conectados agora e quantos podem estar.
-  int get conectados => sessoesAtivas.length;
+  /// Quantos usuários estão conectados agora e quantos podem estar (como
+  /// no servidor, o mesmo usuário em vários navegadores conta uma vez).
+  int get conectados => sessoesAtivas.map((s) => s.usuarioId).toSet().length;
+
+  /// A sessão deste navegador.
+  bool estaSessao(SessaoUsuario s) => switch (_observarAtual.sessaoAtualId) {
+    final id? => s.id == id,
+    null => s.usuarioId == usuarioAtualId,
+  };
   int get limite => config.limiteSessoes;
   bool get limiteAtingido => conectados >= limite;
 

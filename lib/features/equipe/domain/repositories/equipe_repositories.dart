@@ -37,6 +37,9 @@ abstract interface class UsuarioAtualRepository {
 
   /// Sem servidor dá para simular outro usuário; com login, não.
   bool get permiteTrocar;
+
+  /// Sessão deste navegador (com login); sem servidor, uma por usuário.
+  String? get sessaoAtualId;
 }
 
 abstract interface class AtividadeRepository {

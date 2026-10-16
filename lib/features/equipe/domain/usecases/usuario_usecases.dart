@@ -25,6 +25,8 @@ class ObservarUsuarioAtual {
   final UsuarioAtualRepository _repo;
 
   Stream<String?> call() => _repo.observar();
+
+  String? get sessaoAtualId => _repo.sessaoAtualId;
 }
 
 class ObservarConfiguracaoSeguranca {

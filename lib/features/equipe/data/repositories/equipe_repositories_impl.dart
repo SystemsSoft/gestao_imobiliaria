@@ -105,6 +105,9 @@ class UsuarioAtualRepositoryImpl implements UsuarioAtualRepository {
 
   @override
   bool get permiteTrocar => true;
+
+  @override
+  String? get sessaoAtualId => null;
 }
 
 class AtividadeRepositoryImpl implements AtividadeRepository {

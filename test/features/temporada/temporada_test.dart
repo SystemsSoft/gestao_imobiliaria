@@ -227,6 +227,31 @@ void main() {
       );
     });
 
+    test(
+      'imóvel sem a finalidade aparece na agenda se tiver reserva',
+      () async {
+        await sl<ImovelRepository>().salvar(
+          Imovel(id: 'i2', codigo: 'IM-0002', titulo: 'Apto de venda'),
+        );
+        final vm = sl<CalendarioViewModel>();
+        await Future<void>.delayed(Duration.zero);
+        expect(vm.imoveis.map((i) => i.id), ['i1']);
+        await sl<SalvarReserva>()(
+          Reserva(
+            id: 'x2',
+            imovelId: 'i2',
+            hospedeId: 'h1',
+            checkIn: DateTime(2026, 10, 1),
+            checkOut: DateTime(2026, 10, 3),
+            valorDiaria: 300,
+          ),
+        );
+        await Future<void>.delayed(Duration.zero);
+        expect(vm.imoveis.map((i) => i.id), ['i1', 'i2']);
+        vm.dispose();
+      },
+    );
+
     test('validações', () {
       final salvar = sl<SalvarReserva>();
       expect(() => salvar(_r('a', 14, 10)), throwsA(isA<DomainException>()));

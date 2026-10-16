@@ -231,6 +231,9 @@ class UsuarioAtualApiRepository implements UsuarioAtualRepository {
 
   @override
   bool get permiteTrocar => false;
+
+  @override
+  String? get sessaoAtualId => _sessao.sessaoId;
 }
 
 class AtividadeApiRepository implements AtividadeRepository {

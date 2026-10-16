@@ -49,12 +49,19 @@ class CalendarioViewModel extends ViewModel {
 
   DateTime get hoje => soData(_agora());
 
-  /// Imóveis cadastrados com a finalidade "Temporada".
-  List<Imovel> get imoveis =>
-      _imoveis
-          .where((i) => i.finalidades.contains(Finalidade.temporada))
-          .toList()
-        ..sort((a, b) => a.codigo.compareTo(b.codigo));
+  /// Imóveis com a finalidade "Temporada" e os que têm reserva (o
+  /// formulário aceita qualquer imóvel; a reserva não pode sumir da agenda).
+  List<Imovel> get imoveis {
+    final comReserva = {for (final r in _reservas) r.imovelId};
+    return _imoveis
+        .where(
+          (i) =>
+              i.finalidades.contains(Finalidade.temporada) ||
+              comReserva.contains(i.id),
+        )
+        .toList()
+      ..sort((a, b) => a.codigo.compareTo(b.codigo));
+  }
 
   /// Imóvel exibido na visão mensal (o escolhido ou o primeiro).
   Imovel? get imovelSelecionado =>

@@ -13,6 +13,9 @@ import 'package:marceloimob_gestao/features/equipe/domain/entities/fila.dart';
 import 'package:marceloimob_gestao/features/equipe/domain/entities/permissoes.dart';
 import 'package:marceloimob_gestao/features/equipe/domain/entities/usuario_sistema.dart';
 import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
+import 'package:marceloimob_gestao/core/di/injector.dart';
+import 'package:marceloimob_gestao/core/api/json.dart';
+import 'package:marceloimob_gestao/features/equipe/presentation/viewmodels/usuarios_viewmodel.dart';
 
 import '../../apoio/servidor_falso.dart';
 
@@ -140,4 +143,32 @@ void main() {
       await sub.cancel();
     });
   });
+
+  test(
+    'sessões: conta usuários distintos e marca só a deste navegador',
+    () async {
+      await configurarDependencias(apiUrl: 'http://servidor');
+      final sessaoApp = sl<SessaoApi>()
+        ..iniciar(token: 't', usuarioId: 'u1', sessaoId: 's2');
+      sl
+        ..unregister<ApiClient>()
+        ..registerLazySingleton(() => servidor.cliente(sessao: sessaoApp));
+      final agora = escreverDataHora(DateTime.now());
+      for (final (id, usuario) in [('s1', 'u1'), ('s2', 'u1'), ('s3', 'u2')]) {
+        servidor.colecao('equipe/sessoes')[id] = {
+          'id': id,
+          'usuarioId': usuario,
+          'inicio': agora,
+          'ultimaAtividade': agora,
+          'dispositivo': 'Chrome no macOS',
+        };
+      }
+      final vm = sl<UsuariosViewModel>();
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      expect(vm.sessoesAtivas, hasLength(3));
+      expect(vm.conectados, 2); // u1 em dois navegadores conta uma vez
+      expect(vm.sessoesAtivas.where(vm.estaSessao).map((s) => s.id), ['s2']);
+      vm.dispose();
+    },
+  );
 }

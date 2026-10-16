@@ -163,16 +163,19 @@ class _UsuariosTabState extends State<UsuariosTab> {
       title: Text(u?.nome ?? 'Usuário removido'),
       subtitle: Text(
         '${s.dispositivo} • desde ${formatDateTime(s.inicio)}'
-        '${s.usuarioId == _vm.usuarioAtualId ? ' • esta sessão' : ''}',
+        '${_vm.estaSessao(s) ? ' • esta sessão' : ''}',
         style: const TextStyle(fontSize: 12),
       ),
-      trailing: TextButton.icon(
-        onPressed: () =>
-            _acao(() => _vm.encerrarSessao(s), 'Sessão encerrada.'),
-        icon: const Icon(Icons.logout, size: 18),
-        label: const Text('Encerrar'),
-        style: TextButton.styleFrom(foregroundColor: Colors.orangeAccent),
-      ),
+      // A própria sessão se encerra pelo "Sair" do menu.
+      trailing: _vm.estaSessao(s)
+          ? null
+          : TextButton.icon(
+              onPressed: () =>
+                  _acao(() => _vm.encerrarSessao(s), 'Sessão encerrada.'),
+              icon: const Icon(Icons.logout, size: 18),
+              label: const Text('Encerrar'),
+              style: TextButton.styleFrom(foregroundColor: Colors.orangeAccent),
+            ),
     );
   }
 
