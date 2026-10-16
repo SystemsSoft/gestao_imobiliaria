@@ -7,13 +7,11 @@ class Entrar {
 
   final AuthRepository _repository;
 
-  Future<Usuario> call({required String email, required String senha}) {
-    final e = email.trim();
-    if (e.isEmpty || !e.contains('@') || !e.contains('.')) {
-      throw const DomainException('E-mail inválido');
-    }
+  Future<Usuario> call({required String usuario, required String senha}) {
+    final u = usuario.trim();
+    if (u.isEmpty) throw const DomainException('Informe seu usuário');
     if (senha.isEmpty) throw const DomainException('Informe sua senha');
-    return _repository.entrar(email: e, senha: senha);
+    return _repository.entrar(usuario: u, senha: senha);
   }
 }
 

@@ -2,14 +2,15 @@ import '../../../../core/config/empresa_info.dart';
 
 /// Dados de quem entrega a declaração (a imobiliária).
 class DeclaranteDimob {
-  const DeclaranteDimob({
+  /// Sem [nome], usa o da Personalização.
+  DeclaranteDimob({
     this.documento = '',
-    this.nome = EmpresaInfo.nome,
+    String? nome,
     this.responsavelNome = '',
     this.responsavelCpf = '',
     this.retificadora = false,
     this.numeroRecibo = '',
-  });
+  }) : nome = nome ?? EmpresaInfo.nome;
 
   /// CNPJ ou CPF do declarante.
   final String documento;

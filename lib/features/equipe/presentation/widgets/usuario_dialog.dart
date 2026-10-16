@@ -34,6 +34,7 @@ class _UsuarioDialog extends StatefulWidget {
 class _UsuarioDialogState extends State<_UsuarioDialog> {
   UsuarioSistema? get _u => widget.usuario;
   late final _nome = TextEditingController(text: _u?.nome);
+  late final _login = TextEditingController(text: _u?.login);
   late final _email = TextEditingController(text: _u?.email);
   late final _telefone = TextEditingController(text: _u?.telefone);
   late final _creci = TextEditingController(text: _u?.creci);
@@ -45,7 +46,7 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
 
   @override
   void dispose() {
-    for (final c in [_nome, _email, _telefone, _creci, _senha]) {
+    for (final c in [_nome, _login, _email, _telefone, _creci, _senha]) {
       c.dispose();
     }
     super.dispose();
@@ -70,10 +71,19 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
                 textCapitalization: TextCapitalization.words,
               ),
               const SizedBox(height: 12),
-              AppTextField(
-                label: 'E-mail (login) *',
-                controller: _email,
-                keyboardType: TextInputType.emailAddress,
+              FieldRow(
+                children: [
+                  AppTextField(
+                    label: 'Usuário (login) *',
+                    hint: 'Ex.: Marcelo',
+                    controller: _login,
+                  ),
+                  AppTextField(
+                    label: 'E-mail (opcional)',
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                ],
               ),
               if (widget.comLogin) ...[
                 const SizedBox(height: 12),
@@ -160,6 +170,7 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
               usuario: UsuarioSistema(
                 id: _u?.id ?? gerarId(),
                 nome: _nome.text.trim(),
+                login: _login.text.trim(),
                 email: _email.text.trim(),
                 perfil: _perfil,
                 permissoes: mudouPerfil

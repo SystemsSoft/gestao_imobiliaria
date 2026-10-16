@@ -32,12 +32,13 @@ void main() {
   test('login guarda o token e ele vai nas requisições; sair limpa', () async {
     final auth = AuthRepositoryApi(api, sessao, status);
     await expectLater(
-      auth.entrar(email: 'admin@x.com', senha: 'errada'),
+      auth.entrar(usuario: 'Marcelo', senha: 'errada'),
       throwsA(isA<ApiException>()),
     );
     expect(sessao.logado, isFalse);
 
-    await auth.entrar(email: 'admin@x.com', senha: 'senha-certa');
+    final u = await auth.entrar(usuario: 'Marcelo', senha: 'senha-certa');
+    expect(u.login, 'Marcelo');
     expect((sessao.usuarioId, sessao.logado), ('u-admin', true));
     await api.get('equipe/usuarios');
     expect(servidor.ultimoToken, 'Bearer token-de-teste');
@@ -73,6 +74,7 @@ void main() {
       final u = UsuarioSistema(
         id: gerarId(),
         nome: 'Carla Corretora',
+        login: 'Carla',
         email: 'carla@x.com',
         perfil: PerfilAcesso.corretor,
         permissoes: Permissoes.perfil(PerfilAcesso.corretor),

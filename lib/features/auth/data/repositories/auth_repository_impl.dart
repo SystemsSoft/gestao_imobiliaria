@@ -2,12 +2,15 @@ import '../../domain/entities/usuario.dart';
 import '../../domain/repositories/auth_repository.dart';
 
 /// Autenticação local (sem servidor, usada nos testes): aceita qualquer
-/// credencial válida no formato.
+/// usuário e senha preenchidos.
 class AuthRepositoryLocal implements AuthRepository {
   @override
-  Future<Usuario> entrar({required String email, required String senha}) async {
+  Future<Usuario> entrar({
+    required String usuario,
+    required String senha,
+  }) async {
     await Future<void>.delayed(const Duration(milliseconds: 800));
-    return Usuario(email: email);
+    return Usuario(login: usuario);
   }
 
   @override

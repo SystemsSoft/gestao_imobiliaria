@@ -85,7 +85,7 @@ class _UsuariosTabState extends State<UsuariosTab> {
               TextField(
                 onChanged: _vm.buscar,
                 decoration: const InputDecoration(
-                  hintText: 'Buscar usuário por nome ou e-mail...',
+                  hintText: 'Buscar por nome, usuário ou e-mail...',
                   prefixIcon: Icon(Icons.search),
                 ),
               ),
@@ -207,7 +207,10 @@ class _UsuariosTabState extends State<UsuariosTab> {
                   ],
                 ),
                 Text(
-                  u.email,
+                  [
+                    'Usuário: ${u.login}',
+                    if (u.email.isNotEmpty) u.email,
+                  ].join(' • '),
                   style: const TextStyle(color: Colors.white60, fontSize: 12),
                 ),
                 const SizedBox(height: 6),

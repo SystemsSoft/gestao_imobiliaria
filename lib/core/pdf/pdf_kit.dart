@@ -25,13 +25,19 @@ class PdfKit {
     bold: pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Bold.ttf')),
   );
 
-  static Future<pw.MemoryImage> logo() async => _logo ??= pw.MemoryImage(
-    (await rootBundle.load(
-      'assets/logo_marcelo_bonifacio.png',
-    )).buffer.asUint8List(),
-  );
+  /// Logotipo da Personalização ou, sem ele, o logotipo padrão do sistema.
+  static Future<pw.MemoryImage> logo() async {
+    final personalizado = EmpresaInfo.logo;
+    if (personalizado != null) return pw.MemoryImage(personalizado);
+    return _logo ??= pw.MemoryImage(
+      (await rootBundle.load(
+        'assets/logo_marcelo_bonifacio.png',
+      )).buffer.asUint8List(),
+    );
+  }
 
   static pw.Widget cabecalho(pw.MemoryImage logo, String titulo) {
+    final empresa = EmpresaInfo.atual;
     return pw.Container(
       padding: const pw.EdgeInsets.only(bottom: 8),
       margin: const pw.EdgeInsets.only(bottom: 16),
@@ -41,26 +47,35 @@ class PdfKit {
       child: pw.Row(
         crossAxisAlignment: pw.CrossAxisAlignment.center,
         children: [
-          pw.Image(logo, width: 48, height: 48),
+          pw.Image(logo, width: 48, height: 48, fit: pw.BoxFit.contain),
           pw.SizedBox(width: 10),
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text(
-                EmpresaInfo.nome.toUpperCase(),
-                style: pw.TextStyle(
-                  fontSize: 14,
-                  fontWeight: pw.FontWeight.bold,
-                  color: azul,
+          pw.Expanded(
+            child: pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  empresa.nome.toUpperCase(),
+                  style: pw.TextStyle(
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold,
+                    color: azul,
+                  ),
                 ),
-              ),
-              pw.Text(
-                '${EmpresaInfo.atividade} • ${EmpresaInfo.creci}',
-                style: const pw.TextStyle(fontSize: 9, color: cinza),
-              ),
-            ],
+                if (empresa.atividadeECreci.isNotEmpty)
+                  pw.Text(
+                    empresa.atividadeECreci,
+                    style: const pw.TextStyle(fontSize: 9, color: cinza),
+                  ),
+                if (empresa.contatos.isNotEmpty)
+                  pw.Text(
+                    empresa.contatos,
+                    maxLines: 2,
+                    style: const pw.TextStyle(fontSize: 7.5, color: cinza),
+                  ),
+              ],
+            ),
           ),
-          pw.Spacer(),
+          pw.SizedBox(width: 10),
           pw.Text(
             titulo,
             style: pw.TextStyle(

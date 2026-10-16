@@ -26,7 +26,7 @@ void main() {
     );
     await tester.tap(find.text('ENTRAR'));
     await tester.pump();
-    expect(find.text('Informe seu e-mail'), findsOneWidget);
+    expect(find.text('Informe seu usuário'), findsOneWidget);
     expect(find.text('Informe sua senha'), findsOneWidget);
   });
 

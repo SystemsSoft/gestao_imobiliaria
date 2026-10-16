@@ -28,6 +28,7 @@ Permissoes permissoesDeJson(Map<String, dynamic>? j) => Permissoes(
 
 Map<String, Object?> usuarioParaJson(UsuarioSistema u, {String? senha}) => {
   'nome': u.nome,
+  'login': u.login,
   'email': u.email,
   'perfil': u.perfil.name,
   'permissoes': permissoesParaJson(u.permissoes),
@@ -41,6 +42,7 @@ Map<String, Object?> usuarioParaJson(UsuarioSistema u, {String? senha}) => {
 UsuarioSistema usuarioDeJson(Map<String, dynamic> j) => UsuarioSistema(
   id: j['id'] as String,
   nome: lerTexto(j['nome']),
+  login: lerTexto(j['login']),
   email: lerTexto(j['email']),
   perfil: lerEnum(PerfilAcesso.values, j['perfil'], PerfilAcesso.atendente),
   permissoes: permissoesDeJson(j['permissoes'] as Map<String, dynamic>?),

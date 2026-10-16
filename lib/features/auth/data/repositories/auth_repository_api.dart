@@ -13,19 +13,22 @@ class AuthRepositoryApi implements AuthRepository {
   final StatusConexao _status;
 
   @override
-  Future<Usuario> entrar({required String email, required String senha}) async {
+  Future<Usuario> entrar({
+    required String usuario,
+    required String senha,
+  }) async {
     final r =
-        await _api.post('auth/entrar', {'email': email, 'senha': senha})
+        await _api.post('auth/entrar', {'usuario': usuario, 'senha': senha})
             as Map<String, dynamic>;
-    final usuario = r['usuario'] as Map<String, dynamic>;
+    final dados = r['usuario'] as Map<String, dynamic>;
     // Dados de um login anterior (outro usuário) não podem aparecer.
     _status.invalidarTudo();
     _sessao.iniciar(
       token: r['token'] as String,
-      usuarioId: usuario['id'] as String,
+      usuarioId: dados['id'] as String,
       sessaoId: r['sessaoId'] as String,
     );
-    return Usuario(email: usuario['email'] as String);
+    return Usuario(login: dados['login'] as String? ?? usuario);
   }
 
   @override

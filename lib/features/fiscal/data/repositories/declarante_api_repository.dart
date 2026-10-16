@@ -41,11 +41,11 @@ class DeclaranteApiRepository implements DeclaranteRepository {
 
   @override
   Stream<DeclaranteDimob> observar() =>
-      _dados.watch().map((l) => l.firstOrNull ?? const DeclaranteDimob());
+      _dados.watch().map((l) => l.firstOrNull ?? DeclaranteDimob());
 
   @override
   Future<DeclaranteDimob> obter() async =>
-      (await _dados.all()).firstOrNull ?? const DeclaranteDimob();
+      (await _dados.all()).firstOrNull ?? DeclaranteDimob();
 
   @override
   Future<void> salvar(DeclaranteDimob declarante) async {

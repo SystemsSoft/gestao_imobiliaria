@@ -15,7 +15,7 @@ void main() {
     final u = UsuarioSistema(
       id: 'u-${perfil.name}',
       nome: perfil.label,
-      email: '${perfil.name}@x.com',
+      login: perfil.name,
       perfil: perfil,
       permissoes: Permissoes.perfil(perfil),
       criadoEm: DateTime(2026),

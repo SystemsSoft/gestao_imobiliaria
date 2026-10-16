@@ -1,5 +1,6 @@
 class Usuario {
-  const Usuario({required this.email});
+  const Usuario({required this.login});
 
-  final String email;
+  /// Nome de usuário usado para entrar (ex.: "Marcelo").
+  final String login;
 }

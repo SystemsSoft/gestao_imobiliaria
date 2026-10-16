@@ -75,6 +75,7 @@ class UsuariosViewModel extends ViewModel {
               (perfil == null || u.perfil == perfil) &&
               (q.isEmpty ||
                   u.nome.toLowerCase().contains(q) ||
+                  u.login.toLowerCase().contains(q) ||
                   u.email.toLowerCase().contains(q)),
         )
         .toList()

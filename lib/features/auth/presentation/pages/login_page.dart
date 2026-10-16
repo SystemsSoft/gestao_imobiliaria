@@ -17,7 +17,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _usuarioController = TextEditingController();
   final _passwordController = TextEditingController();
   final _vm = sl<LoginViewModel>();
 
@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usuarioController.dispose();
     _passwordController.dispose();
     _vm.dispose();
     super.dispose();
@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final ok = await _vm.entrar(
-      _emailController.text,
+      _usuarioController.text,
       _passwordController.text,
     );
     if (!mounted) return;
@@ -144,15 +144,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
             TextFormField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
+              controller: _usuarioController,
               textInputAction: TextInputAction.next,
-              autofillHints: const [AutofillHints.email],
+              autofillHints: const [AutofillHints.username],
               decoration: const InputDecoration(
-                labelText: 'E-mail',
-                prefixIcon: Icon(Icons.mail_outline),
+                labelText: 'Usuário',
+                prefixIcon: Icon(Icons.person_outline),
               ),
-              validator: _vm.validarEmail,
+              validator: _vm.validarUsuario,
             ),
             const SizedBox(height: 16),
             TextFormField(

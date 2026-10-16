@@ -70,6 +70,9 @@ class RegistrarAtividade {
 
 final _email = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
+/// Letras (com acento), números, ponto, hífen e sublinhado; sem espaços.
+final _login = RegExp(r'^[A-Za-zÀ-ÖØ-öø-ÿ0-9._-]{3,60}$');
+
 class SalvarUsuario {
   const SalvarUsuario(this._repo, this._registrar);
   final UsuarioRepository _repo;
@@ -80,16 +83,23 @@ class SalvarUsuario {
     if (senha != null && senha.isNotEmpty && senha.length < 8) {
       throw const DomainException('A senha precisa de ao menos 8 caracteres.');
     }
-    if (!_email.hasMatch(u.email.trim())) {
+    if (!_login.hasMatch(u.login.trim())) {
+      throw const DomainException(
+        'Usuário inválido: use de 3 a 60 letras, números, ponto, hífen ou '
+        'sublinhado, sem espaços.',
+      );
+    }
+    final email = u.email.trim();
+    if (email.isNotEmpty && !_email.hasMatch(email)) {
       throw const DomainException('E-mail inválido.');
     }
     final todos = await _repo.listar();
     final duplicado = todos.any(
       (x) =>
-          x.id != u.id && x.email.toLowerCase() == u.email.trim().toLowerCase(),
+          x.id != u.id && x.login.toLowerCase() == u.login.trim().toLowerCase(),
     );
     if (duplicado) {
-      throw const DomainException('Já existe um usuário com este e-mail.');
+      throw const DomainException('Já existe outro usuário com este login.');
     }
     final novo = !todos.any((x) => x.id == u.id);
     await _repo.salvar(u, senha: senha?.isEmpty ?? true ? null : senha);

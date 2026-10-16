@@ -59,7 +59,7 @@ class _MontarParcelas {
       venda: v,
       compradores: [for (final id in v.compradores) ?c(id)],
       credor: v.credor == CredorParcelas.imobiliaria
-          ? const Credor(nome: EmpresaInfo.nome, documento: EmpresaInfo.creci)
+          ? _imobiliaria()
           : Credor(
               nome: vendedores.map((x) => x.nome).join(' e '),
               documento: vendedores
@@ -112,7 +112,7 @@ class ImprimirReciboComissao {
         venda: v,
         imovel: await _imoveis.obter(v.imovelId),
         recebedor: p.contatoId == null
-            ? const Credor(nome: EmpresaInfo.nome, documento: EmpresaInfo.creci)
+            ? _imobiliaria()
             : Credor(
                 nome: corretor?.nome ?? '',
                 documento: corretor?.documento ?? '',
@@ -124,4 +124,14 @@ class ImprimirReciboComissao {
       ),
     );
   }
+}
+
+/// A imobiliária como credora/recebedora: CNPJ/CPF da Personalização ou,
+/// sem ele, o CRECI.
+Credor _imobiliaria() {
+  final e = EmpresaInfo.atual;
+  return Credor(
+    nome: e.nome,
+    documento: e.documento.isNotEmpty ? e.documento : e.creci,
+  );
 }

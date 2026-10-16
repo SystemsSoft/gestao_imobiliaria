@@ -1,3 +1,4 @@
+import '../../../../core/config/empresa_info.dart';
 import 'modelo_contrato.dart';
 
 /// Campo do sistema que pode ser usado no texto do modelo.
@@ -33,6 +34,30 @@ const _empresa = [
     'Marcelo Bonifácio',
   ),
   CampoModelo('empresa_creci', 'CRECI', 'Imobiliária', 'CRECI 065655 RJ'),
+  CampoModelo(
+    'empresa_documento',
+    'CNPJ/CPF da imobiliária',
+    'Imobiliária',
+    '11.222.333/0001-81',
+  ),
+  CampoModelo(
+    'empresa_endereco',
+    'Endereço da imobiliária',
+    'Imobiliária',
+    'Rua Moreira César, 100, Icaraí, Niterói/RJ',
+  ),
+  CampoModelo(
+    'empresa_telefone',
+    'Telefone da imobiliária',
+    'Imobiliária',
+    '(21) 99999-0000',
+  ),
+  CampoModelo(
+    'empresa_email',
+    'E-mail da imobiliária',
+    'Imobiliária',
+    'contato@imobiliaria.com.br',
+  ),
   CampoModelo(
     'cidade_data',
     'Cidade e data por extenso',
@@ -387,3 +412,16 @@ List<CampoModelo> camposModelo(TipoModelo tipo) => switch (tipo) {
 Map<String, String> camposDoModelo(TipoModelo tipo) => {
   for (final c in camposModelo(tipo)) c.chave: c.descricao,
 };
+
+/// Valores dos campos {{empresa_...}}, vindos da Personalização.
+Map<String, String> valoresEmpresa() {
+  final e = EmpresaInfo.atual;
+  return {
+    'empresa_nome': e.nome,
+    'empresa_creci': e.creci,
+    'empresa_documento': e.documento,
+    'empresa_endereco': e.endereco,
+    'empresa_telefone': e.telefone,
+    'empresa_email': e.email,
+  };
+}

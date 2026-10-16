@@ -6,7 +6,8 @@ class UsuarioSistema {
   const UsuarioSistema({
     required this.id,
     required this.nome,
-    required this.email,
+    required this.login,
+    this.email = '',
     required this.perfil,
     required this.permissoes,
     required this.criadoEm,
@@ -18,6 +19,11 @@ class UsuarioSistema {
 
   final String id;
   final String nome;
+
+  /// Nome de usuário para entrar (ex.: "Marcelo").
+  final String login;
+
+  /// Contato (opcional).
   final String email;
   final PerfilAcesso perfil;
   final Permissoes permissoes;
@@ -44,6 +50,7 @@ class UsuarioSistema {
 
   UsuarioSistema copyWith({
     String? nome,
+    String? login,
     String? email,
     PerfilAcesso? perfil,
     Permissoes? permissoes,
@@ -54,6 +61,7 @@ class UsuarioSistema {
   }) => UsuarioSistema(
     id: id,
     nome: nome ?? this.nome,
+    login: login ?? this.login,
     email: email ?? this.email,
     perfil: perfil ?? this.perfil,
     permissoes: permissoes ?? this.permissoes,

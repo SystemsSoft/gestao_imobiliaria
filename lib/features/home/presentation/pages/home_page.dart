@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/api/status_conexao.dart';
 import '../../../../core/config/empresa_info.dart';
 import '../../../../core/di/injector.dart';
+import '../../../../core/errors/domain_exception.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/visual_marca.dart';
 import '../../../auth/domain/usecases/entrar.dart';
@@ -14,6 +15,8 @@ import '../../../equipe/presentation/pages/equipe_seguranca_page.dart';
 import '../../../financeiro/presentation/pages/financeiro_page.dart';
 import '../../../fiscal/presentation/pages/fiscal_page.dart';
 import '../../../locacao/presentation/pages/administracao_locacao_page.dart';
+import '../../../personalizacao/domain/usecases/personalizacao_usecases.dart';
+import '../../../personalizacao/presentation/pages/personalizacao_page.dart';
 import '../../../temporada/presentation/pages/temporada_page.dart';
 import '../../../vendas/presentation/pages/administracao_vendas_page.dart';
 import '../viewmodels/home_viewmodel.dart';
@@ -32,6 +35,23 @@ const _larguraMenuFixo = 1100.0;
 
 class _HomePageState extends State<HomePage> {
   final _vm = sl<HomeViewModel>();
+
+  @override
+  void initState() {
+    super.initState();
+    _carregarPersonalizacao();
+  }
+
+  /// Dados e logotipo da imobiliária usados em todos os documentos.
+  Future<void> _carregarPersonalizacao() async {
+    try {
+      await sl<CarregarPersonalizacao>()();
+    } on DomainException {
+      // Sem conexão: os documentos usam os dados padrão até a próxima vez.
+    }
+    if (mounted) setState(() {});
+  }
+
   final _scaffold = GlobalKey<ScaffoldState>();
   bool _menuAberto = true;
 
@@ -56,23 +76,7 @@ class _HomePageState extends State<HomePage> {
         abaInicial: aba,
         completo: _vm.equipeCompleta,
       ),
-      ModuloMenu.personalizacao => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(modulo.icon, size: 64, color: AppColors.gold),
-            const SizedBox(height: 16),
-            Text(
-              modulo.label,
-              style: const TextStyle(
-                color: AppColors.gold,
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
-      ),
+      ModuloMenu.personalizacao => const PersonalizacaoPage(),
     };
   }
 

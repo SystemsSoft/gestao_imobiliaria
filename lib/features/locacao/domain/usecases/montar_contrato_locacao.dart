@@ -1,4 +1,5 @@
 import '../../../../core/config/empresa_info.dart';
+import '../../../contratos/domain/entities/campos_modelo.dart';
 import '../../../../core/utils/extenso.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../contratos/domain/entities/contrato_documento.dart';
@@ -63,8 +64,7 @@ class MontarContratoLocacao {
         'clausulas_adicionais': contrato.clausulasAdicionais.isEmpty
             ? 'Não há.'
             : contrato.clausulasAdicionais,
-        'empresa_nome': EmpresaInfo.nome,
-        'empresa_creci': EmpresaInfo.creci,
+        ...valoresEmpresa(),
         'cidade_data': cidadeData(imovel?.cidade ?? '', data ?? DateTime.now()),
       },
       assinaturas: [

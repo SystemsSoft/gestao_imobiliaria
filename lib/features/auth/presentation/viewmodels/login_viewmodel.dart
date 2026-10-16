@@ -15,23 +15,19 @@ class LoginViewModel extends ViewModel {
     notificar();
   }
 
-  String? validarEmail(String? v) {
-    final value = v?.trim() ?? '';
-    if (value.isEmpty) return 'Informe seu e-mail';
-    if (!value.contains('@') || !value.contains('.')) return 'E-mail inválido';
-    return null;
-  }
+  String? validarUsuario(String? v) =>
+      (v?.trim().isEmpty ?? true) ? 'Informe seu usuário' : null;
 
   String? validarSenha(String? v) =>
       (v == null || v.isEmpty) ? 'Informe sua senha' : null;
 
   /// Retorna true quando o login foi aceito.
-  Future<bool> entrar(String email, String senha) async {
+  Future<bool> entrar(String usuario, String senha) async {
     carregando = true;
     erro = null;
     notificar();
     try {
-      await _entrar(email: email, senha: senha);
+      await _entrar(usuario: usuario, senha: senha);
       return true;
     } on DomainException catch (e) {
       erro = e.mensagem;

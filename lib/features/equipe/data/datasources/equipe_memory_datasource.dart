@@ -20,6 +20,7 @@ class EquipeMemoryDataSource {
       UsuarioSistema(
         id: idAdministrador,
         nome: EmpresaInfo.nome,
+        login: 'admin',
         email: 'admin@imobiliaria.com.br',
         perfil: PerfilAcesso.administrador,
         permissoes: Permissoes.perfil(PerfilAcesso.administrador),

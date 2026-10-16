@@ -210,13 +210,13 @@ class ServidorFalso {
     return null;
   }
 
-  /// Login: aceita a senha "senha-certa" para qualquer e-mail.
+  /// Login: aceita a senha "senha-certa" para qualquer usuário.
   http.Response _auth(http.Request r, String acao) {
     switch (acao) {
       case 'entrar':
         final corpo = jsonDecode(r.body) as Map<String, dynamic>;
         if (corpo['senha'] != 'senha-certa') {
-          return _json({'detail': 'E-mail ou senha incorretos.'}, 422);
+          return _json({'detail': 'Usuário ou senha incorretos.'}, 422);
         }
         return _json({
           'token': 'token-de-teste',
@@ -224,7 +224,7 @@ class ServidorFalso {
           'usuario': {
             'id': 'u-admin',
             'nome': 'Admin',
-            'email': corpo['email'],
+            'login': corpo['usuario'],
           },
         });
       case 'sair':

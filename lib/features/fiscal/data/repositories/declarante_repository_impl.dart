@@ -7,13 +7,12 @@ class DeclaranteRepositoryImpl implements DeclaranteRepository {
   final FiscalMemoryDataSource _ds;
 
   @override
-  Stream<DeclaranteDimob> observar() => _ds.declarante.watch().map(
-    (l) => l.firstOrNull ?? const DeclaranteDimob(),
-  );
+  Stream<DeclaranteDimob> observar() =>
+      _ds.declarante.watch().map((l) => l.firstOrNull ?? DeclaranteDimob());
 
   @override
   Future<DeclaranteDimob> obter() async =>
-      _ds.declarante.all.firstOrNull ?? const DeclaranteDimob();
+      _ds.declarante.all.firstOrNull ?? DeclaranteDimob();
 
   @override
   Future<void> salvar(DeclaranteDimob declarante) async =>

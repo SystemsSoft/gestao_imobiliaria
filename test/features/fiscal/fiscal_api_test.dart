@@ -13,7 +13,7 @@ void main() {
     expect((await repo.obter()).nome, 'Marcelo Bonifácio');
 
     await SalvarDeclarante(repo)(
-      const DeclaranteDimob(
+      DeclaranteDimob(
         documento: '11.222.333/0001-81',
         nome: 'Marcelo Bonifácio Imóveis',
         responsavelCpf: '529.982.247-25',
