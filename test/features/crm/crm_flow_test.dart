@@ -44,7 +44,8 @@ void main() {
       _field('Link (URL)'),
       'https://exemplo.com/foto.jpg',
     );
-    await tester.tap(find.text('Adicionar anexo'));
+    expect(find.text('Enviar do computador'), findsOneWidget);
+    await tester.tap(find.text('Adicionar link'));
     await tester.pump();
     await tester.tap(find.text('SALVAR IMÓVEL'));
     await tester.pumpAndSettle();

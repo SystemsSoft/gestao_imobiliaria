@@ -4,6 +4,7 @@ import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/form_widgets.dart';
+import '../../../../core/widgets/midia_anexo.dart';
 import '../../../../core/widgets/visual_marca.dart';
 import '../../domain/entities/enums.dart';
 import '../../domain/entities/imovel.dart';
@@ -149,10 +150,9 @@ class _ImovelCard extends StatelessWidget {
                   height: 84,
                   child: foto == null
                       ? const _FotoPlaceholder()
-                      : Image.network(
+                      : ImagemAnexo(
                           foto,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => const _FotoPlaceholder(),
+                          alternativa: const _FotoPlaceholder(),
                         ),
                 ),
               ),

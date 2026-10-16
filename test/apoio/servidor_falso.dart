@@ -45,6 +45,35 @@ class ServidorFalso {
     headers: {'content-type': 'application/json; charset=utf-8'},
   );
 
+  /// Arquivos enviados (multipart): id → nome, categoria e tamanho.
+  final arquivos = <String, Map<String, dynamic>>{};
+
+  http.Response _arquivos(http.Request r, List<String> partes) {
+    String link(String id) =>
+        '/api/v1/arquivos/$id/conteudo?expira=4102444800&assinatura=x';
+    if (partes.length == 2 && partes[1] == 'links') {
+      final ids = ((jsonDecode(r.body) as Map)['ids'] as List).cast<String>();
+      return _json({
+        for (final id in ids)
+          if (arquivos.containsKey(id)) id: link(id),
+      });
+    }
+    final corpo = latin1.decode(r.bodyBytes);
+    final nome = RegExp(r'filename="([^"]+)"').firstMatch(corpo)!.group(1)!;
+    final categoria = RegExp(
+      r'name="categoria"\r\n\r\n(\w+)',
+    ).firstMatch(corpo)!.group(1)!;
+    final id =
+        '00000000-0000-4000-8000-${(arquivos.length + 1).toString().padLeft(12, '0')}';
+    arquivos[id] = {'nome': nome, 'categoria': categoria};
+    return _json({
+      'id': id,
+      'nome': nome,
+      'tamanho': corpo.length,
+      'link': link(id),
+    }, 201);
+  }
+
   Future<http.Response> responder(http.Request r) async {
     requisicoes.add('${r.method} ${r.url.path}');
     ultimoToken = r.headers['Authorization'];
@@ -56,6 +85,9 @@ class ServidorFalso {
       }
     }
     if (partes.isNotEmpty && partes[0] == 'auth') return _auth(r, partes[1]);
+    if (partes.isNotEmpty && partes[0] == 'arquivos') {
+      return _arquivos(r, partes);
+    }
     if (partes.isNotEmpty && partes[0] == 'equipe') {
       final especial = _equipe(r, partes);
       if (especial != null) return especial;

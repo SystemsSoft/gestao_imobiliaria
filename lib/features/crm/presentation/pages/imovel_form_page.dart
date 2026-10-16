@@ -1,5 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/arquivos/arquivo_repository.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
@@ -7,6 +9,7 @@ import '../../../../core/utils/id.dart';
 import '../../../../core/cep/busca_cep.dart';
 import '../../../../core/widgets/campo_cep.dart';
 import '../../../../core/widgets/form_widgets.dart';
+import '../../../../core/widgets/midia_anexo.dart';
 import '../../domain/entities/catalog.dart';
 import '../../domain/entities/enums.dart';
 import '../../domain/entities/imovel.dart';
@@ -228,6 +231,47 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
     });
   }
 
+  CategoriaArquivo get _categoriaAnexo => switch (_anexoTipo) {
+    AnexoTipo.foto => CategoriaArquivo.foto,
+    AnexoTipo.video => CategoriaArquivo.video,
+    _ => CategoriaArquivo.arquivo,
+  };
+
+  /// Escolhe no computador (vários de uma vez) e envia ao servidor.
+  Future<void> _enviarDoComputador() async {
+    final categoria = _categoriaAnexo;
+    final escolhidos = await FilePicker.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: categoria.extensoes,
+    );
+    if (escolhidos.isEmpty) return;
+    final arquivos = [
+      for (final f in escolhidos)
+        ArquivoEscolhido(
+          nome: f.name,
+          tamanho: await f.length() ?? 0,
+          ler: f.readAsBytes,
+        ),
+    ];
+    final anexos = await _vm.enviarAnexos(
+      _anexoTipo,
+      arquivos,
+      titulo: _anexoTitulo.text,
+    );
+    if (!mounted) return;
+    setState(() {
+      _anexos.addAll(anexos);
+      if (anexos.isNotEmpty) _anexoTitulo.clear();
+    });
+    if (_vm.erro case final erro?) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(erro)));
+    }
+  }
+
+  /// A primeira foto é a capa nas listagens.
+  void _tornarCapa(int i) =>
+      setState(() => _anexos.insert(0, _anexos.removeAt(i)));
+
   Future<void> _salvar() async {
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -302,6 +346,13 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
     messenger.showSnackBar(const SnackBar(content: Text('Imóvel salvo.')));
+  }
+
+  Anexo? get _capa {
+    for (final a in _anexos) {
+      if (a.tipo == AnexoTipo.foto) return a;
+    }
+    return null;
   }
 
   IconData _iconeAnexo(AnexoTipo t) => switch (t) {
@@ -727,13 +778,49 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
                           ),
                         ],
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: OutlinedButton.icon(
-                          onPressed: _addAnexo,
-                          icon: const Icon(Icons.add_link),
-                          label: const Text('Adicionar anexo'),
-                        ),
+                      Wrap(
+                        spacing: 12,
+                        runSpacing: 8,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: _addAnexo,
+                            icon: const Icon(Icons.add_link),
+                            label: const Text('Adicionar link'),
+                          ),
+                          if (_anexoTipo != AnexoTipo.link)
+                            FilledButton.icon(
+                              onPressed: _vm.enviando
+                                  ? null
+                                  : _enviarDoComputador,
+                              style: FilledButton.styleFrom(
+                                backgroundColor: AppColors.gold,
+                                foregroundColor: AppColors.navy,
+                              ),
+                              icon: _vm.enviando
+                                  ? const SizedBox.square(
+                                      dimension: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Icon(Icons.upload_file),
+                              label: Text(
+                                _vm.enviando
+                                    ? 'Enviando...'
+                                    : 'Enviar do computador',
+                              ),
+                            ),
+                          if (_anexoTipo != AnexoTipo.link)
+                            Text(
+                              '${_anexoTipo == AnexoTipo.foto ? 'Fotos: pode escolher várias. ' : ''}'
+                              'Até ${_categoriaAnexo.maximoMb} MB por arquivo.',
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 12,
+                              ),
+                            ),
+                        ],
                       ),
                       if (_anexos.isEmpty)
                         const Text(
@@ -742,22 +829,63 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
                         ),
                       for (var i = 0; i < _anexos.length; i++)
                         ListTile(
+                          key: ValueKey(_anexos[i].url),
                           dense: true,
                           contentPadding: EdgeInsets.zero,
-                          leading: Icon(
-                            _iconeAnexo(_anexos[i].tipo),
-                            color: AppColors.gold,
+                          onTap: () => abrirAnexo(context, _anexos[i].url),
+                          leading: SizedBox.square(
+                            dimension: 44,
+                            child: _anexos[i].tipo == AnexoTipo.foto
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: ImagemAnexo(
+                                      _anexos[i].url,
+                                      alternativa: Icon(
+                                        _iconeAnexo(_anexos[i].tipo),
+                                        color: AppColors.gold,
+                                      ),
+                                    ),
+                                  )
+                                : Icon(
+                                    _iconeAnexo(_anexos[i].tipo),
+                                    color: AppColors.gold,
+                                  ),
                           ),
                           title: Text(_anexos[i].titulo),
                           subtitle: Text(
-                            _anexos[i].url,
+                            ehArquivoEnviado(_anexos[i].url)
+                                ? 'Enviado do computador · clique para abrir'
+                                : _anexos[i].url,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete_outline),
-                            onPressed: () =>
-                                setState(() => _anexos.removeAt(i)),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (_anexos[i].tipo == AnexoTipo.foto)
+                                _anexos[i] == _capa
+                                    ? const Tooltip(
+                                        message: 'Capa do imóvel',
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8),
+                                          child: Icon(
+                                            Icons.star,
+                                            color: AppColors.gold,
+                                          ),
+                                        ),
+                                      )
+                                    : IconButton(
+                                        tooltip: 'Usar como capa',
+                                        icon: const Icon(Icons.star_border),
+                                        onPressed: () => _tornarCapa(i),
+                                      ),
+                              IconButton(
+                                tooltip: 'Remover',
+                                icon: const Icon(Icons.delete_outline),
+                                onPressed: () =>
+                                    setState(() => _anexos.removeAt(i)),
+                              ),
+                            ],
                           ),
                         ),
                     ],

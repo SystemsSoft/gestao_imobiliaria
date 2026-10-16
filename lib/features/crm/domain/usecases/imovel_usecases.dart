@@ -1,4 +1,6 @@
+import '../../../../core/arquivos/arquivo_repository.dart';
 import '../../../../core/errors/domain_exception.dart';
+import '../entities/enums.dart';
 import '../entities/imovel.dart';
 import '../repositories/evento_repository.dart';
 import '../repositories/imovel_repository.dart';
@@ -45,5 +47,41 @@ class RemoverImovel {
     for (final e in await _eventos.listar()) {
       if (e.imovelId == id) await _eventos.salvar(e.copyWith(semImovel: true));
     }
+  }
+}
+
+/// Envia do computador uma foto, vídeo ou arquivo e devolve o anexo que
+/// aponta para ele (link escolhido como tipo vira arquivo).
+class EnviarAnexo {
+  const EnviarAnexo(this._arquivos);
+  final ArquivoRepository _arquivos;
+
+  Future<Anexo> call(
+    AnexoTipo tipo,
+    ArquivoEscolhido arquivo, {
+    String titulo = '',
+  }) async {
+    final (tipoFinal, categoria) = switch (tipo) {
+      AnexoTipo.foto => (tipo, CategoriaArquivo.foto),
+      AnexoTipo.video => (tipo, CategoriaArquivo.video),
+      AnexoTipo.arquivo ||
+      AnexoTipo.link => (AnexoTipo.arquivo, CategoriaArquivo.arquivo),
+    };
+    categoria.validar(arquivo.nome, arquivo.tamanho);
+    final enviado = await _arquivos.enviar(
+      bytes: await arquivo.ler(),
+      nome: arquivo.nome,
+      categoria: categoria,
+    );
+    final ponto = arquivo.nome.lastIndexOf('.');
+    return Anexo(
+      tipo: tipoFinal,
+      titulo: titulo.trim().isNotEmpty
+          ? titulo.trim()
+          : ponto > 0
+          ? arquivo.nome.substring(0, ponto)
+          : arquivo.nome,
+      url: enviado.referencia,
+    );
   }
 }

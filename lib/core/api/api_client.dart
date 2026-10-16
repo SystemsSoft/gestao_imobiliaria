@@ -27,6 +27,7 @@ class ApiClient {
   final SessaoApi? sessao;
 
   static const _timeout = Duration(seconds: 20);
+  static const _timeoutEnvio = Duration(minutes: 15);
 
   Map<String, String> get _cabecalhos => {
     'Content-Type': 'application/json; charset=utf-8',
@@ -62,6 +63,29 @@ class ApiClient {
   Future<void> delete(String caminho) =>
       _enviar(() => _http.delete(_uri(caminho), headers: _cabecalhos));
 
+  /// Envia um arquivo (multipart) com campos de formulário.
+  Future<dynamic> enviarArquivo(
+    String caminho, {
+    required List<int> bytes,
+    required String nomeArquivo,
+    Map<String, String> campos = const {},
+  }) => _enviar(() async {
+    final req = http.MultipartRequest('POST', _uri(caminho))
+      ..headers.addAll({
+        'Accept': 'application/json',
+        if (sessao?.token case final t?) 'Authorization': 'Bearer $t',
+      })
+      ..fields.addAll(campos)
+      ..files.add(
+        http.MultipartFile.fromBytes('arquivo', bytes, filename: nomeArquivo),
+      );
+    return http.Response.fromStream(await _http.send(req));
+  }, timeout: _timeoutEnvio);
+
+  /// Endereço completo de um caminho devolvido pelo servidor (`/api/v1/...`).
+  Uri endereco(String caminho) =>
+      _base.resolve(caminho.startsWith('/') ? caminho.substring(1) : caminho);
+
   /// Busca todas as páginas de uma listagem paginada.
   Future<List<Map<String, dynamic>>> listarTudo(
     String caminho, {
@@ -89,10 +113,13 @@ class ApiClient {
     return itens;
   }
 
-  Future<dynamic> _enviar(Future<http.Response> Function() requisicao) async {
+  Future<dynamic> _enviar(
+    Future<http.Response> Function() requisicao, {
+    Duration timeout = _timeout,
+  }) async {
     final http.Response r;
     try {
-      r = await requisicao().timeout(_timeout);
+      r = await requisicao().timeout(timeout);
     } on TimeoutException {
       throw const ApiException(
         'O servidor demorou a responder. Tente novamente.',

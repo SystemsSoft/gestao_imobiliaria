@@ -66,7 +66,8 @@ void registrarCrm(GetIt sl) {
     ..registerFactory(SugerirNegocios.new)
     // ViewModels
     ..registerFactory(() => ImoveisViewModel(sl(), sl()))
-    ..registerFactory(() => ImovelFormViewModel(sl(), sl()))
+    ..registerFactory(() => EnviarAnexo(sl()))
+    ..registerFactory(() => ImovelFormViewModel(sl(), sl(), sl()))
     ..registerFactory(() => ContatosViewModel(sl(), sl()))
     ..registerFactory(() => ContatoFormViewModel(sl()))
     ..registerFactory(() => CruzamentoViewModel(sl(), sl(), sl()))
