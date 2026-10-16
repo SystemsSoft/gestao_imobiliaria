@@ -74,6 +74,24 @@ class ServidorFalso {
     }, 201);
   }
 
+  /// Site: configuração única e leads (o app só altera status, responsável
+  /// e anotação; o resto veio do formulário do site).
+  http.Response? _site(http.Request r, List<String> partes) {
+    if (partes.length == 2 && partes[1] == 'configuracao') {
+      final d = colecao('site');
+      if (r.method == 'PUT') {
+        d['configuracao'] = jsonDecode(r.body) as Map<String, dynamic>;
+      }
+      return _json(d['configuracao'] ?? {'noAr': true});
+    }
+    if (partes.length == 3 && partes[1] == 'leads' && r.method == 'PUT') {
+      final lead = colecao('site/leads')[partes[2]]!;
+      lead.addAll(jsonDecode(r.body) as Map<String, dynamic>);
+      return _json(lead);
+    }
+    return null;
+  }
+
   Future<http.Response> responder(http.Request r) async {
     requisicoes.add('${r.method} ${r.url.path}');
     ultimoToken = r.headers['Authorization'];
@@ -85,6 +103,10 @@ class ServidorFalso {
       }
     }
     if (partes.isNotEmpty && partes[0] == 'auth') return _auth(r, partes[1]);
+    if (partes.isNotEmpty && partes[0] == 'site') {
+      final especial = _site(r, partes);
+      if (especial != null) return especial;
+    }
     if (partes.isNotEmpty && partes[0] == 'arquivos') {
       return _arquivos(r, partes);
     }

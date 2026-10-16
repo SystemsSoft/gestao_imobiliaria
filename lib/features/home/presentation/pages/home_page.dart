@@ -22,6 +22,7 @@ import '../../../vendas/presentation/pages/administracao_vendas_page.dart';
 import '../viewmodels/home_viewmodel.dart';
 import '../widgets/cabecalho_modulo.dart';
 import '../widgets/menu_lateral.dart';
+import '../../../site/presentation/pages/site_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -77,6 +78,7 @@ class _HomePageState extends State<HomePage> {
         completo: _vm.equipeCompleta,
       ),
       ModuloMenu.personalizacao => const PersonalizacaoPage(),
+      ModuloMenu.site => SitePage(abaInicial: aba),
     };
   }
 

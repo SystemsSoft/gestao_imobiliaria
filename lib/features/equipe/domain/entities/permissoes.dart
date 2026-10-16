@@ -71,6 +71,7 @@ class Permissoes {
         ModuloSistema.vendas: _operar,
         ModuloSistema.locacao: _operar,
         ModuloSistema.contratosRelatorios: _leitura,
+        ModuloSistema.site: _leitura,
       },
     ),
     PerfilAcesso.financeiro => const Permissoes(
@@ -90,6 +91,7 @@ class Permissoes {
       modulos: {
         ModuloSistema.cadastrosCrm: _operar,
         ModuloSistema.locacao: _leitura,
+        ModuloSistema.site: _operar,
       },
     ),
   };

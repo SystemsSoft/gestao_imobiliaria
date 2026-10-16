@@ -35,6 +35,8 @@ class Imovel {
     this.referencia = '',
     this.condominioNome = '',
     this.exibirEnderecoSite = true,
+    this.publicarSite = false,
+    this.destaqueSite = false,
     this.valorVenda,
     this.valorLocacao,
     this.valorTemporada,
@@ -86,6 +88,10 @@ class Imovel {
   final String condominioNome;
   final bool exibirEnderecoSite;
 
+  /// Aparece no site (se disponível); destaque vai para a página inicial.
+  final bool publicarSite;
+  final bool destaqueSite;
+
   final double? valorVenda;
   final double? valorLocacao;
   final double? valorTemporada;
@@ -128,6 +134,8 @@ class Imovel {
     String? codigo,
     DateTime? criadoEm,
     bool semProprietario = false,
+    bool? publicarSite,
+    bool? destaqueSite,
   }) => Imovel(
     id: id,
     codigo: codigo ?? this.codigo,
@@ -146,6 +154,8 @@ class Imovel {
     referencia: referencia,
     condominioNome: condominioNome,
     exibirEnderecoSite: exibirEnderecoSite,
+    publicarSite: publicarSite ?? this.publicarSite,
+    destaqueSite: destaqueSite ?? this.destaqueSite,
     valorVenda: valorVenda,
     valorLocacao: valorLocacao,
     valorTemporada: valorTemporada,

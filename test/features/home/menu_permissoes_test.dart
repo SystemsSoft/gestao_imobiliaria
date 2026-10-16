@@ -38,6 +38,7 @@ void main() {
       ModuloMenu.temporada,
       ModuloMenu.contratosRelatorios,
       ModuloMenu.equipeSeguranca, // só fila e chat
+      ModuloMenu.site, // só vê os leads
     ]);
   });
 

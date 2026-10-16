@@ -17,6 +17,7 @@ enum ModuloMenu {
   fiscal('Fiscal', Icons.receipt_long_outlined),
   contratosRelatorios('Contratos e Relatórios', Icons.description_outlined),
   equipeSeguranca('Equipe e Segurança', Icons.shield_outlined),
+  site('Site e Leads', Icons.language),
   personalizacao('Personalização', Icons.settings_outlined);
 
   const ModuloMenu(this.label, this.icon);
@@ -86,6 +87,7 @@ class HomeViewModel extends ViewModel {
     // Todos usam a fila e o chat; o restante depende da permissão.
     ModuloMenu.equipeSeguranca => null,
     ModuloMenu.personalizacao => ModuloSistema.personalizacao,
+    ModuloMenu.site => ModuloSistema.site,
   };
 
   /// Compromissos da agenda atrasados ou de hoje, ainda não concluídos.

@@ -62,6 +62,8 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
     text: widget.imovel?.referencia,
   );
   late bool _exibirEndereco = widget.imovel?.exibirEnderecoSite ?? true;
+  late bool _publicarSite = widget.imovel?.publicarSite ?? false;
+  late bool _destaqueSite = widget.imovel?.destaqueSite ?? false;
 
   // Valores
   late final _valorVenda = TextEditingController(
@@ -299,6 +301,8 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
         referencia: _referencia.text.trim(),
         condominioNome: _condominioNome.text.trim(),
         exibirEnderecoSite: _exibirEndereco,
+        publicarSite: _publicarSite,
+        destaqueSite: _publicarSite && _destaqueSite,
         valorVenda: _finalidades.contains(Finalidade.venda)
             ? parseMoney(_valorVenda.text)
             : null,
@@ -513,6 +517,17 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
                           ),
                         ],
                       ),
+                      AppSwitch(
+                        label: 'Publicar no site',
+                        value: _publicarSite,
+                        onChanged: (v) => setState(() => _publicarSite = v),
+                      ),
+                      if (_publicarSite)
+                        AppSwitch(
+                          label: 'Destaque na página inicial do site',
+                          value: _destaqueSite,
+                          onChanged: (v) => setState(() => _destaqueSite = v),
+                        ),
                       AppSwitch(
                         label: 'Exibir endereço completo no site e portais',
                         value: _exibirEndereco,

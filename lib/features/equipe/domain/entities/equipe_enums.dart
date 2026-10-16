@@ -22,7 +22,8 @@ enum ModuloSistema {
   fiscal('Fiscal'),
   contratosRelatorios('Contratos e Relatórios'),
   equipeSeguranca('Equipe e Segurança'),
-  personalizacao('Personalização');
+  personalizacao('Personalização'),
+  site('Site e Leads');
 
   const ModuloSistema(this.label);
   final String label;
