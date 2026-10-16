@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 
 import '../api/api_client.dart';
 import '../api/sessao_api.dart';
+import '../cep/busca_cep.dart';
 import '../api/status_conexao.dart';
 
 import '../../features/auth/auth_injection.dart';
@@ -25,7 +26,9 @@ final sl = GetIt.instance;
 /// já integrados (CRM) usam o servidor; sem ela, ficam em memória (testes).
 Future<void> configurarDependencias({String? apiUrl}) async {
   await sl.reset();
-  sl.registerLazySingleton(StatusConexao.new);
+  sl
+    ..registerLazySingleton(StatusConexao.new)
+    ..registerLazySingleton(BuscaCep.new);
   if (apiUrl != null && apiUrl.isNotEmpty) {
     sl
       ..registerLazySingleton(SessaoApi.new)

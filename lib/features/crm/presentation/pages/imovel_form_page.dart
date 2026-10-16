@@ -4,6 +4,8 @@ import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/utils/id.dart';
+import '../../../../core/cep/busca_cep.dart';
+import '../../../../core/widgets/campo_cep.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../domain/entities/catalog.dart';
 import '../../domain/entities/enums.dart';
@@ -309,6 +311,17 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
     AnexoTipo.link => Icons.link,
   };
 
+  /// Preenche logradouro, bairro, cidade e UF pelo CEP; número e complemento
+  /// ficam como o usuário digitou.
+  void _preencherEndereco(EnderecoCep e) => setState(() {
+    if (e.logradouro.isNotEmpty) _logradouro.text = e.logradouro;
+    if (e.bairro.isNotEmpty) _bairro.text = e.bairro;
+    if (e.cidade.isNotEmpty) _cidade.text = e.cidade;
+    if (e.uf.isNotEmpty) _uf = e.uf;
+    // O "complemento" da ViaCEP é a faixa de números do CEP (ex.: "de 612
+    // a 1510 - lado par"), não o do imóvel: não é copiado.
+  });
+
   @override
   Widget build(BuildContext context) {
     final contatos = _vm.contatos;
@@ -405,11 +418,9 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
                       FieldRow(
                         flex: const [1, 3, 1],
                         children: [
-                          AppTextField(
-                            label: 'CEP',
+                          CampoCep(
                             controller: _cep,
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [cepFormatter],
+                            onEncontrado: _preencherEndereco,
                           ),
                           AppTextField(
                             label: 'Logradouro',
