@@ -15,3 +15,21 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Servidor
+
+Por padrão o app usa o servidor de produção na AWS (`http://18.191.168.173`,
+definido em `lib/core/api/api_config.dart`):
+
+```bash
+flutter run -d chrome
+```
+
+Para usar o servidor local (`python main.py` no `marceloimob_servidor`):
+
+```bash
+flutter run -d chrome --dart-define=API_URL=http://localhost:8000
+```
+
+Enquanto o servidor estiver só em HTTP, publique o app também em HTTP (ou
+rode localmente): uma página `https://` não consegue chamar uma API `http://`.
