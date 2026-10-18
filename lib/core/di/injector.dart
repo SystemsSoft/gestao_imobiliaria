@@ -18,6 +18,7 @@ import '../../features/fiscal/fiscal_injection.dart';
 import '../../features/home/home_injection.dart';
 import '../../features/locacao/locacao_injection.dart';
 import '../../features/personalizacao/personalizacao_injection.dart';
+import '../../features/portal_inquilino/portal_injection.dart';
 import '../../features/site/site_injection.dart';
 import '../../features/manutencao/manutencao_injection.dart';
 import '../../features/temporada/temporada_injection.dart';
@@ -57,4 +58,5 @@ Future<void> configurarDependencias({String? apiUrl}) async {
   registrarDashboard(sl);
   registrarPersonalizacao(sl);
   registrarSite(sl);
+  registrarPortalInquilino(sl);
 }

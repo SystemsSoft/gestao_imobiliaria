@@ -9,6 +9,8 @@ Map<String, Object?> manutencaoParaJson(Manutencao m) => {
   'descricao': m.descricao,
   'status': m.status.name,
   'dataPrevista': escreverData(m.dataPrevista),
+  'contratoId': m.contratoId,
+  'origem': m.origem.name,
   'diario': [
     for (final r in m.diario)
       {
@@ -42,6 +44,12 @@ Manutencao manutencaoDeJson(Map<String, dynamic> j) => Manutencao(
   ),
   dataPrevista: lerData(j['dataPrevista']),
   criadaEm: lerData(j['criadoEm']) ?? DateTime.now(),
+  contratoId: j['contratoId'] as String?,
+  origem: lerEnum(
+    OrigemManutencao.values,
+    j['origem'],
+    OrigemManutencao.equipe,
+  ),
   diario: [
     for (final r in (j['diario'] as List?) ?? const [])
       RegistroDiario(

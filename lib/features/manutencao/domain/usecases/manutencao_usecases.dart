@@ -28,9 +28,18 @@ class SalvarManutencao {
     if (m.descricao.trim().isEmpty) {
       throw const DomainException('Descreva a manutenção.');
     }
-    // Mantém o diário já registrado ao editar os dados da pauta.
+    // Mantém o diário e o vínculo com o contrato (chamado do inquilino) ao
+    // editar os dados da pauta.
     final atual = _repo.porId(m.id);
-    return _repo.salvar(atual == null ? m : m.copyWith(diario: atual.diario));
+    return _repo.salvar(
+      atual == null
+          ? m
+          : m.copyWith(
+              diario: atual.diario,
+              contratoId: atual.contratoId,
+              origem: atual.origem,
+            ),
+    );
   }
 }
 

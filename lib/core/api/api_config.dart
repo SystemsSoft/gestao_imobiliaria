@@ -6,8 +6,5 @@ class ApiConfig {
 
   static const producao = 'http://18.191.168.173';
 
-  static const url = String.fromEnvironment(
-    'API_URL',
-    defaultValue: producao,
-  );
+  static const url = String.fromEnvironment('API_URL', defaultValue: producao);
 }

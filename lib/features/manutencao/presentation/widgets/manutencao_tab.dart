@@ -172,6 +172,11 @@ class _ManutencaoTabState extends State<ManutencaoTab> {
                   spacing: 6,
                   runSpacing: 4,
                   children: [
+                    if (m.doInquilino)
+                      const GoldChip(
+                        'Chamado do inquilino',
+                        color: Colors.lightBlueAccent,
+                      ),
                     GoldChip(m.tipoLabel),
                     GoldChip(m.status.label, color: corStatus(m.status)),
                     if (m.dataPrevista != null)

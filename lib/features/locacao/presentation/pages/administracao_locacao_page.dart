@@ -10,6 +10,7 @@ import '../widgets/contratos_tab.dart';
 import '../widgets/despesas_tab.dart';
 import '../widgets/imposto_renda_tab.dart';
 import '../widgets/repasses_tab.dart';
+import '../../../portal_inquilino/presentation/widgets/portal_inquilino_tab.dart';
 
 /// Módulo "Administração de Locação".
 class AdministracaoLocacaoPage extends StatelessWidget {
@@ -21,7 +22,7 @@ class AdministracaoLocacaoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: abaInicial,
-      length: 7,
+      length: 8,
       child: Column(
         children: [
           Material(
@@ -52,6 +53,10 @@ class AdministracaoLocacaoPage extends StatelessWidget {
                   icon: Icon(Icons.article_outlined),
                   text: 'Modelos de contrato',
                 ),
+                Tab(
+                  icon: Icon(Icons.badge_outlined),
+                  text: 'Portal do inquilino',
+                ),
               ],
             ),
           ),
@@ -65,6 +70,7 @@ class AdministracaoLocacaoPage extends StatelessWidget {
                 ManutencaoTab(contexto: ContextoManutencao.locacao),
                 ImpostoRendaTab(),
                 ModelosTab(tipo: TipoModelo.locacao),
+                PortalInquilinoTab(),
               ],
             ),
           ),

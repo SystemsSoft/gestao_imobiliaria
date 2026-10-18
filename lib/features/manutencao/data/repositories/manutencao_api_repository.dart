@@ -11,6 +11,8 @@ class ManutencaoApiRepository implements ManutencaoRepository {
     : _itens = RemoteCollection(
         idOf: (m) => m.id,
         status: status,
+        // Chamados abertos pelos inquilinos no site aparecem sozinhos.
+        intervalo: const Duration(seconds: 60),
         carregar: () async => [
           for (final j in await _api.listarTudo('manutencoes'))
             manutencaoDeJson(j),

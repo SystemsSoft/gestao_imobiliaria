@@ -8,6 +8,7 @@ import '../../domain/entities/manutencao.dart';
 import '../viewmodels/manutencoes_viewmodel.dart';
 import '../widgets/manutencao_dialogs.dart';
 import '../widgets/manutencao_widgets.dart';
+import '../../../portal_inquilino/presentation/widgets/anexos_chamado.dart';
 
 /// Dados da manutenção e o diário de serviços executados.
 class ManutencaoDetalhePage extends StatelessWidget {
@@ -94,6 +95,7 @@ class ManutencaoDetalhePage extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
                   children: [
                     _cabecalho(m),
+                    AnexosChamado(manutencaoId: m.id),
                     const SizedBox(height: 12),
                     ResumoValores(
                       itens: [
@@ -194,6 +196,11 @@ class ManutencaoDetalhePage extends StatelessWidget {
             runSpacing: 8,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
+              if (m.doInquilino)
+                const GoldChip(
+                  'Chamado do inquilino (portal)',
+                  color: Colors.lightBlueAccent,
+                ),
               GoldChip(m.tipoLabel),
               if (m.dataPrevista != null)
                 GoldChip(

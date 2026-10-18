@@ -18,6 +18,15 @@ enum TipoManutencao {
   final String label;
 }
 
+/// Quem abriu: a equipe ou o inquilino, pelo portal do site.
+enum OrigemManutencao {
+  equipe('Equipe'),
+  inquilino('Inquilino (portal)');
+
+  const OrigemManutencao(this.label);
+  final String label;
+}
+
 enum StatusManutencao {
   pendente('Pendente'),
   emAndamento('Em andamento'),
@@ -74,6 +83,8 @@ class Manutencao {
     this.status = StatusManutencao.pendente,
     this.dataPrevista,
     this.diario = const [],
+    this.contratoId,
+    this.origem = OrigemManutencao.equipe,
   });
 
   final String id;
@@ -88,6 +99,12 @@ class Manutencao {
   final DateTime? dataPrevista;
   final DateTime criadaEm;
   final List<RegistroDiario> diario;
+
+  /// Contrato de locação do chamado aberto pelo inquilino.
+  final String? contratoId;
+  final OrigemManutencao origem;
+
+  bool get doInquilino => origem == OrigemManutencao.inquilino;
 
   String get tipoLabel =>
       tipo == TipoManutencao.outros && tipoOutro.trim().isNotEmpty
@@ -116,6 +133,8 @@ class Manutencao {
   Manutencao copyWith({
     StatusManutencao? status,
     List<RegistroDiario>? diario,
+    String? contratoId,
+    OrigemManutencao? origem,
   }) => Manutencao(
     id: id,
     contexto: contexto,
@@ -127,5 +146,7 @@ class Manutencao {
     dataPrevista: dataPrevista,
     status: status ?? this.status,
     diario: diario ?? this.diario,
+    contratoId: contratoId ?? this.contratoId,
+    origem: origem ?? this.origem,
   );
 }

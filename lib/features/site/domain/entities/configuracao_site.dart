@@ -32,6 +32,7 @@ class ConfiguracaoSite {
     this.permitirAgendarVisita = true,
     this.botaoWhatsapp = true,
     this.mostrarValores = true,
+    this.mostrarAreaInquilino = true,
     this.distribuirNaFila = true,
     this.criarTarefa = true,
     this.metaDescricao = '',
@@ -65,6 +66,9 @@ class ConfiguracaoSite {
   final bool botaoWhatsapp;
   final bool mostrarValores;
 
+  /// Link e páginas da Área do inquilino (/inquilino).
+  final bool mostrarAreaInquilino;
+
   // Atendimento dos leads
   final bool distribuirNaFila;
   final bool criarTarefa;
@@ -94,6 +98,7 @@ class ConfiguracaoSite {
     bool? permitirAgendarVisita,
     bool? botaoWhatsapp,
     bool? mostrarValores,
+    bool? mostrarAreaInquilino,
     bool? distribuirNaFila,
     bool? criarTarefa,
     String? metaDescricao,
@@ -119,6 +124,7 @@ class ConfiguracaoSite {
     permitirAgendarVisita: permitirAgendarVisita ?? this.permitirAgendarVisita,
     botaoWhatsapp: botaoWhatsapp ?? this.botaoWhatsapp,
     mostrarValores: mostrarValores ?? this.mostrarValores,
+    mostrarAreaInquilino: mostrarAreaInquilino ?? this.mostrarAreaInquilino,
     distribuirNaFila: distribuirNaFila ?? this.distribuirNaFila,
     criarTarefa: criarTarefa ?? this.criarTarefa,
     metaDescricao: metaDescricao ?? this.metaDescricao,

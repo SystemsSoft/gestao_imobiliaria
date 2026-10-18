@@ -60,6 +60,9 @@ import 'package:marceloimob_gestao/features/manutencao/data/models/manutencao_js
 import 'package:marceloimob_gestao/features/manutencao/data/repositories/manutencao_api_repository.dart';
 import 'package:marceloimob_gestao/features/manutencao/domain/entities/manutencao.dart';
 import 'package:marceloimob_gestao/features/personalizacao/data/repositories/empresa_repositories.dart';
+import 'package:marceloimob_gestao/features/portal_inquilino/data/repositories/portal_repositories.dart';
+import 'package:marceloimob_gestao/features/portal_inquilino/domain/entities/portal.dart';
+import 'package:marceloimob_gestao/features/portal_inquilino/domain/usecases/portal_usecases.dart';
 import 'package:marceloimob_gestao/features/temporada/data/models/reserva_json.dart';
 import 'package:marceloimob_gestao/features/temporada/data/repositories/reserva_api_repository.dart';
 import 'package:marceloimob_gestao/features/temporada/domain/entities/reserva.dart';
@@ -101,6 +104,22 @@ void _igual(
       if (!ignorar.contains(e.key)) e.key: e.value,
   };
   expect(jsonEncode(_norm(limpo(lido))), jsonEncode(_norm(limpo(enviado))));
+}
+
+/// CPF válido aleatório (o login do portal é único).
+String _cpf() {
+  final d = [
+    for (var i = 0; i < 9; i++) (DateTime.now().microsecond + i * 7) % 10,
+  ];
+  for (final n in [10, 11]) {
+    var soma = 0;
+    for (var i = 0; i < n - 1; i++) {
+      soma += d[i] * (n - i);
+    }
+    final r = soma * 10 % 11;
+    d.add(r == 10 ? 0 : r);
+  }
+  return d.join();
 }
 
 final _png = Uint8List.fromList(
@@ -739,6 +758,84 @@ void main() {
       expect(await repo.obterLogo(), _png);
       await repo.removerLogo();
       expect(await repo.obterLogo(), isNull);
+    });
+  });
+
+  group('Portal do inquilino', () {
+    test('acesso, documento publicado e aviso', () async {
+      final inquilino = Contato(
+        id: gerarId(),
+        nome: 'Inquilina do Portal',
+        criadoEm: DateTime(2026),
+        documento: _cpf(),
+        papeis: {PapelContato.locatario},
+      );
+      await ContatoApiRepository(
+        CrmApiDataSource(_api(), StatusConexao()),
+      ).salvar(inquilino);
+      final contrato =
+          await SalvarContrato(
+            ContratoLocacaoApiRepository(
+              LocacaoApiDataSource(_api(), StatusConexao()),
+            ),
+          )(
+            ContratoLocacao(
+              id: gerarId(),
+              numero: '',
+              imovelId: imovel.id,
+              locatarioId: inquilino.id,
+              beneficiarios: [
+                Beneficiario(contatoId: dono.id, percentual: 100),
+              ],
+              dataInicio: DateTime(2026, 1, 1),
+              valorAluguel: 2500,
+            ),
+          );
+      final portal = PortalInquilinoApiRepository(_api());
+      final senha = await portal.liberarAcesso(inquilino.id);
+      expect(senha.login, inquilino.documento);
+      expect(senha.senha, hasLength(10));
+      final acesso = (await portal.acessos()).firstWhere(
+        (a) => a.contatoId == inquilino.id,
+      );
+      expect((acesso.ativo, acesso.trocarSenha), (true, true));
+
+      await PublicarDocumentoContrato(portal, ArquivoRepositoryApi(_api()))(
+        contratoId: contrato.id,
+        tipo: TipoArquivoContrato.vistoria,
+        titulo: 'Vistoria de entrada',
+        arquivo: ArquivoEscolhido(
+          nome: 'vistoria.png',
+          tamanho: _png.length,
+          ler: () async => _png,
+        ),
+      );
+      final docs = await portal.arquivos(contratoId: contrato.id);
+      expect(docs.single.titulo, 'Vistoria de entrada');
+      expect(docs.single.referencia, startsWith('arquivo:'));
+      await portal.salvarArquivo(docs.single.comVisibilidade(false));
+      expect(
+        (await portal.arquivos(
+          contratoId: contrato.id,
+        )).single.visivelInquilino,
+        isFalse,
+      );
+
+      await EnviarComunicado(portal)(
+        contratoId: contrato.id,
+        titulo: 'Bem-vinda',
+        mensagem: 'Seu portal está pronto.',
+      );
+      final avisos = await portal.comunicados(contratoId: contrato.id);
+      expect(
+        avisos.map((c) => c.titulo),
+        containsAll(['Bem-vinda', 'Novo documento disponível']),
+      );
+      await portal.revogarAcesso(inquilino.id);
+      expect(
+        (await portal.acessos()).where((a) => a.contatoId == inquilino.id),
+        isEmpty,
+      );
     });
   });
 
