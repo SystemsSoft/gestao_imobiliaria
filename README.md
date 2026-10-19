@@ -18,7 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Servidor
 
-Por padrão o app usa o servidor de produção na AWS (`http://18.191.168.173`,
+Por padrão o app usa o servidor de produção na AWS (`https://api.inovacloud.app`,
 definido em `lib/core/api/api_config.dart`):
 
 ```bash
@@ -31,5 +31,5 @@ Para usar o servidor local (`python main.py` no `marceloimob_servidor`):
 flutter run -d chrome --dart-define=API_URL=http://localhost:8000
 ```
 
-Enquanto o servidor estiver só em HTTP, publique o app também em HTTP (ou
-rode localmente): uma página `https://` não consegue chamar uma API `http://`.
+Para publicar o app web em outro endereço (ex.: `https://gestao.inovacloud.app`),
+inclua esse endereço em `CORS_ORIGINS` no `.env` do servidor.
