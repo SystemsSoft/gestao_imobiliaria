@@ -62,9 +62,11 @@
     // pede.
     (function () {
       var convite = null;
+      var aguardando = [];
       window.addEventListener('beforeinstallprompt', function (e) {
         e.preventDefault();
         convite = e;
+        aguardando.splice(0).forEach(function (f) { f(); });
       });
       window.addEventListener('appinstalled', function () {
         convite = null;
@@ -72,8 +74,26 @@
       window.mbInstalacaoDisponivel = function () {
         return convite !== null;
       };
-      window.mbInstalarApp = async function () {
-        if (!convite) return 'indisponivel';
+      // O app já está instalado neste aparelho (Chrome no Android).
+      async function jaInstalado() {
+        try {
+          if (!navigator.getInstalledRelatedApps) return false;
+          var apps = await navigator.getInstalledRelatedApps();
+          return apps.length > 0;
+        } catch (e) {
+          return false;
+        }
+      }
+      // Abre a instalação do navegador. Se o convite ainda não chegou (a
+      // página acabou de abrir), espera um pouco por ele.
+      window.mbInstalarApp = async function (esperaMs) {
+        if (!convite && esperaMs > 0) {
+          await new Promise(function (ok) {
+            aguardando.push(ok);
+            setTimeout(ok, esperaMs);
+          });
+        }
+        if (!convite) return (await jaInstalado()) ? 'ja-instalado' : 'indisponivel';
         var c = convite;
         convite = null;
         await c.prompt();

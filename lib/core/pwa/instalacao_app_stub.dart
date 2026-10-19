@@ -18,6 +18,10 @@ class InstalacaoAppPlataforma implements InstalacaoApp {
   bool get enderecoOficial => false;
 
   @override
-  Future<ResultadoInstalacao> instalar() async =>
-      ResultadoInstalacao.indisponivel;
+  Future<ResultadoInstalacao> instalar({
+    Duration espera = Duration.zero,
+  }) async => ResultadoInstalacao.indisponivel;
+
+  @override
+  void abrirNoChrome() {}
 }

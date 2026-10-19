@@ -11,6 +11,9 @@ enum ResultadoInstalacao {
   /// O usuário fechou a janela de instalação.
   recusado,
 
+  /// O app já está instalado neste aparelho.
+  jaInstalado,
+
   /// O navegador não ofereceu a instalação (precisa seguir as instruções).
   indisponivel,
 }
@@ -98,7 +101,12 @@ abstract class InstalacaoApp {
   /// Este é o endereço oficial, onde a instalação funciona.
   bool get enderecoOficial;
 
-  Future<ResultadoInstalacao> instalar();
+  /// Abre a janela de instalação do navegador. Com [espera], aguarda o
+  /// navegador liberar a instalação (logo após abrir a página).
+  Future<ResultadoInstalacao> instalar({Duration espera = Duration.zero});
+
+  /// Android: reabre esta página no Google Chrome (que instala o app).
+  void abrirNoChrome();
 }
 
 extension InstalacaoAppOpcao on InstalacaoApp {

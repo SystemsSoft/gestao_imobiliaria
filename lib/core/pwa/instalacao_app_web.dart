@@ -10,7 +10,7 @@ import 'instalacao_app.dart';
 external bool _disponivel();
 
 @JS('mbInstalarApp')
-external JSPromise<JSString> _instalar();
+external JSPromise<JSString> _instalar(int esperaMs);
 
 class InstalacaoAppPlataforma implements InstalacaoApp {
   late final (Sistema, Navegador) _detectado = detectar(
@@ -44,16 +44,31 @@ class InstalacaoAppPlataforma implements InstalacaoApp {
       web.window.location.href.startsWith(enderecoAppWeb);
 
   @override
-  Future<ResultadoInstalacao> instalar() async {
+  Future<ResultadoInstalacao> instalar({
+    Duration espera = Duration.zero,
+  }) async {
     try {
-      final r = (await _instalar().toDart).toDart;
+      final r = (await _instalar(espera.inMilliseconds).toDart).toDart;
       return switch (r) {
         'accepted' => ResultadoInstalacao.instalado,
         'dismissed' => ResultadoInstalacao.recusado,
+        'ja-instalado' => ResultadoInstalacao.jaInstalado,
         _ => ResultadoInstalacao.indisponivel,
       };
     } on Object {
       return ResultadoInstalacao.indisponivel;
     }
+  }
+
+  /// Link de intenção do Android: abre o endereço atual no Chrome (se ele
+  /// não existir, segue no próprio navegador).
+  @override
+  void abrirNoChrome() {
+    final atual = Uri.parse(web.window.location.href);
+    final semEsquema = atual.toString().substring('${atual.scheme}://'.length);
+    web.window.location.href =
+        'intent://$semEsquema#Intent;scheme=${atual.scheme};'
+        'package=com.android.chrome;'
+        'S.browser_fallback_url=${Uri.encodeComponent(atual.toString())};end';
   }
 }

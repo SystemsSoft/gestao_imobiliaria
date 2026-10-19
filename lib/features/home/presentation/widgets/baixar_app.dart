@@ -12,6 +12,7 @@ import '../../../../core/widgets/form_widgets.dart';
 /// nos demais casos mostra o passo a passo do navegador em uso.
 Future<void> baixarApp(BuildContext context) async {
   final app = sl<InstalacaoApp>();
+  if (app.android) return _instalarNoAndroid(context, app);
   if (app.disponivel) {
     final r = await app.instalar();
     if (!context.mounted) return;
@@ -27,7 +28,7 @@ Future<void> baixarApp(BuildContext context) async {
         return;
       case ResultadoInstalacao.recusado:
         return;
-      case ResultadoInstalacao.indisponivel:
+      case ResultadoInstalacao.jaInstalado || ResultadoInstalacao.indisponivel:
         break;
     }
   }
@@ -57,20 +58,46 @@ Future<void> baixarApp(BuildContext context) async {
   }
 }
 
+/// Android: instalação direta, sem passo a passo. Espera alguns segundos o
+/// Chrome liberar a instalação (logo após abrir a página ela ainda não
+/// está pronta); fora do Chrome, reabre a página nele.
+Future<void> _instalarNoAndroid(BuildContext context, InstalacaoApp app) async {
+  if (!app.disponivel) mostrarMensagem(context, 'Preparando a instalação...');
+  // Até 3 s: o navegador só abre a janela logo depois do toque.
+  final r = await app.instalar(espera: const Duration(seconds: 3));
+  if (!context.mounted) return;
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  switch (r) {
+    case ResultadoInstalacao.instalado:
+      mostrarMensagem(
+        context,
+        'App instalado! Abra pelo ícone "MB Gestão" na tela inicial.',
+      );
+    case ResultadoInstalacao.recusado:
+      break;
+    case ResultadoInstalacao.jaInstalado:
+      mostrarMensagem(
+        context,
+        'O MB Gestão já está instalado. Abra pelo ícone na tela inicial.',
+      );
+    case ResultadoInstalacao.indisponivel:
+      if (app.navegador.instalacaoDireta) {
+        mostrarMensagem(
+          context,
+          'O Chrome ainda está preparando a instalação. Toque em '
+          '"Baixar app" de novo em alguns segundos.',
+        );
+      } else {
+        mostrarMensagem(context, 'Abrindo no Google Chrome para instalar...');
+        app.abrirNoChrome();
+      }
+  }
+}
+
 typedef PassoInstalacao = (String texto, IconData icone);
 
-/// Passos de instalação para o sistema e o navegador em uso.
+/// Passos de instalação no computador para o navegador em uso.
 List<PassoInstalacao> passosInstalacao(Sistema sistema, Navegador navegador) {
-  if (sistema == Sistema.android) {
-    return const [
-      ('Toque em ⋮ no canto do Chrome', Icons.more_vert),
-      (
-        'Escolha "Instalar app" ou "Adicionar à tela inicial"',
-        Icons.add_to_home_screen,
-      ),
-      ('Confirme em "Instalar"', Icons.download_done),
-    ];
-  }
   return switch (navegador) {
     Navegador.chrome => const [
       (

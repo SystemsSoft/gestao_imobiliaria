@@ -17,6 +17,7 @@ class _InstalacaoFalsa implements InstalacaoApp {
     this.instalado = false,
     this.disponivel = false,
     this.enderecoOficial = true,
+    this.resultadoSemConvite = ResultadoInstalacao.indisponivel,
   }) : sistema = sistema ?? (android ? Sistema.android : Sistema.ios);
 
   @override
@@ -30,13 +31,23 @@ class _InstalacaoFalsa implements InstalacaoApp {
   @override
   final bool enderecoOficial;
   int pedidos = 0;
+  int aberturasNoChrome = 0;
+
+  /// O que o navegador responde quando não ofereceu a instalação.
+  final ResultadoInstalacao resultadoSemConvite;
 
   @override
-  Future<ResultadoInstalacao> instalar() async {
+  Future<ResultadoInstalacao> instalar({
+    Duration espera = Duration.zero,
+  }) async {
     pedidos++;
+    if (!disponivel) return resultadoSemConvite;
     disponivel = false;
     return ResultadoInstalacao.instalado;
   }
+
+  @override
+  void abrirNoChrome() => aberturasNoChrome++;
 }
 
 void _computador(WidgetTester tester) {
@@ -130,11 +141,7 @@ void main() {
     expect(find.textContaining('App instalado!'), findsOneWidget);
   });
 
-  testWidgets('Android sem convite do navegador: mostra como instalar', (
-    tester,
-  ) async {
-    _celular(tester);
-    await _abrirHome(tester, _InstalacaoFalsa(enderecoOficial: false));
+  Future<void> tocarBaixarApp(WidgetTester tester) async {
     await _abrirMenu(tester);
     await tester.scrollUntilVisible(
       find.text('Baixar app'),
@@ -143,8 +150,42 @@ void main() {
     );
     await tester.tap(find.text('Baixar app'));
     await tester.pumpAndSettle();
-    expect(find.text('Abrir endereço oficial'), findsOneWidget);
-    expect(find.text(enderecoAppWeb), findsOneWidget);
+  }
+
+  testWidgets('Android: instala direto, sem passo a passo', (tester) async {
+    _celular(tester);
+    final app = _InstalacaoFalsa(disponivel: true, enderecoOficial: false);
+    await _abrirHome(tester, app);
+    await tocarBaixarApp(tester);
+    expect(app.pedidos, 1);
+    expect(find.textContaining('App instalado!'), findsOneWidget);
+    expect(find.textContaining('Abrir endereço oficial'), findsNothing);
+    expect(find.byType(BottomSheet), findsNothing);
+  });
+
+  testWidgets('Android com o app já instalado: avisa, sem instruções', (
+    tester,
+  ) async {
+    _celular(tester);
+    final app = _InstalacaoFalsa(
+      resultadoSemConvite: ResultadoInstalacao.jaInstalado,
+    );
+    await _abrirHome(tester, app);
+    await tocarBaixarApp(tester);
+    expect(find.textContaining('já está instalado'), findsOneWidget);
+    expect(find.byType(BottomSheet), findsNothing);
+  });
+
+  testWidgets('Android fora do Chrome: reabre a página no Chrome', (
+    tester,
+  ) async {
+    _celular(tester);
+    final app = _InstalacaoFalsa(navegador: Navegador.firefox);
+    await _abrirHome(tester, app);
+    await tocarBaixarApp(tester);
+    expect(app.aberturasNoChrome, 1);
+    expect(find.textContaining('Abrindo no Google Chrome'), findsOneWidget);
+    expect(find.byType(BottomSheet), findsNothing);
   });
 
   testWidgets('computador: sem barra inferior', (tester) async {
