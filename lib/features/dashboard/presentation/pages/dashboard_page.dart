@@ -179,17 +179,19 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _layoutColuna(DashboardResumo r, bool medio) {
     const g = SizedBox(height: 16);
-    final kpis = _kpis(r);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         LayoutBuilder(
           builder: (context, c) {
-            final colunas = c.maxWidth >= 640 ? 2 : 1;
-            final largura = (c.maxWidth - 16 * (colunas - 1)) / colunas;
+            // Celular: grade 2×2 de cartões compactos (tocar abre a lista).
+            final compacto = c.maxWidth < 640;
+            final kpis = _kpis(r, compacto: compacto);
+            final espaco = compacto ? 10.0 : 16.0;
+            final largura = (c.maxWidth - espaco) / 2;
             return Wrap(
-              spacing: 16,
-              runSpacing: 16,
+              spacing: espaco,
+              runSpacing: espaco,
               children: [
                 for (final k in kpis) SizedBox(width: largura, child: k),
               ],
@@ -197,7 +199,7 @@ class _DashboardPageState extends State<DashboardPage> {
           },
         ),
         g,
-        _acoesRapidas(),
+        _acoesRapidas(compacto: !medio),
         g,
         _desempenho(r),
         g,
@@ -220,13 +222,14 @@ class _DashboardPageState extends State<DashboardPage> {
 
   // ---------------------------------------------------------------- KPIs
 
-  List<Widget> _kpis(DashboardResumo r) => [
+  List<Widget> _kpis(DashboardResumo r, {bool compacto = false}) => [
     _kpi(
       'Imóveis Cadastrados',
       Icons.home_outlined,
       r.imoveis,
       'Ver imóveis',
       DestinoDashboard.imoveis,
+      compacto: compacto,
     ),
     _kpi(
       'Clientes Ativos',
@@ -234,6 +237,7 @@ class _DashboardPageState extends State<DashboardPage> {
       r.clientes,
       'Ver clientes',
       DestinoDashboard.clientes,
+      compacto: compacto,
     ),
     _kpi(
       'Vendas no Mês',
@@ -241,6 +245,7 @@ class _DashboardPageState extends State<DashboardPage> {
       r.vendasMes,
       'Ver vendas',
       DestinoDashboard.vendas,
+      compacto: compacto,
     ),
     _kpi(
       'Locações Ativas',
@@ -248,6 +253,7 @@ class _DashboardPageState extends State<DashboardPage> {
       r.locacoesAtivas,
       'Ver locações',
       DestinoDashboard.locacoes,
+      compacto: compacto,
     ),
   ];
 
@@ -256,8 +262,10 @@ class _DashboardPageState extends State<DashboardPage> {
     IconData icone,
     Indicador ind,
     String link,
-    DestinoDashboard destino,
-  ) {
+    DestinoDashboard destino, {
+    bool compacto = false,
+  }) {
+    if (compacto) return _kpiCompacto(titulo, icone, ind, destino);
     return DashCard(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
       child: Column(
@@ -308,6 +316,53 @@ class _DashboardPageState extends State<DashboardPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Cartão do celular: ícone, número, variação e nome; tocar abre a lista.
+  Widget _kpiCompacto(
+    String titulo,
+    IconData icone,
+    Indicador ind,
+    DestinoDashboard destino,
+  ) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () => _ir(destino),
+        child: DashCard(
+          padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(icone, color: AppColors.gold, size: 22),
+                  const Spacer(),
+                  Variacao(ind.variacaoPercentual),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${ind.valor}',
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w800,
+                  height: 1.1,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                titulo,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white70, fontSize: 12.5),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -464,7 +519,87 @@ class _DashboardPageState extends State<DashboardPage> {
 
   // ------------------------------------------------------- Ações rápidas
 
-  Widget _acoesRapidas() {
+  Widget _acoesRapidas({bool compacto = false}) {
+    final acoes = <(IconData, String, String, VoidCallback)>[
+      (
+        Icons.home_outlined,
+        'Novo Cadastro de Imóvel',
+        'Imóvel',
+        () => _abrir(const ImovelFormPage()),
+      ),
+      (
+        Icons.person_outline,
+        'Novo Cliente',
+        'Cliente',
+        () => _abrir(const ContatoFormPage()),
+      ),
+      (
+        Icons.sell_outlined,
+        'Nova Venda',
+        'Venda',
+        () => _abrir(const VendaFormPage()),
+      ),
+      (
+        Icons.key_outlined,
+        'Nova Locação',
+        'Locação',
+        () => _abrir(const ContratoFormPage()),
+      ),
+      (
+        Icons.receipt_long_outlined,
+        'Emitir Boleto',
+        'Boleto',
+        () => _ir(DestinoDashboard.boletos),
+      ),
+    ];
+    if (compacto) {
+      // Celular: atalhos redondos lado a lado, ao alcance do polegar.
+      return DashCard(
+        titulo: 'Ações Rápidas',
+        icone: Icons.bolt,
+        padding: const EdgeInsets.fromLTRB(12, 16, 12, 14),
+        child: Row(
+          children: [
+            for (final (icone, titulo, curto, onTap) in acoes)
+              Expanded(
+                child: Tooltip(
+                  message: titulo,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: onTap,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.gold.withValues(alpha: 0.12),
+                              border: Border.all(
+                                color: AppColors.gold.withValues(alpha: 0.7),
+                              ),
+                            ),
+                            child: Icon(icone, color: AppColors.gold),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            curto,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
     Widget botao(IconData icone, String texto, VoidCallback onTap) => Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
@@ -498,31 +633,8 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: const EdgeInsets.fromLTRB(18, 18, 18, 8),
       child: Column(
         children: [
-          botao(
-            Icons.home_outlined,
-            'Novo Cadastro de Imóvel',
-            () => _abrir(const ImovelFormPage()),
-          ),
-          botao(
-            Icons.person_outline,
-            'Novo Cliente',
-            () => _abrir(const ContatoFormPage()),
-          ),
-          botao(
-            Icons.sell_outlined,
-            'Nova Venda',
-            () => _abrir(const VendaFormPage()),
-          ),
-          botao(
-            Icons.key_outlined,
-            'Nova Locação',
-            () => _abrir(const ContratoFormPage()),
-          ),
-          botao(
-            Icons.receipt_long_outlined,
-            'Emitir Boleto',
-            () => _ir(DestinoDashboard.boletos),
-          ),
+          for (final (icone, titulo, _, onTap) in acoes)
+            botao(icone, titulo, onTap),
         ],
       ),
     );

@@ -11,6 +11,8 @@ class MenuLateral extends StatelessWidget {
     required this.selecionado,
     required this.onSelecionar,
     this.modulos = ModuloMenu.values,
+    this.compacto = false,
+    this.onBaixarApp,
   });
 
   /// Módulos que o usuário pode ver.
@@ -18,6 +20,12 @@ class MenuLateral extends StatelessWidget {
 
   final ModuloMenu selecionado;
   final ValueChanged<ModuloMenu> onSelecionar;
+
+  /// Celular: logo menor e sem a ilustração, para caberem mais itens.
+  final bool compacto;
+
+  /// Última opção ("Baixar app"); só aparece quando informada.
+  final VoidCallback? onBaixarApp;
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +44,10 @@ class MenuLateral extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(18, 18, 18, 6),
+            padding: EdgeInsets.fromLTRB(18, compacto ? 10 : 18, 18, 6),
             child: Image.asset(
               'assets/logo_marcelo_bonifacio.png',
-              height: 130,
+              height: compacto ? 84 : 130,
               fit: BoxFit.contain,
             ),
           ),
@@ -53,35 +61,44 @@ class MenuLateral extends StatelessWidget {
                     selecionado: m == selecionado,
                     onTap: () => onSelecionar(m),
                   ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 150,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                ShaderMask(
-                  blendMode: BlendMode.dstIn,
-                  shaderCallback: (r) => const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.transparent, Colors.black],
-                    stops: [0, 0.4],
-                  ).createShader(r),
-                  child: const Skyline(semente: 5, densidade: 0.8),
-                ),
-                Align(
-                  alignment: const Alignment(0, 0.55),
-                  child: Text(
-                    'Mais que imóveis,\nrealizamos sonhos.',
-                    textAlign: TextAlign.center,
-                    style: estiloManuscrito(tamanho: 21),
+                if (onBaixarApp case final baixar?) ...[
+                  Divider(color: Colors.white.withValues(alpha: 0.12)),
+                  _ItemAcao(
+                    icone: Icons.install_mobile,
+                    texto: 'Baixar app',
+                    onTap: baixar,
                   ),
-                ),
+                ],
               ],
             ),
           ),
+          if (!compacto)
+            SizedBox(
+              height: 150,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ShaderMask(
+                    blendMode: BlendMode.dstIn,
+                    shaderCallback: (r) => const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.transparent, Colors.black],
+                      stops: [0, 0.4],
+                    ).createShader(r),
+                    child: const Skyline(semente: 5, densidade: 0.8),
+                  ),
+                  Align(
+                    alignment: const Alignment(0, 0.55),
+                    child: Text(
+                      'Mais que imóveis,\nrealizamos sonhos.',
+                      textAlign: TextAlign.center,
+                      style: estiloManuscrito(tamanho: 21),
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -141,6 +158,54 @@ class _ItemMenu extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Item de ação do menu (não é um módulo), com destaque dourado.
+class _ItemAcao extends StatelessWidget {
+  const _ItemAcao({
+    required this.icone,
+    required this.texto,
+    required this.onTap,
+  });
+
+  final IconData icone;
+  final String texto;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 4),
+      child: Material(
+        color: AppColors.gold.withValues(alpha: 0.08),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: AppColors.gold.withValues(alpha: 0.45)),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            child: Row(
+              children: [
+                Icon(icone, size: 22, color: AppColors.gold),
+                const SizedBox(width: 14),
+                Text(
+                  texto,
+                  style: const TextStyle(
+                    color: AppColors.gold,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

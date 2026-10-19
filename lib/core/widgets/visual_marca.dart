@@ -118,6 +118,9 @@ class AbasModulo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Celular: abas mais baixas e juntas (cabem mais na largura).
+    final estreito = MediaQuery.sizeOf(context).width < 700;
+    final fonte = estreito ? 14.0 : 15.0;
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -127,8 +130,8 @@ class AbasModulo extends StatelessWidget {
       child: TabBar(
         isScrollable: true,
         tabAlignment: TabAlignment.start,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        labelPadding: const EdgeInsets.symmetric(horizontal: 26),
+        padding: EdgeInsets.symmetric(horizontal: estreito ? 4 : 16),
+        labelPadding: EdgeInsets.symmetric(horizontal: estreito ? 14 : 26),
         indicatorSize: TabBarIndicatorSize.tab,
         indicator: const UnderlineTabIndicator(
           borderSide: BorderSide(color: AppColors.gold, width: 3),
@@ -136,10 +139,10 @@ class AbasModulo extends StatelessWidget {
         dividerColor: Colors.transparent,
         labelColor: AppColors.gold,
         unselectedLabelColor: Colors.white.withValues(alpha: 0.85),
-        labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
-        unselectedLabelStyle: const TextStyle(
+        labelStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: fonte),
+        unselectedLabelStyle: TextStyle(
           fontWeight: FontWeight.w400,
-          fontSize: 15,
+          fontSize: fonte,
         ),
         overlayColor: WidgetStatePropertyAll(
           AppColors.gold.withValues(alpha: 0.06),
@@ -147,12 +150,12 @@ class AbasModulo extends StatelessWidget {
         tabs: [
           for (final (icone, texto) in abas)
             Tab(
-              height: 72,
+              height: estreito ? 52 : 72,
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(icone, size: 24),
-                  const SizedBox(width: 12),
+                  Icon(icone, size: estreito ? 20 : 24),
+                  SizedBox(width: estreito ? 8 : 12),
                   Text(texto),
                 ],
               ),
@@ -171,11 +174,10 @@ class PainelConteudo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final estreito = MediaQuery.sizeOf(context).width < 700;
+    // Celular: ocupa a largura toda (sem moldura), sobra mais espaço útil.
+    if (MediaQuery.sizeOf(context).width < 700) return child;
     return Padding(
-      padding: estreito
-          ? const EdgeInsets.all(10)
-          : const EdgeInsets.fromLTRB(26, 22, 26, 26),
+      padding: const EdgeInsets.fromLTRB(26, 22, 26, 26),
       child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
@@ -204,6 +206,7 @@ class CampoBusca extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final estreito = MediaQuery.sizeOf(context).width < 700;
     OutlineInputBorder borda(Color c) => OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
       borderSide: BorderSide(color: c),
@@ -217,13 +220,17 @@ class CampoBusca extends StatelessWidget {
           color: Colors.white.withValues(alpha: 0.6),
           fontSize: 16,
         ),
-        prefixIcon: const Padding(
+        prefixIcon: Padding(
           padding: EdgeInsets.only(left: 16, right: 10),
-          child: Icon(Icons.search, size: 26, color: Colors.white),
+          child: Icon(
+            Icons.search,
+            size: estreito ? 22 : 26,
+            color: Colors.white,
+          ),
         ),
         filled: true,
         fillColor: AppColors.navy.withValues(alpha: 0.55),
-        contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        contentPadding: EdgeInsets.symmetric(vertical: estreito ? 13 : 18),
         enabledBorder: borda(Colors.white.withValues(alpha: 0.14)),
         focusedBorder: borda(AppColors.gold.withValues(alpha: 0.8)),
         border: borda(Colors.white.withValues(alpha: 0.14)),

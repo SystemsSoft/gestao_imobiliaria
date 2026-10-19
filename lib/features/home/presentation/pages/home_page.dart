@@ -4,6 +4,7 @@ import '../../../../core/api/status_conexao.dart';
 import '../../../../core/config/empresa_info.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/errors/domain_exception.dart';
+import '../../../../core/pwa/instalacao_app.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/visual_marca.dart';
 import '../../../auditoria/presentation/pages/auditorias_page.dart';
@@ -21,8 +22,10 @@ import '../../../personalizacao/presentation/pages/personalizacao_page.dart';
 import '../../../temporada/presentation/pages/temporada_page.dart';
 import '../../../vendas/presentation/pages/administracao_vendas_page.dart';
 import '../viewmodels/home_viewmodel.dart';
+import '../widgets/baixar_app.dart';
 import '../widgets/cabecalho_modulo.dart';
 import '../widgets/menu_lateral.dart';
+import '../widgets/navegacao_inferior.dart';
 import '../../../site/presentation/pages/site_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,6 +37,9 @@ class HomePage extends StatefulWidget {
 
 /// Largura a partir da qual o menu fica fixo ao lado do conteúdo.
 const _larguraMenuFixo = 1100.0;
+
+/// Abaixo desta largura (celular): barra inferior e título na barra do topo.
+const _larguraCelular = 760.0;
 
 class _HomePageState extends State<HomePage> {
   final _vm = sl<HomeViewModel>();
@@ -123,13 +129,21 @@ class _HomePageState extends State<HomePage> {
         final modulo = _vm.selecionado;
         final largura = MediaQuery.sizeOf(context).width;
         final menuFixo = largura >= _larguraMenuFixo;
+        final celular = largura < _larguraCelular;
         final menu = MenuLateral(
           selecionado: modulo,
           modulos: _vm.modulosPermitidos,
+          compacto: celular,
           onSelecionar: (m) {
             if (!menuFixo) Navigator.of(context).pop();
             _vm.selecionar(m);
           },
+          onBaixarApp: sl<InstalacaoApp>().mostrarOpcao
+              ? () {
+                  if (!menuFixo) Navigator.of(context).pop();
+                  baixarApp(context);
+                }
+              : null,
         );
         return Scaffold(
           key: _scaffold,
@@ -137,10 +151,18 @@ class _HomePageState extends State<HomePage> {
           drawer: menuFixo
               ? null
               : Drawer(
-                  width: 260,
+                  width: 280,
                   backgroundColor: AppColors.navyDark,
                   child: SafeArea(child: menu),
                 ),
+          bottomNavigationBar: celular
+              ? NavegacaoInferior(
+                  permitidos: _vm.modulosPermitidos,
+                  selecionado: modulo,
+                  onSelecionar: _vm.selecionar,
+                  onMais: () => _scaffold.currentState?.openDrawer(),
+                )
+              : null,
           body: FundoMarca(
             child: SafeArea(
               child: Row(
@@ -151,6 +173,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         CabecalhoModulo(
                           vm: _vm,
+                          modulo: celular ? modulo : null,
                           onMenu: () => menuFixo
                               ? setState(() => _menuAberto = !_menuAberto)
                               : _scaffold.currentState?.openDrawer(),
@@ -159,7 +182,7 @@ class _HomePageState extends State<HomePage> {
                               _vm.selecionar(ModuloMenu.cadastrosCrm),
                         ),
                         const _AvisoConexao(),
-                        if (modulo != ModuloMenu.dashboard)
+                        if (!celular && modulo != ModuloMenu.dashboard)
                           _TituloModulo(modulo: modulo),
                         Expanded(
                           child: KeyedSubtree(

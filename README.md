@@ -33,3 +33,16 @@ flutter run -d chrome --dart-define=API_URL=http://localhost:8000
 
 Para publicar o app web em outro endereço (ex.: `https://gestao.inovacloud.app`),
 inclua esse endereço em `CORS_ORIGINS` no `.env` do servidor.
+
+## App web e instalação no Android
+
+O app fica publicado em `https://api.inovacloud.app/gestao/`:
+
+```bash
+./deploy_web.sh
+```
+
+O script gera o build (`--base-href /gestao/`), envia para o servidor e
+configura a rota no nginx. No Android, o menu mostra **Baixar app**, que
+instala o app na tela inicial (PWA: abre em tela cheia e sempre na versão
+mais nova). A opção não aparece em outros aparelhos nem no app já instalado.

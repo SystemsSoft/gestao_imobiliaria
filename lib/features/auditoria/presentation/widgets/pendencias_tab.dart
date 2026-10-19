@@ -36,7 +36,12 @@ class _PendenciasTabState extends State<PendenciasTab> {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              padding: EdgeInsets.fromLTRB(
+                _margem(context),
+                20,
+                _margem(context),
+                0,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -54,14 +59,14 @@ class _PendenciasTabState extends State<PendenciasTab> {
               ),
             ),
             FiltroChips<Gravidade>(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: _margem(context)),
               opcoes: Gravidade.values,
               selecionado: _vm.gravidade,
               labelOf: (g) => '${g.label} (${_vm.contar(g)})',
               onChanged: _vm.filtrarGravidade,
             ),
             FiltroChips<AreaPendencia>(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: EdgeInsets.symmetric(horizontal: _margem(context)),
               opcoes: AreaPendencia.values,
               selecionado: _vm.area,
               labelOf: (a) => a.label,
@@ -84,7 +89,12 @@ class _PendenciasTabState extends State<PendenciasTab> {
                       message: 'Nenhuma pendência. Carteira em dia!',
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(24, 4, 24, 48),
+                      padding: EdgeInsets.fromLTRB(
+                        _margem(context),
+                        4,
+                        _margem(context),
+                        48,
+                      ),
                       itemCount: lista.length,
                       itemBuilder: (_, i) => _card(lista[i]),
                     ),
@@ -153,3 +163,7 @@ class _PendenciasTabState extends State<PendenciasTab> {
     );
   }
 }
+
+/// Margem lateral: menor no celular.
+double _margem(BuildContext context) =>
+    MediaQuery.sizeOf(context).width < 600 ? 16 : 24;

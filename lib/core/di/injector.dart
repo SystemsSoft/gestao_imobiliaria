@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import '../api/api_client.dart';
 import '../api/sessao_api.dart';
 import '../cep/busca_cep.dart';
+import '../pwa/instalacao_app.dart';
 import '../api/status_conexao.dart';
 import '../arquivos/arquivo_repository.dart';
 import '../arquivos/arquivo_repository_api.dart';
@@ -34,7 +35,8 @@ Future<void> configurarDependencias({String? apiUrl}) async {
   await sl.reset();
   sl
     ..registerLazySingleton(StatusConexao.new)
-    ..registerLazySingleton(BuscaCep.new);
+    ..registerLazySingleton(BuscaCep.new)
+    ..registerLazySingleton<InstalacaoApp>(InstalacaoApp.new);
   if (apiUrl != null && apiUrl.isNotEmpty) {
     sl
       ..registerLazySingleton(SessaoApi.new)

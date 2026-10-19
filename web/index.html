@@ -56,6 +56,37 @@
       };
     })();
   </script>
+  <script>
+    // Instalação do app (PWA) no Android: o Chrome oferece o convite
+    // (beforeinstallprompt), que o menu "Baixar app" abre quando o usuário
+    // pede.
+    (function () {
+      var convite = null;
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        convite = e;
+      });
+      window.addEventListener('appinstalled', function () {
+        convite = null;
+      });
+      window.mbInstalacaoDisponivel = function () {
+        return convite !== null;
+      };
+      window.mbInstalarApp = async function () {
+        if (!convite) return 'indisponivel';
+        var c = convite;
+        convite = null;
+        await c.prompt();
+        var escolha = await c.userChoice;
+        return escolha.outcome;
+      };
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker.register('sw.js').catch(function () {});
+        });
+      }
+    })();
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

@@ -24,6 +24,16 @@ enum ModuloMenu {
   const ModuloMenu(this.label, this.icon);
   final String label;
   final IconData icon;
+
+  /// Nome curto para a barra do celular.
+  String get curto => switch (this) {
+    locacao => 'Locação',
+    vendas => 'Vendas',
+    temporada => 'Temporada',
+    contratosRelatorios => 'Contratos',
+    equipeSeguranca => 'Equipe',
+    _ => label,
+  };
 }
 
 /// Índice da aba "Central de Relacionamento" em Cadastros e CRM.

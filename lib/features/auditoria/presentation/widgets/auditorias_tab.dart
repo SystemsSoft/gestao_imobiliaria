@@ -53,7 +53,12 @@ class _AuditoriasTabState extends State<AuditoriasTab> {
           return Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+                padding: EdgeInsets.fromLTRB(
+                  _margem(context),
+                  20,
+                  _margem(context),
+                  0,
+                ),
                 child: CampoBusca(
                   hint:
                       'Buscar por número, imóvel, proprietário ou corretor...',
@@ -61,7 +66,7 @@ class _AuditoriasTabState extends State<AuditoriasTab> {
                 ),
               ),
               FiltroChips<StatusAuditoria>(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
+                padding: EdgeInsets.symmetric(horizontal: _margem(context)),
                 opcoes: StatusAuditoria.values,
                 selecionado: _vm.status,
                 labelOf: (s) => '${s.label} (${_vm.contar(s)})',
@@ -78,7 +83,12 @@ class _AuditoriasTabState extends State<AuditoriasTab> {
                             'em "Nova auditoria".',
                       )
                     : ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(24, 4, 24, 96),
+                        padding: EdgeInsets.fromLTRB(
+                          _margem(context),
+                          4,
+                          _margem(context),
+                          96,
+                        ),
                         itemCount: lista.length,
                         itemBuilder: (_, i) => _card(lista[i]),
                       ),
@@ -172,3 +182,7 @@ class _AuditoriasTabState extends State<AuditoriasTab> {
     );
   }
 }
+
+/// Margem lateral: menor no celular.
+double _margem(BuildContext context) =>
+    MediaQuery.sizeOf(context).width < 600 ? 16 : 24;

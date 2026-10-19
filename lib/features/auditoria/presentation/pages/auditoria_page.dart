@@ -292,7 +292,12 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1000),
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+                  padding: EdgeInsets.fromLTRB(
+                    MediaQuery.sizeOf(context).width < 600 ? 10 : 16,
+                    16,
+                    MediaQuery.sizeOf(context).width < 600 ? 10 : 16,
+                    80,
+                  ),
                   children: [
                     if (_a.concluida) _faixaConcluida(),
                     _dados(),
@@ -383,40 +388,43 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
       title: 'Dados da visita',
       icon: Icons.event_note_outlined,
       children: [
-        _linha([
-          _a.nova
-              ? AppDropdown<Imovel>(
-                  label: 'Imóvel',
-                  value: imovel,
-                  items: _vm.listaImoveis,
-                  labelOf: (i) => '${i.codigo} • ${i.titulo}',
-                  onChanged: (i) => _vm.editar(
-                    (a) => a.copyWith(
-                      imovelId: i?.id ?? '',
-                      contratoId: () => _vm.contratos.values
-                          .where(
-                            (c) =>
-                                c.imovelId == i?.id && c.status.name == 'ativo',
-                          )
-                          .firstOrNull
-                          ?.id,
+        FieldRow(
+          children: [
+            _a.nova
+                ? AppDropdown<Imovel>(
+                    label: 'Imóvel',
+                    value: imovel,
+                    items: _vm.listaImoveis,
+                    labelOf: (i) => '${i.codigo} • ${i.titulo}',
+                    onChanged: (i) => _vm.editar(
+                      (a) => a.copyWith(
+                        imovelId: i?.id ?? '',
+                        contratoId: () => _vm.contratos.values
+                            .where(
+                              (c) =>
+                                  c.imovelId == i?.id &&
+                                  c.status.name == 'ativo',
+                            )
+                            .firstOrNull
+                            ?.id,
+                      ),
                     ),
+                  )
+                : _leitura('Imóvel', _vm.nomeImovel(_a.imovelId)),
+            ro
+                ? _leitura('Contrato', contrato?.numero ?? '—')
+                : AppDropdown<ContratoLocacao?>(
+                    label: 'Contrato de locação',
+                    value: contrato,
+                    items: [null, ...contratos],
+                    labelOf: (c) => c == null
+                        ? 'Sem contrato'
+                        : '${c.numero} • ${c.status.label}',
+                    onChanged: (c) =>
+                        _vm.editar((a) => a.copyWith(contratoId: () => c?.id)),
                   ),
-                )
-              : _leitura('Imóvel', _vm.nomeImovel(_a.imovelId)),
-          ro
-              ? _leitura('Contrato', contrato?.numero ?? '—')
-              : AppDropdown<ContratoLocacao?>(
-                  label: 'Contrato de locação',
-                  value: contrato,
-                  items: [null, ...contratos],
-                  labelOf: (c) => c == null
-                      ? 'Sem contrato'
-                      : '${c.numero} • ${c.status.label}',
-                  onChanged: (c) =>
-                      _vm.editar((a) => a.copyWith(contratoId: () => c?.id)),
-                ),
-        ]),
+          ],
+        ),
         if (proprietario != null)
           Padding(
             padding: const EdgeInsets.only(top: 6),
@@ -425,78 +433,63 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
               style: const TextStyle(color: Colors.white60, fontSize: 12),
             ),
           ),
-        const SizedBox(height: 12),
-        _linha([
-          ro
-              ? _leitura('Tipo', _a.tipo.label)
-              : AppDropdown<TipoAuditoria>(
-                  label: 'Tipo',
-                  value: _a.tipo,
-                  items: TipoAuditoria.values,
-                  labelOf: (t) => t.label,
-                  onChanged: (t) => _vm.editar((a) => a.copyWith(tipo: t)),
-                ),
-          ro
-              ? _leitura('Situação', _a.status.label)
-              : AppDropdown<StatusAuditoria>(
-                  label: 'Situação',
-                  value: _a.status,
-                  items: StatusAuditoria.editaveis,
-                  labelOf: (s) => s.label,
-                  onChanged: (s) => _vm.editar((a) => a.copyWith(status: s)),
-                ),
-          ro
-              ? _leitura('Corretor', corretor?.nome ?? '—')
-              : AppDropdown<UsuarioSistema?>(
-                  label: 'Corretor responsável',
-                  value: corretor,
-                  items: [null, ..._vm.corretores],
-                  labelOf: (u) => u?.nome ?? 'Ninguém',
-                  onChanged: (u) =>
-                      _vm.editar((a) => a.copyWith(corretorId: () => u?.id)),
-                ),
-        ]),
-        const SizedBox(height: 12),
-        _linha([
-          ro
-              ? _leitura('Agendada para', formatDate(_a.dataAgendada))
-              : DateField(
-                  label: 'Agendada para',
-                  value: _a.dataAgendada,
-                  onChanged: (d) =>
-                      _vm.editar((a) => a.copyWith(dataAgendada: () => d)),
-                ),
-          ro
-              ? _leitura('Realizada em', formatDate(_a.dataRealizada))
-              : DateField(
-                  label: 'Realizada em',
-                  value: _a.dataRealizada,
-                  onChanged: (d) =>
-                      _vm.editar((a) => a.copyWith(dataRealizada: () => d)),
-                ),
-        ]),
+        const SizedBox(height: 14),
+        FieldRow(
+          children: [
+            ro
+                ? _leitura('Tipo', _a.tipo.label)
+                : AppDropdown<TipoAuditoria>(
+                    label: 'Tipo',
+                    value: _a.tipo,
+                    items: TipoAuditoria.values,
+                    labelOf: (t) => t.label,
+                    onChanged: (t) => _vm.editar((a) => a.copyWith(tipo: t)),
+                  ),
+            ro
+                ? _leitura('Situação', _a.status.label)
+                : AppDropdown<StatusAuditoria>(
+                    label: 'Situação',
+                    value: _a.status,
+                    items: StatusAuditoria.editaveis,
+                    labelOf: (s) => s.label,
+                    onChanged: (s) => _vm.editar((a) => a.copyWith(status: s)),
+                  ),
+            ro
+                ? _leitura('Corretor', corretor?.nome ?? '—')
+                : AppDropdown<UsuarioSistema?>(
+                    label: 'Corretor responsável',
+                    value: corretor,
+                    items: [null, ..._vm.corretores],
+                    labelOf: (u) => u?.nome ?? 'Ninguém',
+                    onChanged: (u) =>
+                        _vm.editar((a) => a.copyWith(corretorId: () => u?.id)),
+                  ),
+          ],
+        ),
+        const SizedBox(height: 14),
+        FieldRow(
+          children: [
+            ro
+                ? _leitura('Agendada para', formatDate(_a.dataAgendada))
+                : DateField(
+                    label: 'Agendada para',
+                    value: _a.dataAgendada,
+                    onChanged: (d) =>
+                        _vm.editar((a) => a.copyWith(dataAgendada: () => d)),
+                  ),
+            ro
+                ? _leitura('Realizada em', formatDate(_a.dataRealizada))
+                : DateField(
+                    label: 'Realizada em',
+                    value: _a.dataRealizada,
+                    onChanged: (d) =>
+                        _vm.editar((a) => a.copyWith(dataRealizada: () => d)),
+                  ),
+          ],
+        ),
       ],
     );
   }
-
-  Widget _linha(List<Widget> campos) => LayoutBuilder(
-    builder: (context, c) => c.maxWidth < 600
-        ? Column(
-            children: [
-              for (final w in campos)
-                Padding(padding: const EdgeInsets.only(top: 8), child: w),
-            ],
-          )
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (var i = 0; i < campos.length; i++) ...[
-                if (i > 0) const SizedBox(width: 12),
-                Expanded(child: campos[i]),
-              ],
-            ],
-          ),
-  );
 
   Widget _leitura(String rotulo, String valor) => InputDecorator(
     decoration: InputDecoration(labelText: rotulo),

@@ -18,12 +18,17 @@ class CabecalhoModulo extends StatelessWidget {
     required this.onMenu,
     required this.onSair,
     required this.onBuscar,
+    this.modulo,
   });
 
   final HomeViewModel vm;
   final VoidCallback onMenu;
   final VoidCallback onSair;
   final ValueChanged<String> onBuscar;
+
+  /// No celular, o nome do módulo aberto fica na própria barra (economiza
+  /// a faixa de título).
+  final ModuloMenu? modulo;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +52,21 @@ class CabecalhoModulo extends StatelessWidget {
           ),
           if (estreito) ...[
             const SizedBox(width: 4),
-            Image.asset('assets/logo_icone.png', height: 38),
-            const Spacer(),
+            if (modulo case final m? when m != ModuloMenu.dashboard) ...[
+              Icon(m.icon, color: AppColors.gold, size: 22),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  m.curto,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: estiloTitulo(tamanho: 19),
+                ),
+              ),
+            ] else ...[
+              Image.asset('assets/logo_icone.png', height: 38),
+              const Spacer(),
+            ],
           ] else ...[
             const SizedBox(width: 16),
             Expanded(

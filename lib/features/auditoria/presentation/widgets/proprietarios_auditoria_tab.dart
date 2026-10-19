@@ -96,14 +96,24 @@ class _ProprietariosAuditoriaTabState extends State<ProprietariosAuditoriaTab> {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              padding: EdgeInsets.fromLTRB(
+                _margem(context),
+                20,
+                _margem(context),
+                0,
+              ),
               child: CampoBusca(
                 hint: 'Buscar proprietário por nome ou CPF/CNPJ...',
                 onChanged: _vm.buscar,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 10, 24, 4),
+              padding: EdgeInsets.fromLTRB(
+                _margem(context),
+                10,
+                _margem(context),
+                4,
+              ),
               child: Wrap(
                 spacing: 16,
                 runSpacing: 6,
@@ -131,7 +141,12 @@ class _ProprietariosAuditoriaTabState extends State<ProprietariosAuditoriaTab> {
                           '(beneficiário).',
                     )
                   : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(24, 4, 24, 48),
+                      padding: EdgeInsets.fromLTRB(
+                        _margem(context),
+                        4,
+                        _margem(context),
+                        48,
+                      ),
                       itemCount: lista.length,
                       itemBuilder: (_, i) => _card(lista[i]),
                     ),
@@ -216,3 +231,7 @@ class _ProprietariosAuditoriaTabState extends State<ProprietariosAuditoriaTab> {
     );
   }
 }
+
+/// Margem lateral: menor no celular.
+double _margem(BuildContext context) =>
+    MediaQuery.sizeOf(context).width < 600 ? 16 : 24;
