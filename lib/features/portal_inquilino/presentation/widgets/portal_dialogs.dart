@@ -1,9 +1,9 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/arquivos/arquivo_repository.dart';
+import '../../../../core/arquivos/escolher_arquivos.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../domain/entities/portal.dart';
@@ -76,20 +76,11 @@ class _DocumentoDialogState extends State<_DocumentoDialog> {
   ArquivoEscolhido? _arquivo;
 
   Future<void> _escolher() async {
-    final f = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: CategoriaArquivo.arquivo.extensoes,
+    final escolhidos = await escolherArquivos(
+      extensoes: CategoriaArquivo.arquivo.extensoes,
     );
-    if (f == null) return;
-    final tamanho = await f.length() ?? 0;
-    if (!mounted) return;
-    setState(
-      () => _arquivo = ArquivoEscolhido(
-        nome: f.name,
-        tamanho: tamanho,
-        ler: f.readAsBytes,
-      ),
-    );
+    if (escolhidos.isEmpty || !mounted) return;
+    setState(() => _arquivo = escolhidos.first);
   }
 
   @override

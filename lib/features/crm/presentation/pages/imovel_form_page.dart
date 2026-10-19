@@ -1,7 +1,7 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/arquivos/arquivo_repository.dart';
+import '../../../../core/arquivos/escolher_arquivos.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
@@ -242,19 +242,11 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
   /// Escolhe no computador (vários de uma vez) e envia ao servidor.
   Future<void> _enviarDoComputador() async {
     final categoria = _categoriaAnexo;
-    final escolhidos = await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: categoria.extensoes,
+    final arquivos = await escolherArquivos(
+      extensoes: categoria.extensoes,
+      multiplos: true,
     );
-    if (escolhidos.isEmpty) return;
-    final arquivos = [
-      for (final f in escolhidos)
-        ArquivoEscolhido(
-          nome: f.name,
-          tamanho: await f.length() ?? 0,
-          ler: f.readAsBytes,
-        ),
-    ];
+    if (arquivos.isEmpty) return;
     final anexos = await _vm.enviarAnexos(
       _anexoTipo,
       arquivos,

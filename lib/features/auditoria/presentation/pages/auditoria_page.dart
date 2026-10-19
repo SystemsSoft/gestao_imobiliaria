@@ -1,8 +1,8 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/arquivos/arquivo_repository.dart';
+import '../../../../core/arquivos/escolher_arquivos.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
@@ -85,41 +85,40 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
     if (mounted) Navigator.of(context).pop();
   }
 
-  Future<void> _escolherMidia(TipoMidia tipo, {String? itemId}) async {
-    final categoria = tipo == TipoMidia.video
-        ? CategoriaArquivo.video
-        : CategoriaArquivo.foto;
-    final escolhidos = tipo == TipoMidia.foto
-        ? await FilePicker.pickFiles(
-            type: FileType.custom,
-            allowedExtensions: categoria.extensoes,
-          )
-        : [
-            ?await FilePicker.pickFile(
-              type: FileType.custom,
-              allowedExtensions: categoria.extensoes,
-            ),
-          ];
+  /// Câmera (foto ou vídeo) ou galeria do aparelho; cada arquivo é
+  /// anexado como foto ou vídeo conforme o formato.
+  Future<void> _escolherMidia(OrigemArquivo origem, {String? itemId}) async {
+    final escolhidos = await escolherArquivos(
+      origem: origem,
+      multiplos: true,
+      tipos: const ['image/*', 'video/*'],
+      extensoes: [
+        ...CategoriaArquivo.foto.extensoes,
+        ...CategoriaArquivo.video.extensoes,
+      ],
+    );
     if (escolhidos.isEmpty || !mounted) return;
-    var enviados = 0;
-    for (final f in escolhidos) {
-      final arquivo = ArquivoEscolhido(
-        nome: f.name,
-        tamanho: await f.length() ?? 0,
-        ler: f.readAsBytes,
-      );
+    var fotos = 0, videos = 0;
+    for (final arquivo in escolhidos) {
+      final ext = arquivo.nome.split('.').last.toLowerCase();
+      final tipo = CategoriaArquivo.video.extensoes.contains(ext)
+          ? TipoMidia.video
+          : TipoMidia.foto;
       if (!await _vm.anexar(arquivo: arquivo, tipo: tipo, itemId: itemId)) {
         if (mounted) mostrarMensagem(context, _vm.erro ?? 'Erro.');
         return;
       }
-      enviados++;
+      tipo == TipoMidia.video ? videos++ : fotos++;
     }
-    if (!mounted || enviados == 0) return;
+    if (!mounted) return;
     mostrarMensagem(
       context,
-      tipo == TipoMidia.video
-          ? 'Vídeo anexado. Use "Transcrever" para levar o que foi dito ao relatório.'
-          : '$enviados foto(s) anexada(s).',
+      [
+        if (fotos > 0) '$fotos foto(s) anexada(s).',
+        if (videos > 0)
+          'Vídeo anexado: use "Transcrever" para levar o que foi dito ao '
+              'relatório.',
+      ].join(' '),
     );
   }
 
@@ -631,18 +630,28 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
                 ),
               if (!ro) ...[
                 IconButton(
-                  tooltip: 'Foto deste item',
-                  icon: const Icon(Icons.add_a_photo_outlined, size: 20),
+                  tooltip: 'Tirar foto deste item',
+                  icon: const Icon(Icons.photo_camera_outlined, size: 20),
                   onPressed: _vm.ocupado
                       ? null
-                      : () => _escolherMidia(TipoMidia.foto, itemId: i.id),
+                      : () => _escolherMidia(OrigemArquivo.foto, itemId: i.id),
                 ),
                 IconButton(
-                  tooltip: 'Vídeo deste item',
+                  tooltip: 'Gravar vídeo deste item',
                   icon: const Icon(Icons.videocam_outlined, size: 20),
                   onPressed: _vm.ocupado
                       ? null
-                      : () => _escolherMidia(TipoMidia.video, itemId: i.id),
+                      : () => _escolherMidia(OrigemArquivo.video, itemId: i.id),
+                ),
+                IconButton(
+                  tooltip: 'Fotos e vídeos da galeria',
+                  icon: const Icon(Icons.photo_library_outlined, size: 20),
+                  onPressed: _vm.ocupado
+                      ? null
+                      : () => _escolherMidia(
+                          OrigemArquivo.arquivos,
+                          itemId: i.id,
+                        ),
                 ),
                 IconButton(
                   tooltip: 'Remover item',
@@ -700,19 +709,34 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
             spacing: 8,
             runSpacing: 8,
             children: [
-              OutlinedButton.icon(
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.gold,
+                  foregroundColor: AppColors.navyDark,
+                ),
                 onPressed: _vm.ocupado
                     ? null
-                    : () => _escolherMidia(TipoMidia.foto),
-                icon: const Icon(Icons.add_photo_alternate_outlined),
-                label: const Text('Adicionar fotos'),
+                    : () => _escolherMidia(OrigemArquivo.foto),
+                icon: const Icon(Icons.photo_camera_outlined),
+                label: const Text('Tirar foto'),
+              ),
+              FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: AppColors.gold,
+                  foregroundColor: AppColors.navyDark,
+                ),
+                onPressed: _vm.ocupado
+                    ? null
+                    : () => _escolherMidia(OrigemArquivo.video),
+                icon: const Icon(Icons.videocam_outlined),
+                label: const Text('Gravar vídeo'),
               ),
               OutlinedButton.icon(
                 onPressed: _vm.ocupado
                     ? null
-                    : () => _escolherMidia(TipoMidia.video),
-                icon: const Icon(Icons.video_call_outlined),
-                label: const Text('Adicionar vídeo'),
+                    : () => _escolherMidia(OrigemArquivo.arquivos),
+                icon: const Icon(Icons.photo_library_outlined),
+                label: const Text('Da galeria'),
               ),
             ],
           ),

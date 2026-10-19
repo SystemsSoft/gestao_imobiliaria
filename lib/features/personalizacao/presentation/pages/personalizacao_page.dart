@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/arquivos/escolher_arquivos.dart';
 import '../../../../core/config/empresa_info.dart';
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -95,12 +95,11 @@ class _PersonalizacaoPageState extends State<PersonalizacaoPage> {
   }
 
   Future<void> _escolherLogo() async {
-    final arquivo = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: const ['png', 'jpg', 'jpeg'],
+    final escolhidos = await escolherArquivos(
+      extensoes: const ['png', 'jpg', 'jpeg'],
     );
-    if (arquivo == null) return;
-    final bytes = await arquivo.readAsBytes();
+    if (escolhidos.isEmpty) return;
+    final bytes = await escolhidos.first.ler();
     await _resultado(await _vm.trocarLogo(bytes), 'Logotipo atualizado.');
   }
 
