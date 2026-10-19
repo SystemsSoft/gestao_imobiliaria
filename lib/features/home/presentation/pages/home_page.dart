@@ -6,6 +6,7 @@ import '../../../../core/di/injector.dart';
 import '../../../../core/errors/domain_exception.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/visual_marca.dart';
+import '../../../auditoria/presentation/pages/auditorias_page.dart';
 import '../../../auth/domain/usecases/entrar.dart';
 import '../../../auth/presentation/pages/login_page.dart';
 import '../../../contratos/presentation/pages/contratos_relatorios_page.dart';
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage> {
       ModuloMenu.locacao => AdministracaoLocacaoPage(abaInicial: aba),
       ModuloMenu.vendas => AdministracaoVendasPage(abaInicial: aba),
       ModuloMenu.temporada => const TemporadaPage(),
+      ModuloMenu.auditorias => AuditoriasPage(abaInicial: aba),
       ModuloMenu.financeiro => FinanceiroPage(abaInicial: aba),
       ModuloMenu.fiscal => const FiscalPage(),
       ModuloMenu.contratosRelatorios => const ContratosRelatoriosPage(),

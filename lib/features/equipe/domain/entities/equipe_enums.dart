@@ -17,6 +17,7 @@ enum PerfilAcesso {
 enum ModuloSistema {
   cadastrosCrm('Cadastros e CRM'),
   locacao('Administração de Locação'),
+  auditorias('Auditorias'),
   vendas('Administração de Vendas'),
   financeiro('Financeiro'),
   fiscal('Fiscal'),

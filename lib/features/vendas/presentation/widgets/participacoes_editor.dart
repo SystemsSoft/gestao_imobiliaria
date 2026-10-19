@@ -111,27 +111,34 @@ class ParticipacoesEditor extends StatelessWidget {
               ],
             ),
           ),
-        Row(
-          children: [
-            OutlinedButton.icon(
-              onPressed: () {
-                itens.add(
-                  ParticipacaoEdit(percentual: itens.isEmpty ? 100 : null),
-                );
-                onChanged();
-              },
-              icon: const Icon(Icons.person_add_alt),
-              label: Text('Adicionar ${rotulo.toLowerCase()}'),
-            ),
-            const Spacer(),
-            Text(
-              'Total: ${decimalToText(soma)}%',
-              style: TextStyle(
-                color: ok ? Colors.greenAccent : Colors.orangeAccent,
-                fontWeight: FontWeight.w700,
+        // O total desce para a linha de baixo em telas estreitas.
+        SizedBox(
+          width: double.infinity,
+          child: Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () {
+                  itens.add(
+                    ParticipacaoEdit(percentual: itens.isEmpty ? 100 : null),
+                  );
+                  onChanged();
+                },
+                icon: const Icon(Icons.person_add_alt),
+                label: Text('Adicionar ${rotulo.toLowerCase()}'),
               ),
-            ),
-          ],
+              Text(
+                'Total: ${decimalToText(soma)}%',
+                style: TextStyle(
+                  color: ok ? Colors.greenAccent : Colors.orangeAccent,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

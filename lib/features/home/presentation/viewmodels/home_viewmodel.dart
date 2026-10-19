@@ -13,6 +13,7 @@ enum ModuloMenu {
   locacao('Administração de Locação', Icons.key_outlined),
   vendas('Administração de Vendas', Icons.sell_outlined),
   temporada('Locação por Temporada', Icons.calendar_month_outlined),
+  auditorias('Auditorias', Icons.fact_check_outlined),
   financeiro('Financeiro', Icons.attach_money),
   fiscal('Fiscal', Icons.receipt_long_outlined),
   contratosRelatorios('Contratos e Relatórios', Icons.description_outlined),
@@ -81,6 +82,7 @@ class HomeViewModel extends ViewModel {
     // Temporada usa a permissão de Locação.
     ModuloMenu.locacao || ModuloMenu.temporada => ModuloSistema.locacao,
     ModuloMenu.vendas => ModuloSistema.vendas,
+    ModuloMenu.auditorias => ModuloSistema.auditorias,
     ModuloMenu.financeiro => ModuloSistema.financeiro,
     ModuloMenu.fiscal => ModuloSistema.fiscal,
     ModuloMenu.contratosRelatorios => ModuloSistema.contratosRelatorios,

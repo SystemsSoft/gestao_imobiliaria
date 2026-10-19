@@ -425,7 +425,9 @@ class _DashboardPageState extends State<DashboardPage> {
                         Variacao(f.variacao, sufixo: '%', tamanho: 15),
                       ],
                     ),
-                    const Row(
+                    // Quebra a linha em vez de estourar em telas estreitas.
+                    const Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         Text(
                           'Leads',
@@ -1102,14 +1104,21 @@ class _Hero extends StatelessWidget {
                     children: [
                       Text(
                         nome.isEmpty ? 'Olá!' : 'Olá, $nome!',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: compacto ? 22 : 30,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      const Text(
+                      Text(
                         'Aqui está o resumo da sua imobiliária hoje.',
-                        style: TextStyle(fontSize: 15, color: Colors.white),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: compacto ? 13 : 15,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),

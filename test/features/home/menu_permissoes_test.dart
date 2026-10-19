@@ -36,6 +36,7 @@ void main() {
       ModuloMenu.locacao,
       ModuloMenu.vendas,
       ModuloMenu.temporada,
+      ModuloMenu.auditorias,
       ModuloMenu.contratosRelatorios,
       ModuloMenu.equipeSeguranca, // só fila e chat
       ModuloMenu.site, // só vê os leads

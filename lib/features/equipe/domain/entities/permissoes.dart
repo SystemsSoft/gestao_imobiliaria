@@ -70,6 +70,7 @@ class Permissoes {
         ModuloSistema.cadastrosCrm: _operar,
         ModuloSistema.vendas: _operar,
         ModuloSistema.locacao: _operar,
+        ModuloSistema.auditorias: _operar,
         ModuloSistema.contratosRelatorios: _leitura,
         ModuloSistema.site: _leitura,
       },

@@ -15,12 +15,16 @@ import 'package:marceloimob_gestao/features/vendas/presentation/pages/venda_form
 const _telas = [Size(360, 740), Size(412, 915)];
 
 /// Registra os erros de layout (overflow) em vez de falhar no primeiro.
-List<String> _capturarErros() {
+/// Chame [restaurar] antes do `expect`: com o handler trocado, uma falha
+/// trava o teste em vez de ser reportada.
+({List<String> erros, void Function() restaurar}) _capturarErros() {
   final erros = <String>[];
   final anterior = FlutterError.onError;
-  FlutterError.onError = (d) => erros.add(d.exceptionAsString().split('\n').first);
-  addTearDown(() => FlutterError.onError = anterior);
-  return erros;
+  FlutterError.onError = (d) =>
+      erros.add(d.exceptionAsString().split('\n').first);
+  void restaurar() => FlutterError.onError = anterior;
+  addTearDown(restaurar);
+  return (erros: erros, restaurar: restaurar);
 }
 
 void _celular(WidgetTester tester, Size tela) {
@@ -37,7 +41,7 @@ void main() {
 
     testWidgets('módulos e abas cabem no celular ($nome)', (tester) async {
       _celular(tester, tela);
-      final erros = _capturarErros();
+      final (:erros, :restaurar) = _capturarErros();
       await tester.pumpWidget(
         MaterialApp(theme: buildAppTheme(), home: const HomePage()),
       );
@@ -60,6 +64,7 @@ void main() {
           }
         }
       }
+      restaurar();
       expect(problemas, isEmpty, reason: problemas.join('\n'));
     });
 
@@ -76,11 +81,12 @@ void main() {
         tester,
       ) async {
         _celular(tester, tela);
-        final erros = _capturarErros();
+        final (:erros, :restaurar) = _capturarErros();
         await tester.pumpWidget(
           MaterialApp(theme: buildAppTheme(), home: pagina),
         );
         await tester.pumpAndSettle();
+        restaurar();
         expect(erros.toSet(), isEmpty);
       });
     }

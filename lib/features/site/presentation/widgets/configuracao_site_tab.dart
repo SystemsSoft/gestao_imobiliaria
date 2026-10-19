@@ -268,6 +268,11 @@ class _ConfiguracaoSiteTabState extends State<ConfiguracaoSiteTab> {
                         c.mostrarAreaInquilino,
                         (v) => c.copyWith(mostrarAreaInquilino: v),
                       ),
+                      _chave(
+                        'Área do proprietário (repasses e auditorias)',
+                        c.mostrarAreaProprietario,
+                        (v) => c.copyWith(mostrarAreaProprietario: v),
+                      ),
                     ],
                   ),
                   FormSection(

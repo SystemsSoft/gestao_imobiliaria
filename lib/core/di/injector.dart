@@ -8,6 +8,7 @@ import '../arquivos/arquivo_repository.dart';
 import '../arquivos/arquivo_repository_api.dart';
 import '../arquivos/arquivo_repository_memoria.dart';
 
+import '../../features/auditoria/auditoria_injection.dart';
 import '../../features/auth/auth_injection.dart';
 import '../../features/contratos/contratos_injection.dart';
 import '../../features/crm/crm_injection.dart';
@@ -59,4 +60,5 @@ Future<void> configurarDependencias({String? apiUrl}) async {
   registrarPersonalizacao(sl);
   registrarSite(sl);
   registrarPortalInquilino(sl);
+  registrarAuditoria(sl);
 }
