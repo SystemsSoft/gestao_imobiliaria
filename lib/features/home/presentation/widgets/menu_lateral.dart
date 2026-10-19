@@ -13,6 +13,7 @@ class MenuLateral extends StatelessWidget {
     this.modulos = ModuloMenu.values,
     this.compacto = false,
     this.onBaixarApp,
+    this.baixarParaDesktop = false,
   });
 
   /// Módulos que o usuário pode ver.
@@ -26,6 +27,9 @@ class MenuLateral extends StatelessWidget {
 
   /// Última opção ("Baixar app"); só aparece quando informada.
   final VoidCallback? onBaixarApp;
+
+  /// No computador a opção vira "Baixar para desktop".
+  final bool baixarParaDesktop;
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +68,12 @@ class MenuLateral extends StatelessWidget {
                 if (onBaixarApp case final baixar?) ...[
                   Divider(color: Colors.white.withValues(alpha: 0.12)),
                   _ItemAcao(
-                    icone: Icons.install_mobile,
-                    texto: 'Baixar app',
+                    icone: baixarParaDesktop
+                        ? Icons.install_desktop
+                        : Icons.install_mobile,
+                    texto: baixarParaDesktop
+                        ? 'Baixar para desktop'
+                        : 'Baixar app',
                     onTap: baixar,
                   ),
                 ],
@@ -197,12 +205,16 @@ class _ItemAcao extends StatelessWidget {
               children: [
                 Icon(icone, size: 22, color: AppColors.gold),
                 const SizedBox(width: 14),
-                Text(
-                  texto,
-                  style: const TextStyle(
-                    color: AppColors.gold,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Text(
+                    texto,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.gold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
               ],

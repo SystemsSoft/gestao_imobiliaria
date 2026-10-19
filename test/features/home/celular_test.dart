@@ -8,17 +8,21 @@ import 'package:marceloimob_gestao/features/home/presentation/pages/home_page.da
 import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
 import 'package:marceloimob_gestao/features/home/presentation/widgets/navegacao_inferior.dart';
 
-/// Navegador simulado (Android ou não, instalado ou não).
+/// Navegador simulado (sistema, navegador, instalado ou não).
 class _InstalacaoFalsa implements InstalacaoApp {
   _InstalacaoFalsa({
-    this.android = true,
+    bool android = true,
+    Sistema? sistema,
+    this.navegador = Navegador.chrome,
     this.instalado = false,
     this.disponivel = false,
     this.enderecoOficial = true,
-  });
+  }) : sistema = sistema ?? (android ? Sistema.android : Sistema.ios);
 
   @override
-  final bool android;
+  final Sistema sistema;
+  @override
+  final Navegador navegador;
   @override
   final bool instalado;
   @override
@@ -28,14 +32,17 @@ class _InstalacaoFalsa implements InstalacaoApp {
   int pedidos = 0;
 
   @override
-  bool get mostrarOpcao => android && !instalado;
-
-  @override
   Future<ResultadoInstalacao> instalar() async {
     pedidos++;
     disponivel = false;
     return ResultadoInstalacao.instalado;
   }
+}
+
+void _computador(WidgetTester tester) {
+  tester.view.physicalSize = const Size(1400, 900);
+  tester.view.devicePixelRatio = 1;
+  addTearDown(tester.view.reset);
 }
 
 void _celular(WidgetTester tester) {
@@ -141,10 +148,105 @@ void main() {
   });
 
   testWidgets('computador: sem barra inferior', (tester) async {
-    tester.view.physicalSize = const Size(1400, 900);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.reset);
+    _computador(tester);
     await _abrirHome(tester, _InstalacaoFalsa(android: false));
     expect(find.byType(NavegacaoInferior), findsNothing);
+    expect(find.byTooltip('Baixar para desktop'), findsNothing); // iPhone/iPad
+  });
+
+  testWidgets('Mac com Chrome: botão "Baixar para desktop" instala', (
+    tester,
+  ) async {
+    _computador(tester);
+    final app = _InstalacaoFalsa(sistema: Sistema.mac, disponivel: true);
+    await _abrirHome(tester, app);
+    // Ícone no topo e última opção do menu.
+    expect(find.byTooltip('Baixar para desktop'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Baixar para desktop'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.text('Baixar app'), findsNothing);
+    await tester.tap(find.byTooltip('Baixar para desktop'));
+    await tester.pumpAndSettle();
+    expect(app.pedidos, 1);
+    expect(find.textContaining('janela própria'), findsOneWidget);
+  });
+
+  testWidgets('Mac com Safari: ensina "Adicionar ao Dock"', (tester) async {
+    _computador(tester);
+    await _abrirHome(
+      tester,
+      _InstalacaoFalsa(sistema: Sistema.mac, navegador: Navegador.safari),
+    );
+    await tester.tap(find.byTooltip('Baixar para desktop'));
+    await tester.pumpAndSettle();
+    expect(find.text('MB Gestão para macOS'), findsOneWidget);
+    expect(find.textContaining('Adicionar ao Dock'), findsOneWidget);
+  });
+
+  testWidgets('Windows com Firefox: indica Chrome ou Edge', (tester) async {
+    _computador(tester);
+    await _abrirHome(
+      tester,
+      _InstalacaoFalsa(sistema: Sistema.windows, navegador: Navegador.firefox),
+    );
+    await tester.tap(find.byTooltip('Baixar para desktop'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Google Chrome ou no Microsoft Edge'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('app já instalado no computador: sem o botão', (tester) async {
+    _computador(tester);
+    await _abrirHome(
+      tester,
+      _InstalacaoFalsa(sistema: Sistema.windows, instalado: true),
+    );
+    expect(find.byTooltip('Baixar para desktop'), findsNothing);
+  });
+
+  test('detecta sistema e navegador pelo user agent', () {
+    const mac =
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko)';
+    expect(detectar('$mac Chrome/141.0.0.0 Safari/537.36'), (
+      Sistema.mac,
+      Navegador.chrome,
+    ));
+    expect(detectar('$mac Version/26.0 Safari/605.1.15'), (
+      Sistema.mac,
+      Navegador.safari,
+    ));
+    expect(detectar('$mac Version/26.0 Safari/605.1.15', pontosToque: 5), (
+      Sistema.ios,
+      Navegador.safari,
+    )); // iPad
+    expect(
+      detectar(
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0',
+      ),
+      (Sistema.windows, Navegador.edge),
+    );
+    expect(
+      detectar(
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:144.0) Gecko/20100101 Firefox/144.0',
+      ),
+      (Sistema.windows, Navegador.firefox),
+    );
+    expect(
+      detectar(
+        'Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36',
+      ),
+      (Sistema.android, Navegador.chrome),
+    );
+    expect(
+      detectar(
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1',
+      ).$1,
+      Sistema.ios,
+    );
   });
 }

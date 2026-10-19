@@ -5,7 +5,7 @@ import 'package:web/web.dart' as web;
 import 'instalacao_app.dart';
 
 /// Funções do `web/index.html`, que guarda o convite de instalação
-/// (`beforeinstallprompt`) do Chrome.
+/// (`beforeinstallprompt`) do Chrome e do Edge.
 @JS('mbInstalacaoDisponivel')
 external bool _disponivel();
 
@@ -13,17 +13,22 @@ external bool _disponivel();
 external JSPromise<JSString> _instalar();
 
 class InstalacaoAppPlataforma implements InstalacaoApp {
+  late final (Sistema, Navegador) _detectado = detectar(
+    web.window.navigator.userAgent,
+    pontosToque: web.window.navigator.maxTouchPoints,
+  );
+
   @override
-  bool get android =>
-      web.window.navigator.userAgent.toLowerCase().contains('android');
+  Sistema get sistema => _detectado.$1;
+
+  @override
+  Navegador get navegador => _detectado.$2;
 
   @override
   bool get instalado =>
       web.window.matchMedia('(display-mode: standalone)').matches ||
-      web.window.matchMedia('(display-mode: fullscreen)').matches;
-
-  @override
-  bool get mostrarOpcao => android && !instalado;
+      web.window.matchMedia('(display-mode: fullscreen)').matches ||
+      web.window.matchMedia('(display-mode: window-controls-overlay)').matches;
 
   @override
   bool get disponivel {

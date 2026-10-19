@@ -19,6 +19,7 @@ class CabecalhoModulo extends StatelessWidget {
     required this.onSair,
     required this.onBuscar,
     this.modulo,
+    this.onBaixarDesktop,
   });
 
   final HomeViewModel vm;
@@ -29,6 +30,9 @@ class CabecalhoModulo extends StatelessWidget {
   /// No celular, o nome do módulo aberto fica na própria barra (economiza
   /// a faixa de título).
   final ModuloMenu? modulo;
+
+  /// Botão "Baixar para desktop" (só no computador, fora do app instalado).
+  final VoidCallback? onBaixarDesktop;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +83,10 @@ class CabecalhoModulo extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
+          ],
+          if (onBaixarDesktop case final baixar?) ...[
+            _BotaoBaixar(comTexto: largura >= 1500, onTap: baixar),
+            const SizedBox(width: 8),
           ],
           _Avisos(vm: vm),
           if (largura >= 1000) ...[
@@ -370,6 +378,35 @@ class _Usuario extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// Atalho para instalar o app no computador.
+class _BotaoBaixar extends StatelessWidget {
+  const _BotaoBaixar({required this.comTexto, required this.onTap});
+
+  final bool comTexto;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!comTexto) {
+      return IconButton(
+        tooltip: 'Baixar para desktop',
+        onPressed: onTap,
+        icon: const Icon(Icons.install_desktop, color: AppColors.gold),
+      );
+    }
+    return OutlinedButton.icon(
+      onPressed: onTap,
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.gold,
+        side: BorderSide(color: AppColors.gold.withValues(alpha: 0.6)),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      ),
+      icon: const Icon(Icons.install_desktop, size: 20),
+      label: const Text('Baixar para desktop'),
     );
   }
 }

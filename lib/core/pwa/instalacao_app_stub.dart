@@ -3,13 +3,13 @@ import 'instalacao_app.dart';
 /// Fora do navegador (testes, apps nativos): nada a instalar.
 class InstalacaoAppPlataforma implements InstalacaoApp {
   @override
-  bool get android => false;
+  Sistema get sistema => Sistema.outro;
+
+  @override
+  Navegador get navegador => Navegador.outro;
 
   @override
   bool get instalado => false;
-
-  @override
-  bool get mostrarOpcao => false;
 
   @override
   bool get disponivel => false;

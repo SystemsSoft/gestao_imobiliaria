@@ -130,6 +130,7 @@ class _HomePageState extends State<HomePage> {
         final largura = MediaQuery.sizeOf(context).width;
         final menuFixo = largura >= _larguraMenuFixo;
         final celular = largura < _larguraCelular;
+        final instalacao = sl<InstalacaoApp>();
         final menu = MenuLateral(
           selecionado: modulo,
           modulos: _vm.modulosPermitidos,
@@ -138,12 +139,13 @@ class _HomePageState extends State<HomePage> {
             if (!menuFixo) Navigator.of(context).pop();
             _vm.selecionar(m);
           },
-          onBaixarApp: sl<InstalacaoApp>().mostrarOpcao
+          onBaixarApp: instalacao.mostrarOpcao
               ? () {
                   if (!menuFixo) Navigator.of(context).pop();
                   baixarApp(context);
                 }
               : null,
+          baixarParaDesktop: instalacao.computador,
         );
         return Scaffold(
           key: _scaffold,
@@ -174,6 +176,12 @@ class _HomePageState extends State<HomePage> {
                         CabecalhoModulo(
                           vm: _vm,
                           modulo: celular ? modulo : null,
+                          onBaixarDesktop:
+                              !celular &&
+                                  instalacao.computador &&
+                                  instalacao.mostrarOpcao
+                              ? () => baixarApp(context)
+                              : null,
                           onMenu: () => menuFixo
                               ? setState(() => _menuAberto = !_menuAberto)
                               : _scaffold.currentState?.openDrawer(),

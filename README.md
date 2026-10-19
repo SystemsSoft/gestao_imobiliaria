@@ -43,6 +43,13 @@ O app fica publicado em `https://api.inovacloud.app/gestao/`:
 ```
 
 O script gera o build (`--base-href /gestao/`), envia para o servidor e
-configura a rota no nginx. No Android, o menu mostra **Baixar app**, que
-instala o app na tela inicial (PWA: abre em tela cheia e sempre na versão
-mais nova). A opção não aparece em outros aparelhos nem no app já instalado.
+configura a rota no nginx. O app pode ser instalado (PWA: abre em janela
+própria e sempre na versão mais nova):
+
+- **Android**: opção **Baixar app** no menu (instala na tela inicial).
+- **Computador** (Windows, Mac e Linux): botão **Baixar para desktop** no
+  topo e no menu. Chrome e Edge instalam direto; no Safari do Mac (Sonoma
+  ou mais novo) o app mostra como usar Arquivo › Adicionar ao Dock; o
+  Firefox não instala apps, então ele indica o Chrome ou o Edge.
+
+As opções somem quando o app já está instalado (e no iPhone/iPad).
