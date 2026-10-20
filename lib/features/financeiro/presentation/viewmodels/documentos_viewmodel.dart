@@ -17,6 +17,8 @@ class DocumentosViewModel extends ViewModel {
     this._substituir,
     this._remover,
     this._endereco,
+    this._listarDestinatarios,
+    this._compartilhar,
   ) {
     carregar();
   }
@@ -30,6 +32,11 @@ class DocumentosViewModel extends ViewModel {
   final SubstituirArquivoDocumento _substituir;
   final RemoverDocumento _remover;
   final EnderecoDocumento _endereco;
+  final ListarDestinatarios _listarDestinatarios;
+  final CompartilharPasta _compartilhar;
+
+  /// Inquilinos e proprietários, carregados ao abrir o compartilhamento.
+  List<Destinatario> destinatarios = const [];
 
   List<PastaDocumento> pastas = const [];
   List<Documento> _documentos = const [];
@@ -96,6 +103,21 @@ class DocumentosViewModel extends ViewModel {
     pastas = await _listarPastas();
     if (id == null) await abrirPasta(p.id);
   });
+
+  Future<bool> carregarDestinatarios() =>
+      executar(() async => destinatarios = await _listarDestinatarios());
+
+  Future<bool> compartilhar(String pastaId, Set<String> contatoIds) =>
+      executar(() async {
+        await _compartilhar(pastaId, contatoIds);
+        pastas = await _listarPastas();
+      });
+
+  /// Nomes de quem vê a pasta (na ordem da lista de destinatários).
+  List<Destinatario> compartilhadaCom(PastaDocumento p) => [
+    for (final d in destinatarios)
+      if (p.compartilhadaCom.contains(d.id)) d,
+  ];
 
   Future<bool> removerPasta(String id) => executar(() async {
     await _removerPasta(id);

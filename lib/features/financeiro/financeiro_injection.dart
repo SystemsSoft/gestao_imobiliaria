@@ -71,7 +71,7 @@ void registrarFinanceiro(GetIt sl) {
         () => ConfiguracaoFinanceiraRepositoryImpl(sl()),
       )
       ..registerLazySingleton<DocumentoRepository>(
-        DocumentoMemoriaRepository.new,
+        () => DocumentoMemoriaRepository(sl()),
       );
   }
   sl
@@ -117,6 +117,8 @@ void registrarFinanceiro(GetIt sl) {
     ..registerFactory(() => SubstituirArquivoDocumento(sl()))
     ..registerFactory(() => RemoverDocumento(sl()))
     ..registerFactory(() => EnderecoDocumento(sl()))
+    ..registerFactory(() => ListarDestinatarios(sl()))
+    ..registerFactory(() => CompartilharPasta(sl()))
     // ViewModels
     ..registerFactory(
       () =>
@@ -141,6 +143,8 @@ void registrarFinanceiro(GetIt sl) {
     )
     ..registerFactory(
       () => DocumentosViewModel(
+        sl(),
+        sl(),
         sl(),
         sl(),
         sl(),

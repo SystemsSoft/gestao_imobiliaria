@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import '../../../crm/domain/entities/enums.dart';
+import '../../../crm/domain/repositories/contato_repository.dart';
 import '../../../../core/errors/domain_exception.dart';
 import '../../../../core/utils/id.dart';
 import '../../domain/entities/documento.dart';
@@ -7,7 +9,11 @@ import '../../domain/repositories/documento_repository.dart';
 
 /// Pastas e documentos em memória (testes e uso sem servidor).
 class DocumentoMemoriaRepository implements DocumentoRepository {
+  DocumentoMemoriaRepository(this._contatos);
+  final ContatoRepository _contatos;
+
   final _pastas = <String, String>{};
+  final _compartilhadas = <String, List<String>>{};
   final _docs = <String, Documento>{};
   final _conteudo = <String, Uint8List>{};
 
@@ -17,18 +23,52 @@ class DocumentoMemoriaRepository implements DocumentoRepository {
   @override
   Future<List<PastaDocumento>> pastas() async => [
     for (final MapEntry(key: id, value: nome) in _pastas.entries)
-      PastaDocumento(id: id, nome: nome, documentos: _quantos(id)),
+      PastaDocumento(
+        id: id,
+        nome: nome,
+        documentos: _quantos(id),
+        compartilhadaCom: _compartilhadas[id] ?? const [],
+      ),
   ]..sort((a, b) => a.nome.toLowerCase().compareTo(b.nome.toLowerCase()));
 
   @override
   Future<PastaDocumento> salvarPasta(String id, String nome) async {
     _pastas[id] = nome;
-    return PastaDocumento(id: id, nome: nome, documentos: _quantos(id));
+    return PastaDocumento(
+      id: id,
+      nome: nome,
+      documentos: _quantos(id),
+      compartilhadaCom: _compartilhadas[id] ?? const [],
+    );
+  }
+
+  @override
+  Future<List<Destinatario>> destinatarios() async => [
+    for (final c in await _contatos.listar())
+      if (c.papeis.contains(PapelContato.locatario) ||
+          c.papeis.contains(PapelContato.proprietario))
+        Destinatario(
+          id: c.id,
+          nome: c.nome,
+          documento: c.documento,
+          inquilino: c.papeis.contains(PapelContato.locatario),
+          proprietario: c.papeis.contains(PapelContato.proprietario),
+        ),
+  ]..sort((a, b) => a.nome.toLowerCase().compareTo(b.nome.toLowerCase()));
+
+  @override
+  Future<PastaDocumento> compartilhar(
+    String pastaId,
+    List<String> contatoIds,
+  ) async {
+    _compartilhadas[pastaId] = [...contatoIds];
+    return (await pastas()).firstWhere((p) => p.id == pastaId);
   }
 
   @override
   Future<void> removerPasta(String id) async {
     _pastas.remove(id);
+    _compartilhadas.remove(id);
     _docs.removeWhere((_, d) => d.pastaId == id);
   }
 

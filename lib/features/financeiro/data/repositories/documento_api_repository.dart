@@ -12,6 +12,19 @@ PastaDocumento _pasta(_Json j) => PastaDocumento(
   id: j['id'] as String,
   nome: lerTexto(j['nome']),
   documentos: lerInt(j['documentos']),
+  compartilhadaCom: [
+    for (final id in j['compartilhadaCom'] as List? ?? const []) id as String,
+  ],
+);
+
+Destinatario _destinatario(_Json j) => Destinatario(
+  id: j['id'] as String,
+  nome: lerTexto(j['nome']),
+  documento: lerTexto(j['documento']),
+  inquilino: j['inquilino'] as bool? ?? false,
+  proprietario: j['proprietario'] as bool? ?? false,
+  acessoInquilino: j['acessoInquilino'] as bool? ?? false,
+  acessoProprietario: j['acessoProprietario'] as bool? ?? false,
 );
 
 Documento _documento(_Json j) => Documento(
@@ -41,6 +54,22 @@ class DocumentoApiRepository implements DocumentoRepository {
 
   @override
   Future<void> removerPasta(String id) => _api.delete('financeiro/pastas/$id');
+
+  @override
+  Future<List<Destinatario>> destinatarios() async => [
+    for (final j in await _api.get('financeiro/destinatarios') as List)
+      _destinatario(j),
+  ];
+
+  @override
+  Future<PastaDocumento> compartilhar(
+    String pastaId,
+    List<String> contatoIds,
+  ) async => _pasta(
+    await _api.put('financeiro/pastas/$pastaId/compartilhamento', {
+      'contatoIds': contatoIds,
+    }),
+  );
 
   @override
   Future<List<Documento>> documentos(String pastaId) async => [

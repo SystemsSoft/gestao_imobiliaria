@@ -8,6 +8,7 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../domain/entities/documento.dart';
 import '../viewmodels/documentos_viewmodel.dart';
+import 'compartilhar_pasta_dialog.dart';
 
 /// Gerenciador de documentos: pastas (boletos, relatórios e outros) com os
 /// PDFs, Words e Excels baixados no computador e enviados ao sistema.
@@ -72,6 +73,29 @@ class _DocumentosTabState extends State<DocumentosTab> {
     if (await confirmDelete(context, 'Excluir a pasta "${p.nome}"$docs?')) {
       await _acao(() => _vm.removerPasta(p.id), 'Pasta excluída.');
     }
+  }
+
+  Future<void> _compartilhar(PastaDocumento p) async {
+    if (!await _vm.carregarDestinatarios()) {
+      if (mounted) {
+        mostrarMensagem(context, _vm.erro ?? 'Não foi possível carregar.');
+      }
+      return;
+    }
+    if (!mounted) return;
+    final ids = await mostrarCompartilharPastaDialog(
+      context,
+      pasta: p,
+      destinatarios: _vm.destinatarios,
+    );
+    if (ids == null) return;
+    await _acao(
+      () => _vm.compartilhar(p.id, ids),
+      ids.isEmpty
+          ? '"${p.nome}" agora é só da equipe.'
+          : '"${p.nome}" compartilhada com ${ids.length} '
+                '${ids.length == 1 ? 'pessoa' : 'pessoas'}.',
+    );
   }
 
   Future<void> _abrirPasta(String? id) async {
@@ -275,14 +299,22 @@ class _DocumentosTabState extends State<DocumentosTab> {
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
-                Text(switch (p.documentos) {
-                  0 => 'Vazia',
-                  1 => '1 documento',
-                  final n => '$n documentos',
-                }, style: const TextStyle(color: Colors.white60, fontSize: 12)),
+                Text(
+                  [
+                    switch (p.documentos) {
+                      0 => 'Vazia',
+                      1 => '1 documento',
+                      final n => '$n documentos',
+                    },
+                    if (p.compartilhadaCom.isNotEmpty)
+                      'compartilhada com ${p.compartilhadaCom.length}',
+                  ].join(' • '),
+                  style: const TextStyle(color: Colors.white60, fontSize: 12),
+                ),
               ],
             ),
           ),
+          _botaoCompartilhar(p),
           PopupMenuButton<String>(
             tooltip: 'Opções da pasta',
             color: AppColors.navy,
@@ -294,6 +326,25 @@ class _DocumentosTabState extends State<DocumentosTab> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  /// Ícone de compartilhar, com o número de pessoas que já veem a pasta.
+  Widget _botaoCompartilhar(PastaDocumento p) {
+    final n = p.compartilhadaCom.length;
+    return IconButton(
+      tooltip: n == 0
+          ? 'Compartilhar com inquilinos e proprietários'
+          : 'Compartilhada com $n — alterar',
+      color: AppColors.gold,
+      onPressed: _vm.ocupado ? null : () => _compartilhar(p),
+      icon: Badge.count(
+        count: n,
+        isLabelVisible: n > 0,
+        backgroundColor: AppColors.gold,
+        textColor: AppColors.navyDark,
+        child: Icon(n == 0 ? Icons.share_outlined : Icons.share),
       ),
     );
   }
@@ -322,8 +373,7 @@ class _DocumentosTabState extends State<DocumentosTab> {
                   ),
                 const Icon(Icons.folder_open, color: AppColors.gold),
                 const SizedBox(width: 8),
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 360),
+                Flexible(
                   child: Text(
                     pasta.nome,
                     maxLines: 1,
@@ -341,6 +391,7 @@ class _DocumentosTabState extends State<DocumentosTab> {
                   icon: const Icon(Icons.edit_outlined, size: 20),
                   onPressed: () => _renomearPasta(pasta),
                 ),
+                _botaoCompartilhar(pasta),
               ],
             ),
             FilledButton.icon(

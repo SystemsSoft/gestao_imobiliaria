@@ -12,6 +12,12 @@ abstract interface class DocumentoRepository {
   /// Exclui a pasta com todos os documentos dela.
   Future<void> removerPasta(String id);
 
+  /// Inquilinos e proprietários que podem receber pastas.
+  Future<List<Destinatario>> destinatarios();
+
+  /// Define quem vê a pasta no portal (lista vazia = só a equipe).
+  Future<PastaDocumento> compartilhar(String pastaId, List<String> contatoIds);
+
   Future<List<Documento>> documentos(String pastaId);
 
   Future<Documento> enviar(String pastaId, Uint8List bytes, String nomeArquivo);

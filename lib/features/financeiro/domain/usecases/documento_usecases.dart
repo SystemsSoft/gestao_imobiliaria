@@ -53,6 +53,22 @@ class RemoverPasta {
   Future<void> call(String id) => _repo.removerPasta(id);
 }
 
+class ListarDestinatarios {
+  const ListarDestinatarios(this._repo);
+  final DocumentoRepository _repo;
+
+  Future<List<Destinatario>> call() => _repo.destinatarios();
+}
+
+/// Define quais inquilinos e proprietários veem a pasta no portal.
+class CompartilharPasta {
+  const CompartilharPasta(this._repo);
+  final DocumentoRepository _repo;
+
+  Future<PastaDocumento> call(String pastaId, Iterable<String> contatoIds) =>
+      _repo.compartilhar(pastaId, contatoIds.toSet().toList());
+}
+
 class ListarDocumentos {
   const ListarDocumentos(this._repo);
   final DocumentoRepository _repo;

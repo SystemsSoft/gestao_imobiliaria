@@ -5,6 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:marceloimob_gestao/core/arquivos/arquivo_repository.dart';
 import 'package:marceloimob_gestao/core/di/injector.dart';
 import 'package:marceloimob_gestao/core/theme/app_theme.dart';
+import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
+import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
+import 'package:marceloimob_gestao/features/crm/domain/repositories/contato_repository.dart';
 import 'package:marceloimob_gestao/features/financeiro/domain/repositories/documento_repository.dart';
 import 'package:marceloimob_gestao/features/financeiro/presentation/viewmodels/documentos_viewmodel.dart';
 import 'package:marceloimob_gestao/features/financeiro/presentation/widgets/documentos_tab.dart';
@@ -21,8 +24,100 @@ Future<DocumentosViewModel> _vm() async {
   return vm;
 }
 
+Future<void> _contatos() async {
+  final repo = sl<ContatoRepository>();
+  for (final (id, nome, papeis) in [
+    ('ana', 'Ana Inquilina', {PapelContato.locatario}),
+    ('beto', 'Beto Dono', {PapelContato.proprietario}),
+    (
+      'caio',
+      'Caio Dono e Inquilino',
+      {PapelContato.locatario, PapelContato.proprietario},
+    ),
+    ('lead', 'Lead Qualquer', {PapelContato.lead}),
+  ]) {
+    await repo.salvar(
+      Contato(id: id, nome: nome, papeis: papeis, criadoEm: DateTime(2026)),
+    );
+  }
+}
+
 void main() {
   setUp(configurarDependencias);
+
+  test('compartilha a pasta com inquilinos e proprietários', () async {
+    await _contatos();
+    final vm = await _vm();
+    await vm.salvarPasta('Boletos');
+    expect(await vm.carregarDestinatarios(), isTrue);
+    expect(vm.destinatarios.map((d) => d.nome), [
+      'Ana Inquilina',
+      'Beto Dono',
+      'Caio Dono e Inquilino',
+    ]);
+    final caio = vm.destinatarios.last;
+    expect((caio.inquilino, caio.proprietario), (true, true));
+
+    expect(await vm.compartilhar(vm.pastaId!, {'ana', 'beto'}), isTrue);
+    expect(vm.pasta!.compartilhadaCom.toSet(), {'ana', 'beto'});
+    expect(vm.compartilhadaCom(vm.pasta!).map((d) => d.nome), [
+      'Ana Inquilina',
+      'Beto Dono',
+    ]);
+    expect(await vm.compartilhar(vm.pastaId!, {}), isTrue);
+    expect(vm.pasta!.compartilhadaCom, isEmpty);
+    vm.dispose();
+  });
+
+  for (final (nome, tamanho) in [
+    ('celular', const Size(360, 740)),
+    ('computador', const Size(1400, 900)),
+  ]) {
+    testWidgets('ícone de compartilhar abre a lista e marca a pasta ($nome)', (
+      tester,
+    ) async {
+      tester.view.physicalSize = tamanho;
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await _contatos();
+      await sl<DocumentoRepository>().salvarPasta('p1', 'Boletos');
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: buildAppTheme(),
+          home: const Scaffold(body: DocumentosTab()),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byTooltip('Compartilhar com inquilinos e proprietários'),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Compartilhar "Boletos"'), findsOneWidget);
+      expect(find.text('Lead Qualquer'), findsNothing);
+
+      await tester.tap(find.text('Proprietários'));
+      await tester.pumpAndSettle();
+      expect(find.text('Ana Inquilina'), findsNothing);
+      await tester.tap(find.text('Marcar todos da lista (2)'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Compartilhar com 2'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Vazia • compartilhada com 2'), findsOneWidget);
+      expect(
+        find.text('"Boletos" compartilhada com 2 pessoas.'),
+        findsOneWidget,
+      );
+      expect(find.byTooltip('Compartilhada com 2 — alterar'), findsOneWidget);
+      expect(
+        (await sl<DocumentoRepository>().pastas()).single.compartilhadaCom
+            .toSet(),
+        {'beto', 'caio'},
+      );
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   test('pastas: cria, abre, renomeia sem repetir nome e exclui', () async {
     final vm = await _vm();

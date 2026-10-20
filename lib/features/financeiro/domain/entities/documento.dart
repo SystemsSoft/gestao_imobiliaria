@@ -10,6 +10,7 @@ class PastaDocumento {
     required this.id,
     required this.nome,
     this.documentos = 0,
+    this.compartilhadaCom = const [],
   });
 
   final String id;
@@ -17,6 +18,35 @@ class PastaDocumento {
 
   /// Quantidade de documentos na pasta.
   final int documentos;
+
+  /// Inquilinos e proprietários (ids dos contatos) que veem a pasta na
+  /// área deles do portal.
+  final List<String> compartilhadaCom;
+}
+
+/// Inquilino ou proprietário que pode receber uma pasta.
+class Destinatario {
+  const Destinatario({
+    required this.id,
+    required this.nome,
+    this.documento = '',
+    this.inquilino = false,
+    this.proprietario = false,
+    this.acessoInquilino = false,
+    this.acessoProprietario = false,
+  });
+
+  final String id;
+  final String nome;
+  final String documento;
+  final bool inquilino;
+  final bool proprietario;
+
+  /// Tem login ativo na área do portal (sem ele, não vê a pasta).
+  final bool acessoInquilino;
+  final bool acessoProprietario;
+
+  bool get temAcesso => acessoInquilino || acessoProprietario;
 }
 
 enum TipoDocumento { pdf, word, excel }
