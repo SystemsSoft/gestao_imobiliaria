@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../widgets/abrir_sicoob.dart';
 import '../widgets/boletos_tab.dart';
 import '../widgets/conciliacao_tab.dart';
 import '../widgets/contas_tab.dart';
@@ -22,27 +23,40 @@ class FinanceiroPage extends StatelessWidget {
         children: [
           Material(
             color: AppColors.navy,
-            child: TabBar(
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              indicatorColor: AppColors.gold,
-              labelColor: AppColors.gold,
-              unselectedLabelColor: Colors.white70,
-              tabs: const [
-                Tab(
-                  icon: Icon(Icons.swap_vert),
-                  text: 'Contas a pagar e a receber',
+            child: Row(
+              children: [
+                Expanded(
+                  child: TabBar(
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    indicatorColor: AppColors.gold,
+                    labelColor: AppColors.gold,
+                    unselectedLabelColor: Colors.white70,
+                    tabs: const [
+                      Tab(
+                        icon: Icon(Icons.swap_vert),
+                        text: 'Contas a pagar e a receber',
+                      ),
+                      Tab(icon: Icon(Icons.show_chart), text: 'Fluxo de caixa'),
+                      Tab(
+                        icon: Icon(Icons.account_balance_outlined),
+                        text: 'Conciliação bancária',
+                      ),
+                      Tab(
+                        icon: Icon(Icons.qr_code_2),
+                        text: 'Boletos e baixa automática',
+                      ),
+                      Tab(
+                        icon: Icon(Icons.percent),
+                        text: 'Juros, multa e correção',
+                      ),
+                    ],
+                  ),
                 ),
-                Tab(icon: Icon(Icons.show_chart), text: 'Fluxo de caixa'),
-                Tab(
-                  icon: Icon(Icons.account_balance_outlined),
-                  text: 'Conciliação bancária',
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: BotaoAbrirSicoob(),
                 ),
-                Tab(
-                  icon: Icon(Icons.qr_code_2),
-                  text: 'Boletos e baixa automática',
-                ),
-                Tab(icon: Icon(Icons.percent), text: 'Juros, multa e correção'),
               ],
             ),
           ),

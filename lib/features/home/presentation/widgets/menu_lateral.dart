@@ -13,7 +13,6 @@ class MenuLateral extends StatelessWidget {
     this.modulos = ModuloMenu.values,
     this.compacto = false,
     this.onBaixarApp,
-    this.onAbrirSicoob,
     this.baixarParaDesktop = false,
   });
 
@@ -29,21 +28,8 @@ class MenuLateral extends StatelessWidget {
   /// Última opção ("Baixar app"); só aparece quando informada.
   final VoidCallback? onBaixarApp;
 
-  /// Abre o internet banking do Sicoob em outra aba (não é um módulo).
-  final VoidCallback? onAbrirSicoob;
-
-  /// Posição do "Abrir Sicoob": depois do último destes que estiver no menu.
-  static const _antesDoSicoob = [
-    ModuloMenu.fiscal,
-    ModuloMenu.auditorias,
-    ModuloMenu.temporada,
-  ];
-
   /// No computador a opção vira "Baixar para desktop".
   final bool baixarParaDesktop;
-
-  ModuloMenu? get _ancoraSicoob =>
-      _antesDoSicoob.where(modulos.contains).firstOrNull;
 
   @override
   Widget build(BuildContext context) {
@@ -80,21 +66,7 @@ class MenuLateral extends StatelessWidget {
                     selecionado: m == selecionado,
                     onTap: () => onSelecionar(m),
                   ),
-                  if (onAbrirSicoob case final abrir? when m == _ancoraSicoob)
-                    _ItemMenu(
-                      icone: Icons.account_balance_outlined,
-                      texto: 'Abrir Sicoob',
-                      externo: true,
-                      onTap: abrir,
-                    ),
                 ],
-                if (onAbrirSicoob case final abrir? when _ancoraSicoob == null)
-                  _ItemMenu(
-                    icone: Icons.account_balance_outlined,
-                    texto: 'Abrir Sicoob',
-                    externo: true,
-                    onTap: abrir,
-                  ),
                 if (onBaixarApp case final baixar?) ...[
                   Divider(color: Colors.white.withValues(alpha: 0.12)),
                   _ItemAcao(
@@ -149,16 +121,12 @@ class _ItemMenu extends StatelessWidget {
     required this.texto,
     required this.onTap,
     this.selecionado = false,
-    this.externo = false,
   });
 
   final IconData icone;
   final String texto;
   final bool selecionado;
   final VoidCallback onTap;
-
-  /// Abre fora do sistema (mostra o ícone de nova aba).
-  final bool externo;
 
   @override
   Widget build(BuildContext context) {
@@ -200,12 +168,6 @@ class _ItemMenu extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (externo)
-                    Icon(
-                      Icons.open_in_new,
-                      size: 16,
-                      color: cor.withValues(alpha: 0.6),
-                    ),
                 ],
               ),
             ),

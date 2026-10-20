@@ -54,8 +54,9 @@ void main() {
       if (HomeViewModel.foraDoMenu.contains(m)) continue;
       expect(find.text(m.label), findsWidgets);
     }
-    expect(find.text('Abrir Sicoob'), findsOneWidget);
+    expect(find.text('Financeiro'), findsWidgets);
     expect(find.text('Integração Sicoob'), findsNothing);
+    expect(find.text('Abrir Sicoob'), findsNothing);
     await tester.tap(find.text('Ver imóveis'));
     await tester.pumpAndSettle();
     expect(find.byType(CadastrosCrmPage), findsOneWidget);
@@ -74,7 +75,8 @@ void main() {
       if (HomeViewModel.foraDoMenu.contains(m)) continue;
       expect(find.text(m.label), findsWidgets);
     }
-    expect(find.text('Abrir Sicoob'), findsOneWidget);
+    expect(find.text('Financeiro'), findsWidgets);
     expect(find.text('Integração Sicoob'), findsNothing);
+    expect(find.text('Abrir Sicoob'), findsNothing);
   });
 }

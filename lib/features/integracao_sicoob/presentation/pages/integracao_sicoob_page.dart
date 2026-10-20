@@ -11,7 +11,7 @@ import '../viewmodels/integracao_sicoob_viewmodel.dart';
 import '../widgets/boletos_sicoob_tab.dart';
 import '../widgets/conta_sicoob_tab.dart';
 import '../widgets/pix_sicoob_tab.dart';
-import '../widgets/retorno_sicoob.dart';
+import '../../../financeiro/presentation/widgets/abrir_sicoob.dart';
 
 /// Módulo "Integração Sicoob": testes das APIs no Sandbox (boletos, Pix e
 /// conta corrente) antes de ligar a produção.
@@ -57,7 +57,7 @@ class _IntegracaoSicoobPageState extends State<IntegracaoSicoobPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: ListenableBuilder(
                   listenable: _vm,
-                  builder: (context, _) => BotaoAbrirSicoob(vm: _vm),
+                  builder: (context, _) => const BotaoAbrirSicoob(),
                 ),
               ),
             ],

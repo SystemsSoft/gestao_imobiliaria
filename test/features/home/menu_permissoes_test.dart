@@ -7,7 +7,8 @@ import 'package:marceloimob_gestao/features/equipe/domain/entities/usuario_siste
 import 'package:marceloimob_gestao/features/equipe/domain/repositories/equipe_repositories.dart';
 import 'package:marceloimob_gestao/features/equipe/presentation/pages/equipe_seguranca_page.dart';
 import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
-import 'package:marceloimob_gestao/features/home/presentation/widgets/menu_lateral.dart';
+import 'package:marceloimob_gestao/features/financeiro/presentation/pages/financeiro_page.dart';
+import 'package:marceloimob_gestao/features/financeiro/presentation/widgets/abrir_sicoob.dart';
 
 void main() {
   setUp(configurarDependencias);
@@ -49,51 +50,25 @@ void main() {
     ]);
   });
 
-  test('administrador vê tudo, menos Financeiro e Integração Sicoob', () async {
+  test('administrador vê tudo, menos a Integração Sicoob', () async {
     final vm = await vmDe(PerfilAcesso.administrador);
     expect(vm.modulosPermitidos, [
       for (final m in ModuloMenu.values)
-        if (!HomeViewModel.foraDoMenu.contains(m)) m,
+        if (m != ModuloMenu.integracaoSicoob) m,
     ]);
-    expect(vm.modulosPermitidos, isNot(contains(ModuloMenu.financeiro)));
-    expect(vm.podeAbrirSicoob, true);
     vm.dispose();
   });
 
-  test('corretor não vê o Abrir Sicoob', () async {
-    final vm = await vmDe(PerfilAcesso.corretor);
-    expect(vm.podeAbrirSicoob, false);
-    vm.dispose();
-  });
-
-  testWidgets('menu mostra "Abrir Sicoob" depois de Fiscal', (tester) async {
-    tester.view.physicalSize = const Size(400, 1400);
+  testWidgets('Financeiro tem o botão Abrir Sicoob', (tester) async {
+    tester.view.physicalSize = const Size(1600, 900);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
-    var aberto = 0;
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: MenuLateral(
-            selecionado: ModuloMenu.dashboard,
-            modulos: [
-              for (final m in ModuloMenu.values)
-                if (!HomeViewModel.foraDoMenu.contains(m)) m,
-            ],
-            onSelecionar: (_) {},
-            onAbrirSicoob: () => aberto++,
-          ),
-        ),
-      ),
+      const MaterialApp(home: Scaffold(body: FinanceiroPage())),
     );
-    expect(find.text('Financeiro'), findsNothing);
-    expect(find.text('Integração Sicoob'), findsNothing);
-    final fiscal = tester.getTopLeft(find.text('Fiscal')).dy;
-    final sicoob = tester.getTopLeft(find.text('Abrir Sicoob')).dy;
-    final contratos = tester.getTopLeft(find.text('Contratos e Relatórios')).dy;
-    expect(fiscal < sicoob && sicoob < contratos, true);
-    await tester.tap(find.text('Abrir Sicoob'));
-    expect(aberto, 1);
+    await tester.pump();
+    expect(find.text('Abrir Sicoob'), findsOneWidget);
+    expect(linkSicoob, 'https://ib.sicoob.com.br/sicoobnet/ib/#/login');
   });
 
   testWidgets('corretor vê só a fila e o chat na Equipe', (tester) async {

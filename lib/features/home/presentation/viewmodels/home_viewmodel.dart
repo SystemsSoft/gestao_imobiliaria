@@ -69,12 +69,9 @@ class HomeViewModel extends ViewModel {
   UsuarioSistema? get usuario =>
       _usuarios.where((u) => u.id == _usuarioAtualId).firstOrNull;
 
-  /// Telas que saíram do menu: no lugar delas fica "Abrir Sicoob", que abre
-  /// o internet banking. O dashboard ainda abre o Financeiro pelos atalhos.
-  static const foraDoMenu = {
-    ModuloMenu.financeiro,
-    ModuloMenu.integracaoSicoob,
-  };
+  /// Fora do menu: a integração com o Sicoob é só o botão "Abrir Sicoob" do
+  /// Financeiro (a tela de testes da API não é mais usada).
+  static const foraDoMenu = {ModuloMenu.integracaoSicoob};
 
   /// Módulos do menu que o usuário pode ver (o servidor também confere).
   List<ModuloMenu> get modulosPermitidos {
@@ -85,14 +82,6 @@ class HomeViewModel extends ViewModel {
       return p == null || s == null || p.pode(s, AcaoPermissao.visualizar);
     }).toList();
   }
-
-  /// "Abrir Sicoob" aparece para quem cuida do Financeiro.
-  bool get podeAbrirSicoob =>
-      usuario?.permissoes.pode(
-        ModuloSistema.financeiro,
-        AcaoPermissao.visualizar,
-      ) ??
-      true;
 
   /// Usuários, permissões, atividades e comissões da equipe.
   bool get equipeCompleta =>

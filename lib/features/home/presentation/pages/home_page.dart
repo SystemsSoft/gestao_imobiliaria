@@ -17,7 +17,6 @@ import '../../../equipe/presentation/pages/equipe_seguranca_page.dart';
 import '../../../financeiro/presentation/pages/financeiro_page.dart';
 import '../../../fiscal/presentation/pages/fiscal_page.dart';
 import '../../../integracao_sicoob/presentation/pages/integracao_sicoob_page.dart';
-import '../../../integracao_sicoob/presentation/widgets/retorno_sicoob.dart';
 import '../../../locacao/presentation/pages/administracao_locacao_page.dart';
 import '../../../personalizacao/domain/usecases/personalizacao_usecases.dart';
 import '../../../personalizacao/presentation/pages/personalizacao_page.dart';
@@ -149,12 +148,6 @@ class _HomePageState extends State<HomePage> {
                 }
               : null,
           baixarParaDesktop: instalacao.computador,
-          onAbrirSicoob: _vm.podeAbrirSicoob
-              ? () {
-                  if (!menuFixo) Navigator.of(context).pop();
-                  abrirSicoob(context);
-                }
-              : null,
         );
         return Scaffold(
           key: _scaffold,

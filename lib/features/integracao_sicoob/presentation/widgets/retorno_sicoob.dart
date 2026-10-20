@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../../../financeiro/presentation/widgets/abrir_sicoob.dart';
 
 import '../../../../core/arquivos/escolher_arquivos.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -7,48 +7,6 @@ import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../domain/entities/sicoob.dart';
 import '../viewmodels/integracao_sicoob_viewmodel.dart';
-
-/// Abre o internet banking do Sicoob em outra aba (o banco não permite que
-/// ele seja exibido dentro do sistema).
-Future<void> abrirSicoob(BuildContext context, {String? link}) async {
-  link ??= linkSicoobPadrao;
-  final uri = Uri.tryParse(link);
-  final ok = uri != null && await launchUrl(uri, webOnlyWindowName: '_blank');
-  if (!ok && context.mounted) {
-    mostrarMensagem(context, 'Não foi possível abrir $link.');
-  }
-}
-
-/// Botão "Abrir Sicoob" no topo da tela.
-class BotaoAbrirSicoob extends StatelessWidget {
-  const BotaoAbrirSicoob({super.key, required this.vm});
-
-  final IntegracaoSicoobViewModel vm;
-
-  @override
-  Widget build(BuildContext context) {
-    // Com texto só em telas largas, para não empurrar as abas.
-    if (MediaQuery.sizeOf(context).width < 1500) {
-      return IconButton(
-        tooltip: 'Abrir Sicoob',
-        color: AppColors.gold,
-        icon: const Icon(Icons.open_in_new),
-        onPressed: () =>
-            abrirSicoob(context, link: vm.configuracao?.linkInternetBanking),
-      );
-    }
-    return OutlinedButton.icon(
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.gold,
-        side: const BorderSide(color: AppColors.gold),
-      ),
-      onPressed: () =>
-          abrirSicoob(context, link: vm.configuracao?.linkInternetBanking),
-      icon: const Icon(Icons.open_in_new, size: 18),
-      label: const Text('Abrir Sicoob'),
-    );
-  }
-}
 
 /// Envio do arquivo de retorno de cobrança (CNAB 240) baixado no Sicoob:
 /// mostra o que será feito e, confirmado, dá baixa nas cobranças do aluguel.
@@ -119,7 +77,7 @@ class RetornoSicoobCard extends StatelessWidget {
               TextButton.icon(
                 onPressed: () => abrirSicoob(
                   context,
-                  link: vm.configuracao?.linkInternetBanking,
+                  link: vm.configuracao?.linkInternetBanking ?? linkSicoob,
                 ),
                 icon: const Icon(Icons.open_in_new, size: 18),
                 label: const Text('Abrir Sicoob'),
