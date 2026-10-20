@@ -59,7 +59,9 @@ void main() {
     vm.dispose();
   });
 
-  testWidgets('Financeiro tem o botão Abrir Sicoob', (tester) async {
+  testWidgets('Financeiro tem o botão Abrir banco (Sicoob por padrão)', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(1600, 900);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
@@ -67,7 +69,9 @@ void main() {
       const MaterialApp(home: Scaffold(body: FinanceiroPage())),
     );
     await tester.pump();
-    expect(find.text('Abrir Sicoob'), findsOneWidget);
+    expect(find.text('Abrir banco'), findsOneWidget);
+    expect(find.byTooltip('Editar link do banco'), findsOneWidget);
+    expect(find.text('Abrir Sicoob'), findsNothing);
     expect(linkSicoob, 'https://ib.sicoob.com.br/sicoobnet/ib/#/login');
   });
 

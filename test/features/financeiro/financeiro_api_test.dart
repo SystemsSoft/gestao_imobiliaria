@@ -125,12 +125,13 @@ void main() {
       const ConfiguracaoFinanceira(
         multaPercentual: 10,
         indicePadrao: IndiceMonetario.ipca,
+        linkBanco: 'https://banco.exemplo.com.br',
       ),
     );
     final lida = await cfg.obter();
     expect(
-      (lida.multaPercentual, lida.indicePadrao),
-      (10.0, IndiceMonetario.ipca),
+      (lida.multaPercentual, lida.indicePadrao, lida.linkBanco),
+      (10.0, IndiceMonetario.ipca, 'https://banco.exemplo.com.br'),
     );
   });
 }

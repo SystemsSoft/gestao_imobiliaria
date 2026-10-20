@@ -16,7 +16,6 @@ Map<String, Object?> contaBancariaParaJson(ContaBancaria c) => {
   'saldoInicial': c.saldoInicial,
   'convenio': c.convenio,
   'carteira': c.carteira,
-  'linkInternetBanking': c.linkInternetBanking,
 };
 
 ContaBancaria contaBancariaDeJson(Map<String, dynamic> j) => ContaBancaria(
@@ -28,7 +27,6 @@ ContaBancaria contaBancariaDeJson(Map<String, dynamic> j) => ContaBancaria(
   saldoInicial: lerDouble(j['saldoInicial']) ?? 0,
   convenio: lerTexto(j['convenio']),
   carteira: lerTexto(j['carteira']),
-  linkInternetBanking: lerTexto(j['linkInternetBanking']),
 );
 
 // --------------------------------------------------------------- Lançamento
@@ -158,6 +156,7 @@ Map<String, Object?> configuracaoParaJson(ConfiguracaoFinanceira c) => {
   'multaPercentual': c.multaPercentual,
   'jurosMesPercentual': c.jurosMesPercentual,
   'indicePadrao': c.indicePadrao.name,
+  'linkBanco': c.linkBanco,
 };
 
 ConfiguracaoFinanceira configuracaoDeJson(Map<String, dynamic> j) =>
@@ -169,4 +168,5 @@ ConfiguracaoFinanceira configuracaoDeJson(Map<String, dynamic> j) =>
         j['indicePadrao'],
         IndiceMonetario.nenhum,
       ),
+      linkBanco: lerTexto(j['linkBanco']),
     );

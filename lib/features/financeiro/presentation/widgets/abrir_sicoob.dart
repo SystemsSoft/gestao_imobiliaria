@@ -20,19 +20,28 @@ Future<void> abrirSicoob(
   }
 }
 
-/// Botão "Abrir Sicoob" do Financeiro (só o ícone em telas menores, para
-/// não empurrar as abas).
-class BotaoAbrirSicoob extends StatelessWidget {
-  const BotaoAbrirSicoob({super.key});
+/// Botão de abrir um site de banco no Financeiro (só o ícone em telas
+/// menores, para não empurrar as abas).
+class BotaoAbrirSite extends StatelessWidget {
+  const BotaoAbrirSite({
+    super.key,
+    required this.rotulo,
+    required this.icone,
+    required this.onPressed,
+  });
+
+  final String rotulo;
+  final IconData icone;
+  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.sizeOf(context).width < 1500) {
       return IconButton(
-        tooltip: 'Abrir Sicoob',
+        tooltip: rotulo,
         color: AppColors.gold,
-        icon: const Icon(Icons.account_balance_outlined),
-        onPressed: () => abrirSicoob(context),
+        icon: Icon(icone),
+        onPressed: onPressed,
       );
     }
     return OutlinedButton.icon(
@@ -40,9 +49,21 @@ class BotaoAbrirSicoob extends StatelessWidget {
         foregroundColor: AppColors.gold,
         side: const BorderSide(color: AppColors.gold),
       ),
-      onPressed: () => abrirSicoob(context),
+      onPressed: onPressed,
       icon: const Icon(Icons.open_in_new, size: 18),
-      label: const Text('Abrir Sicoob'),
+      label: Text(rotulo),
     );
   }
+}
+
+/// Botão "Abrir Sicoob" do Financeiro.
+class BotaoAbrirSicoob extends StatelessWidget {
+  const BotaoAbrirSicoob({super.key});
+
+  @override
+  Widget build(BuildContext context) => BotaoAbrirSite(
+    rotulo: 'Abrir Sicoob',
+    icone: Icons.account_balance_outlined,
+    onPressed: () => abrirSicoob(context),
+  );
 }

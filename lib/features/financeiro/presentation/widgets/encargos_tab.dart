@@ -77,6 +77,7 @@ class _EncargosTabState extends State<EncargosTab> {
         multaPercentual: parseDecimal(_multaPadrao.text) ?? 0,
         jurosMesPercentual: parseDecimal(_jurosPadrao.text) ?? 0,
         indicePadrao: _indicePadrao,
+        linkBanco: _vm.config.linkBanco,
       ),
     );
     if (!mounted) return;
