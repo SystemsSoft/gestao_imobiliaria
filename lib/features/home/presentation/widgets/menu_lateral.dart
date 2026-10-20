@@ -13,6 +13,7 @@ class MenuLateral extends StatelessWidget {
     this.modulos = ModuloMenu.values,
     this.compacto = false,
     this.onBaixarApp,
+    this.onAbrirSicoob,
     this.baixarParaDesktop = false,
   });
 
@@ -28,8 +29,21 @@ class MenuLateral extends StatelessWidget {
   /// Última opção ("Baixar app"); só aparece quando informada.
   final VoidCallback? onBaixarApp;
 
+  /// Abre o internet banking do Sicoob em outra aba (não é um módulo).
+  final VoidCallback? onAbrirSicoob;
+
+  /// Posição do "Abrir Sicoob": depois do último destes que estiver no menu.
+  static const _antesDoSicoob = [
+    ModuloMenu.fiscal,
+    ModuloMenu.auditorias,
+    ModuloMenu.temporada,
+  ];
+
   /// No computador a opção vira "Baixar para desktop".
   final bool baixarParaDesktop;
+
+  ModuloMenu? get _ancoraSicoob =>
+      _antesDoSicoob.where(modulos.contains).firstOrNull;
 
   @override
   Widget build(BuildContext context) {
@@ -59,11 +73,27 @@ class MenuLateral extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
               children: [
-                for (final m in modulos)
+                for (final m in modulos) ...[
                   _ItemMenu(
-                    modulo: m,
+                    icone: m.icon,
+                    texto: m.label,
                     selecionado: m == selecionado,
                     onTap: () => onSelecionar(m),
+                  ),
+                  if (onAbrirSicoob case final abrir? when m == _ancoraSicoob)
+                    _ItemMenu(
+                      icone: Icons.account_balance_outlined,
+                      texto: 'Abrir Sicoob',
+                      externo: true,
+                      onTap: abrir,
+                    ),
+                ],
+                if (onAbrirSicoob case final abrir? when _ancoraSicoob == null)
+                  _ItemMenu(
+                    icone: Icons.account_balance_outlined,
+                    texto: 'Abrir Sicoob',
+                    externo: true,
+                    onTap: abrir,
                   ),
                 if (onBaixarApp case final baixar?) ...[
                   Divider(color: Colors.white.withValues(alpha: 0.12)),
@@ -115,14 +145,20 @@ class MenuLateral extends StatelessWidget {
 
 class _ItemMenu extends StatelessWidget {
   const _ItemMenu({
-    required this.modulo,
-    required this.selecionado,
+    required this.icone,
+    required this.texto,
     required this.onTap,
+    this.selecionado = false,
+    this.externo = false,
   });
 
-  final ModuloMenu modulo;
+  final IconData icone;
+  final String texto;
   final bool selecionado;
   final VoidCallback onTap;
+
+  /// Abre fora do sistema (mostra o ícone de nova aba).
+  final bool externo;
 
   @override
   Widget build(BuildContext context) {
@@ -148,11 +184,11 @@ class _ItemMenu extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(
                 children: [
-                  Icon(modulo.icon, size: 22, color: cor),
+                  Icon(icone, size: 22, color: cor),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Text(
-                      modulo.label,
+                      texto,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -164,6 +200,12 @@ class _ItemMenu extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (externo)
+                    Icon(
+                      Icons.open_in_new,
+                      size: 16,
+                      color: cor.withValues(alpha: 0.6),
+                    ),
                 ],
               ),
             ),

@@ -75,6 +75,14 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
       false;
 
   Future<void> _sair() async {
+    if (_vm.enviando &&
+        !await _confirmar(
+          'Ainda há fotos ou vídeos sendo enviados. Sair agora cancela o '
+          'que falta enviar.',
+          botao: 'Sair mesmo assim',
+        )) {
+      return;
+    }
     if (_vm.alterada &&
         !await _confirmar(
           'Sair sem salvar as alterações?',
@@ -98,27 +106,25 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
       ],
     );
     if (escolhidos.isEmpty || !mounted) return;
-    var fotos = 0, videos = 0;
-    for (final arquivo in escolhidos) {
-      final ext = arquivo.nome.split('.').last.toLowerCase();
-      final tipo = CategoriaArquivo.video.extensoes.contains(ext)
-          ? TipoMidia.video
-          : TipoMidia.foto;
-      if (!await _vm.anexar(arquivo: arquivo, tipo: tipo, itemId: itemId)) {
-        if (mounted) mostrarMensagem(context, _vm.erro ?? 'Erro.');
-        return;
-      }
-      tipo == TipoMidia.video ? videos++ : fotos++;
-    }
+    final arquivos = [
+      for (final a in escolhidos)
+        (
+          a,
+          CategoriaArquivo.video.extensoes.contains(
+                a.nome.split('.').last.toLowerCase(),
+              )
+              ? TipoMidia.video
+              : TipoMidia.foto,
+        ),
+    ];
+    final ok = await _vm.anexar(arquivos, itemId: itemId);
     if (!mounted) return;
     mostrarMensagem(
       context,
-      [
-        if (fotos > 0) '$fotos foto(s) anexada(s).',
-        if (videos > 0)
-          'Vídeo anexado: use "Transcrever" para levar o que foi dito ao '
-              'relatório.',
-      ].join(' '),
+      ok
+          ? 'Enviando ${arquivos.length} arquivo(s) em segundo plano. '
+                'Pode continuar a auditoria.'
+          : (_vm.erro ?? 'Erro.'),
     );
   }
 
@@ -290,20 +296,22 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1000),
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(
-                    MediaQuery.sizeOf(context).width < 600 ? 10 : 16,
-                    16,
-                    MediaQuery.sizeOf(context).width < 600 ? 10 : 16,
-                    80,
-                  ),
-                  children: [
-                    if (_a.concluida) _faixaConcluida(),
-                    _dados(),
-                    _checklist(),
-                    _midias(),
-                    _conclusao(),
-                  ],
+                // Montada sob demanda: cada item do checklist só é
+                // construído quando aparece na tela (abre sem travar).
+                child: Builder(
+                  builder: (context) {
+                    final blocos = _blocos();
+                    return ListView.builder(
+                      padding: EdgeInsets.fromLTRB(
+                        MediaQuery.sizeOf(context).width < 600 ? 10 : 16,
+                        16,
+                        MediaQuery.sizeOf(context).width < 600 ? 10 : 16,
+                        80,
+                      ),
+                      itemCount: blocos.length,
+                      itemBuilder: (_, i) => blocos[i](),
+                    );
+                  },
                 ),
               ),
             ),
@@ -334,8 +342,10 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
             ),
           ],
         ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
+        Wrap(
+          spacing: 8,
+          runSpacing: 4,
+          crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             const Text('Na Área do proprietário'),
             Switch(
@@ -350,7 +360,6 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
                           : 'Retirada da Área do proprietário.',
                     ),
             ),
-            const SizedBox(width: 8),
             OutlinedButton.icon(
               onPressed: _vm.ocupado
                   ? null
@@ -497,9 +506,24 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
 
   // -------------------------------------------------------------- Checklist
 
-  Widget _checklist() {
+  /// Partes da página, construídas uma a uma pela lista.
+  List<Widget Function()> _blocos() {
     final ro = _vm.somenteLeitura;
-    final areas = _vm.areas;
+    return [
+      if (_a.concluida) _faixaConcluida,
+      _dados,
+      _checklist,
+      for (final e in _vm.areas.entries) ...[
+        () => _tituloArea(e.key, e.value, ro),
+        for (final i in e.value) () => _item(i, ro),
+      ],
+      if (!ro) _acoesChecklist else () => const SizedBox(height: 16),
+      _midias,
+      _conclusao,
+    ];
+  }
+
+  Widget _checklist() {
     final avaliados = _a.itens.length - _a.contar(EstadoItem.pendente);
     return FormSection(
       title: 'Checklist ($avaliados de ${_a.itens.length} avaliados)',
@@ -515,80 +539,80 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
               ),
           ],
         ),
-        if (areas.isEmpty)
+        if (_a.itens.isEmpty)
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.only(top: 12),
             child: Text(
               'Checklist vazio. Inclua itens ou aplique um modelo.',
               style: TextStyle(color: Colors.white54),
             ),
           ),
-        for (final e in areas.entries) ...[
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  e.key,
-                  style: const TextStyle(
-                    color: AppColors.gold,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              if (!ro && e.value.any((i) => i.estado == EstadoItem.pendente))
-                TextButton.icon(
-                  onPressed: () => _vm.areaOk(e.key),
-                  icon: const Icon(Icons.done_all, size: 18),
-                  label: const Text('Restantes OK'),
-                ),
-            ],
-          ),
-          for (final i in e.value) _item(i, ro),
-        ],
-        if (!ro)
-          Wrap(
-            spacing: 8,
-            children: [
-              TextButton.icon(
-                onPressed: _novoItem,
-                icon: const Icon(Icons.add),
-                label: const Text('Incluir item'),
-              ),
-              if (widget.modelos.isNotEmpty)
-                PopupMenuButton<ModeloChecklist>(
-                  tooltip: 'Aplicar modelo',
-                  color: AppColors.navy,
-                  onSelected: _vm.aplicarModelo,
-                  itemBuilder: (_) => [
-                    for (final m in widget.modelos)
-                      PopupMenuItem(value: m, child: Text(m.nome)),
-                  ],
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.playlist_add,
-                          color: AppColors.gold,
-                          size: 18,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          'Aplicar modelo',
-                          style: TextStyle(color: AppColors.gold),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
-          ),
       ],
     );
   }
+
+  Widget _tituloArea(String area, List<ItemAuditoria> itens, bool ro) =>
+      Padding(
+        padding: const EdgeInsets.fromLTRB(4, 6, 0, 0),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                area,
+                style: const TextStyle(
+                  color: AppColors.gold,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            if (!ro && itens.any((i) => i.estado == EstadoItem.pendente))
+              TextButton.icon(
+                onPressed: () => _vm.areaOk(area),
+                icon: const Icon(Icons.done_all, size: 18),
+                label: const Text('Restantes OK'),
+              ),
+          ],
+        ),
+      );
+
+  Widget _acoesChecklist() => Padding(
+    padding: const EdgeInsets.only(top: 8, bottom: 16),
+    child: Wrap(
+      spacing: 8,
+      children: [
+        TextButton.icon(
+          onPressed: _novoItem,
+          icon: const Icon(Icons.add),
+          label: const Text('Incluir item'),
+        ),
+        if (widget.modelos.isNotEmpty)
+          PopupMenuButton<ModeloChecklist>(
+            tooltip: 'Aplicar modelo',
+            color: AppColors.navy,
+            onSelected: _vm.aplicarModelo,
+            itemBuilder: (_) => [
+              for (final m in widget.modelos)
+                PopupMenuItem(value: m, child: Text(m.nome)),
+            ],
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.playlist_add, color: AppColors.gold, size: 18),
+                  SizedBox(width: 8),
+                  Text(
+                    'Aplicar modelo',
+                    style: TextStyle(color: AppColors.gold),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    ),
+  );
 
   Widget _item(ItemAuditoria i, bool ro) {
     final midias = _vm.midiasDo(i.id);
@@ -748,6 +772,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
             style: TextStyle(color: Colors.white54, fontSize: 12),
           ),
         ),
+        if (_vm.envios.isNotEmpty) _envios(),
         if (fotos.isNotEmpty) ...[
           const SizedBox(height: 12),
           Wrap(
@@ -768,6 +793,78 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
       ],
     );
   }
+
+  /// Arquivos subindo em segundo plano (ou que falharam).
+  Widget _envios() => Container(
+    margin: const EdgeInsets.only(top: 12),
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+      color: AppColors.gold.withValues(alpha: 0.06),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: AppColors.gold.withValues(alpha: 0.3)),
+    ),
+    child: Column(
+      children: [
+        for (final e in _vm.envios)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                e.falhou
+                    ? const Icon(Icons.error_outline, color: Colors.redAccent)
+                    : const SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        e.arquivo.nome,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        e.erro ??
+                            (e ==
+                                    _vm.envios.firstWhere(
+                                      (x) => !x.falhou,
+                                      orElse: () => e,
+                                    )
+                                ? 'Enviando ${_tamanho(e.arquivo.tamanho)}...'
+                                : 'Na fila'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: e.falhou ? Colors.redAccent : Colors.white54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (e.falhou) ...[
+                  IconButton(
+                    tooltip: 'Tentar de novo',
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () => _vm.tentarDeNovo(e),
+                  ),
+                  IconButton(
+                    tooltip: 'Descartar',
+                    icon: const Icon(Icons.close),
+                    onPressed: () => _vm.descartarEnvio(e),
+                  ),
+                ],
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
+
+  static String _tamanho(int bytes) => bytes >= 1024 * 1024
+      ? '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB'
+      : '${(bytes / 1024).ceil()} KB';
 
   String _legenda(MidiaAuditoria m) {
     final item = _a.itens.where((i) => i.id == m.itemId).firstOrNull;
@@ -800,6 +897,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
                     )
                   : ImagemAnexo(
                       m.referencia,
+                      largura: 320,
                       alternativa: const ColoredBox(
                         color: AppColors.navy,
                         child: Icon(

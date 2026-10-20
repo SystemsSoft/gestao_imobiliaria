@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import '../../../../core/arquivos/arquivo_repository.dart';
+import '../../../../core/errors/domain_exception.dart';
 import '../../../../core/presentation/view_model.dart';
 import '../../../../core/utils/id.dart';
 import '../../../crm/domain/entities/contato.dart';
@@ -309,29 +310,116 @@ class AuditoriaFormViewModel extends _ComCadastros {
     if (auditoria.nova || alterada) await _salvar();
   }
 
-  Future<bool> anexar({
-    required ArquivoEscolhido arquivo,
-    required TipoMidia tipo,
-    String titulo = '',
+  // ------------------------------------------------ Envio de mídias
+  // Fotos e vídeos sobem em segundo plano, um por vez: a tela continua
+  // livre para avaliar o checklist enquanto os arquivos são enviados.
+
+  final envios = <EnvioMidia>[];
+  Future<void>? _fila;
+
+  /// Há arquivos ainda subindo (concluir espera por eles).
+  bool get enviando => envios.any((e) => !e.falhou);
+
+  /// Põe os arquivos na fila de envio. Salva a auditoria antes, se preciso
+  /// (as mídias e os itens precisam existir no servidor).
+  Future<bool> anexar(
+    List<(ArquivoEscolhido, TipoMidia)> arquivos, {
     String? itemId,
-  }) => executar(() async {
-    await _garantirSalva();
-    auditoria = await _anexar(
-      auditoria,
-      arquivo: arquivo,
-      tipo: tipo,
-      titulo: titulo,
-      itemId: itemId,
+  }) async {
+    if (arquivos.isEmpty) return true;
+    if (auditoria.concluida) {
+      erro = 'Reabra a auditoria para anexar mídias.';
+      notificar();
+      return false;
+    }
+    try {
+      for (final (a, tipo) in arquivos) {
+        (tipo == TipoMidia.video
+                ? CategoriaArquivo.video
+                : CategoriaArquivo.foto)
+            .validar(a.nome, a.tamanho);
+      }
+    } on DomainException catch (e) {
+      erro = e.mensagem;
+      notificar();
+      return false;
+    }
+    if ((auditoria.nova || alterada) && !await salvar()) return false;
+    envios.addAll([
+      for (final (a, tipo) in arquivos) EnvioMidia(a, tipo, itemId),
+    ]);
+    notificar();
+    _fila ??= _processarFila().whenComplete(() => _fila = null);
+    return true;
+  }
+
+  /// Espera a fila esvaziar (ou parar em erros).
+  Future<void> aguardarEnvios() => _fila ?? Future.value();
+
+  Future<void> _processarFila() async {
+    while (!disposed) {
+      final e = envios.where((x) => !x.falhou).firstOrNull;
+      if (e == null) return;
+      try {
+        final r = await _anexar(
+          auditoria,
+          arquivo: e.arquivo,
+          tipo: e.tipo,
+          itemId: e.itemId,
+        );
+        envios.remove(e);
+        _aplicarMidias(r.midias);
+      } on DomainException catch (x) {
+        e.erro = x.mensagem;
+      } on Exception catch (x) {
+        e.erro = 'Falha no envio ($x).';
+      }
+      notificar();
+    }
+  }
+
+  void tentarDeNovo(EnvioMidia e) {
+    e.erro = null;
+    notificar();
+    _fila ??= _processarFila().whenComplete(() => _fila = null);
+  }
+
+  void descartarEnvio(EnvioMidia e) {
+    envios.remove(e);
+    notificar();
+  }
+
+  /// Troca só as mídias, sem perder o que está sendo editado no formulário.
+  void _aplicarMidias(List<MidiaAuditoria> midias) {
+    auditoria = Auditoria(
+      id: auditoria.id,
+      numero: auditoria.numero,
+      imovelId: auditoria.imovelId,
+      contratoId: auditoria.contratoId,
+      proprietarioId: auditoria.proprietarioId,
+      corretorId: auditoria.corretorId,
+      tipo: auditoria.tipo,
+      status: auditoria.status,
+      dataAgendada: auditoria.dataAgendada,
+      dataRealizada: auditoria.dataRealizada,
+      nota: auditoria.nota,
+      resumo: auditoria.resumo,
+      recomendacoes: auditoria.recomendacoes,
+      publicada: auditoria.publicada,
+      concluidaEm: auditoria.concluidaEm,
+      itens: auditoria.itens,
+      midias: midias,
+      criadoEm: auditoria.criadoEm,
     );
-  });
+  }
 
   Future<bool> removerMidia(MidiaAuditoria m) => executar(() async {
-    auditoria = await _repo.removerMidia(auditoria.id, m.id);
+    _aplicarMidias((await _repo.removerMidia(auditoria.id, m.id)).midias);
   });
 
   Future<bool> transcrever(MidiaAuditoria m) => executar(() async {
     await _garantirSalva();
-    auditoria = await _repo.transcrever(auditoria.id, m.id);
+    _aplicarMidias((await _repo.transcrever(auditoria.id, m.id)).midias);
     _acompanharTranscricoes();
   });
 
@@ -354,26 +442,7 @@ class AuditoriaFormViewModel extends _ComCadastros {
     try {
       final r = await _repo.obter(auditoria.id);
       if (disposed) return;
-      auditoria = Auditoria(
-        id: auditoria.id,
-        numero: auditoria.numero,
-        imovelId: auditoria.imovelId,
-        contratoId: auditoria.contratoId,
-        proprietarioId: auditoria.proprietarioId,
-        corretorId: auditoria.corretorId,
-        tipo: auditoria.tipo,
-        status: auditoria.status,
-        dataAgendada: auditoria.dataAgendada,
-        dataRealizada: auditoria.dataRealizada,
-        nota: auditoria.nota,
-        resumo: auditoria.resumo,
-        recomendacoes: auditoria.recomendacoes,
-        publicada: auditoria.publicada,
-        concluidaEm: auditoria.concluidaEm,
-        itens: auditoria.itens,
-        midias: r.midias,
-        criadoEm: auditoria.criadoEm,
-      );
+      _aplicarMidias(r.midias);
       _acompanharTranscricoes();
       notificar();
     } on Exception {
@@ -382,6 +451,11 @@ class AuditoriaFormViewModel extends _ComCadastros {
   }
 
   Future<bool> concluir({required bool publicar}) => executar(() async {
+    if (enviando) {
+      throw const DomainException(
+        'Aguarde o envio das fotos e vídeos terminar para concluir.',
+      );
+    }
     validarConclusao(auditoria);
     await _garantirSalva();
     auditoria = await _repo.concluir(auditoria.id, publicar: publicar);
@@ -514,4 +588,18 @@ class ConfiguracaoAuditoriaViewModel extends ViewModel {
     await _repo.removerModelo(m.id);
     modelos = await _repo.modelos();
   });
+}
+
+/// Arquivo na fila de envio da auditoria.
+class EnvioMidia {
+  EnvioMidia(this.arquivo, this.tipo, this.itemId);
+
+  final ArquivoEscolhido arquivo;
+  final TipoMidia tipo;
+  final String? itemId;
+
+  /// Motivo da falha (o envio fica parado até tentar de novo).
+  String? erro;
+
+  bool get falhou => erro != null;
 }

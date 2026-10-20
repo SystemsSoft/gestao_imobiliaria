@@ -16,6 +16,7 @@ enum ModuloMenu {
   auditorias('Auditorias', Icons.fact_check_outlined),
   financeiro('Financeiro', Icons.attach_money),
   fiscal('Fiscal', Icons.receipt_long_outlined),
+  integracaoSicoob('Integração Sicoob', Icons.account_balance_outlined),
   contratosRelatorios('Contratos e Relatórios', Icons.description_outlined),
   equipeSeguranca('Equipe e Segurança', Icons.shield_outlined),
   site('Site e Leads', Icons.language),
@@ -31,6 +32,7 @@ enum ModuloMenu {
     vendas => 'Vendas',
     temporada => 'Temporada',
     contratosRelatorios => 'Contratos',
+    integracaoSicoob => 'Sicoob',
     equipeSeguranca => 'Equipe',
     _ => label,
   };
@@ -67,15 +69,30 @@ class HomeViewModel extends ViewModel {
   UsuarioSistema? get usuario =>
       _usuarios.where((u) => u.id == _usuarioAtualId).firstOrNull;
 
+  /// Telas que saíram do menu: no lugar delas fica "Abrir Sicoob", que abre
+  /// o internet banking. O dashboard ainda abre o Financeiro pelos atalhos.
+  static const foraDoMenu = {
+    ModuloMenu.financeiro,
+    ModuloMenu.integracaoSicoob,
+  };
+
   /// Módulos do menu que o usuário pode ver (o servidor também confere).
   List<ModuloMenu> get modulosPermitidos {
     final p = usuario?.permissoes;
-    if (p == null) return ModuloMenu.values;
     return ModuloMenu.values.where((m) {
+      if (foraDoMenu.contains(m)) return false;
       final s = _permissaoDo(m);
-      return s == null || p.pode(s, AcaoPermissao.visualizar);
+      return p == null || s == null || p.pode(s, AcaoPermissao.visualizar);
     }).toList();
   }
+
+  /// "Abrir Sicoob" aparece para quem cuida do Financeiro.
+  bool get podeAbrirSicoob =>
+      usuario?.permissoes.pode(
+        ModuloSistema.financeiro,
+        AcaoPermissao.visualizar,
+      ) ??
+      true;
 
   /// Usuários, permissões, atividades e comissões da equipe.
   bool get equipeCompleta =>
@@ -95,6 +112,8 @@ class HomeViewModel extends ViewModel {
     ModuloMenu.auditorias => ModuloSistema.auditorias,
     ModuloMenu.financeiro => ModuloSistema.financeiro,
     ModuloMenu.fiscal => ModuloSistema.fiscal,
+    // Testes da integração bancária: quem cuida do Financeiro.
+    ModuloMenu.integracaoSicoob => ModuloSistema.financeiro,
     ModuloMenu.contratosRelatorios => ModuloSistema.contratosRelatorios,
     // Todos usam a fila e o chat; o restante depende da permissão.
     ModuloMenu.equipeSeguranca => null,

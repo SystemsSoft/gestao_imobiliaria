@@ -51,8 +51,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(DashboardPage), findsOneWidget);
     for (final m in ModuloMenu.values) {
+      if (HomeViewModel.foraDoMenu.contains(m)) continue;
       expect(find.text(m.label), findsWidgets);
     }
+    expect(find.text('Abrir Sicoob'), findsOneWidget);
+    expect(find.text('Integração Sicoob'), findsNothing);
     await tester.tap(find.text('Ver imóveis'));
     await tester.pumpAndSettle();
     expect(find.byType(CadastrosCrmPage), findsOneWidget);
@@ -68,7 +71,10 @@ void main() {
     await tester.tap(find.byTooltip('Menu'));
     await tester.pumpAndSettle();
     for (final m in ModuloMenu.values) {
+      if (HomeViewModel.foraDoMenu.contains(m)) continue;
       expect(find.text(m.label), findsWidgets);
     }
+    expect(find.text('Abrir Sicoob'), findsOneWidget);
+    expect(find.text('Integração Sicoob'), findsNothing);
   });
 }

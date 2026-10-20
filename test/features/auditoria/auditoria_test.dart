@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -245,10 +246,11 @@ void main() {
         addTearDown(vm.dispose);
 
         expect(
-          await vm.anexar(arquivo: _arquivo('sala.mp4'), tipo: TipoMidia.video),
+          await vm.anexar([(_arquivo('sala.mp4'), TipoMidia.video)]),
           true,
         );
         expect(vm.auditoria.nova, false); // salvou antes de anexar
+        await vm.aguardarEnvios();
         expect(vm.auditoria.numero, 'AUD-0001');
         final video = vm.auditoria.midias.single;
 
@@ -278,6 +280,66 @@ void main() {
         expect(m.transcricaoTexto, 'A sala está em bom estado.');
         expect(vm.auditoria.itens.first.estado, EstadoItem.atencao);
         expect(vm.alterada, true); // a edição não foi perdida
+      },
+    );
+
+    test(
+      'envio em segundo plano: a tela segue livre e nada se perde',
+      () async {
+        final repo = sl<AuditoriaRepository>() as AuditoriaMemoryRepository;
+        final vm = AuditoriaFormViewModel(
+          novaAuditoria(imovelId: 'i1', modelo: (await repo.modelos()).first),
+          sl(),
+          sl(),
+          sl(),
+          sl(),
+          repo,
+          sl(),
+        );
+        addTearDown(vm.dispose);
+        final liberar = Completer<void>();
+        final lento = ArquivoEscolhido(
+          nome: 'cozinha.mp4',
+          tamanho: 3,
+          ler: () async {
+            await liberar.future; // upload demorado
+            return Uint8List.fromList([1, 2, 3]);
+          },
+        );
+
+        expect(
+          await vm.anexar([
+            (lento, TipoMidia.video),
+            (_arquivo('sala.jpg'), TipoMidia.foto),
+          ]),
+          true,
+        );
+        expect(vm.ocupado, false); // não trava a tela
+        expect((vm.enviando, vm.envios.length), (true, 2));
+
+        // Enquanto sobe, o corretor avalia e escreve; concluir espera.
+        vm.avaliar(vm.auditoria.itens.first, EstadoItem.problema);
+        vm.observarItem(vm.auditoria.itens.first, 'Sifão vazando');
+        expect(await vm.concluir(publicar: false), false);
+        expect(vm.erro, contains('Aguarde o envio'));
+
+        liberar.complete();
+        await vm.aguardarEnvios();
+        expect(vm.envios, isEmpty);
+        expect(vm.auditoria.midias.map((m) => m.tipo), [
+          TipoMidia.video,
+          TipoMidia.foto,
+        ]);
+        // As respostas do servidor trocaram só as mídias.
+        expect(vm.auditoria.itens.first.estado, EstadoItem.problema);
+        expect(vm.auditoria.itens.first.observacao, 'Sifão vazando');
+
+        // Formato inválido é recusado na hora, sem entrar na fila.
+        expect(
+          await vm.anexar([(_arquivo('planta.pdf'), TipoMidia.foto)]),
+          false,
+        );
+        expect(vm.envios, isEmpty);
       },
     );
 

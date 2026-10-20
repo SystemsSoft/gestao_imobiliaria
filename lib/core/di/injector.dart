@@ -18,6 +18,7 @@ import '../../features/equipe/equipe_injection.dart';
 import '../../features/financeiro/financeiro_injection.dart';
 import '../../features/fiscal/fiscal_injection.dart';
 import '../../features/home/home_injection.dart';
+import '../../features/integracao_sicoob/integracao_sicoob_injection.dart';
 import '../../features/locacao/locacao_injection.dart';
 import '../../features/personalizacao/personalizacao_injection.dart';
 import '../../features/portal_inquilino/portal_injection.dart';
@@ -63,4 +64,5 @@ Future<void> configurarDependencias({String? apiUrl}) async {
   registrarSite(sl);
   registrarPortalInquilino(sl);
   registrarAuditoria(sl);
+  registrarIntegracaoSicoob(sl);
 }
