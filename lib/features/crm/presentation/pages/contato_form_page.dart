@@ -11,6 +11,7 @@ import '../../domain/entities/catalog.dart';
 import '../../domain/entities/contato.dart';
 import '../../domain/entities/enums.dart';
 import '../viewmodels/contato_form_viewmodel.dart';
+import '../widgets/acesso_portal_secao.dart';
 
 class ContatoFormPage extends StatefulWidget {
   const ContatoFormPage({super.key, this.contato});
@@ -469,6 +470,33 @@ class _ContatoFormPageState extends State<ContatoFormPage> {
                     ),
                   ],
                 ),
+                if (widget.contato case final salvo?)
+                  ValueListenableBuilder(
+                    valueListenable: _documento,
+                    builder: (context, doc, _) => AcessoPortalSecao(
+                      contato: salvo,
+                      papeis: _papeis,
+                      documentoAlterado:
+                          doc.text.replaceAll(RegExp(r'\D'), '') !=
+                          salvo.documento.replaceAll(RegExp(r'\D'), ''),
+                      telefone: _celular.text.isNotEmpty
+                          ? _celular.text
+                          : _telefone.text,
+                    ),
+                  )
+                else if (_papeis.contains(PapelContato.locatario) ||
+                    _papeis.contains(PapelContato.proprietario))
+                  const FormSection(
+                    title: 'Acesso ao portal (site)',
+                    icon: Icons.vpn_key_outlined,
+                    children: [
+                      Text(
+                        'Salve o contato e abra-o de novo em "Editar" para '
+                        'liberar o acesso dele à área do site.',
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                    ],
+                  ),
                 if (_papeis.contains(PapelContato.proprietario))
                   FormSection(
                     title: 'Dados bancários (repasse ao proprietário)',

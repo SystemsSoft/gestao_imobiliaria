@@ -16,6 +16,7 @@ import 'domain/usecases/contato_usecases.dart';
 import 'domain/usecases/evento_usecases.dart';
 import 'domain/usecases/imovel_usecases.dart';
 import 'domain/usecases/sugerir_negocios.dart';
+import 'presentation/viewmodels/acesso_portal_viewmodel.dart';
 import 'presentation/viewmodels/central_viewmodel.dart';
 import 'presentation/viewmodels/contato_form_viewmodel.dart';
 import 'presentation/viewmodels/contatos_viewmodel.dart';
@@ -70,6 +71,7 @@ void registrarCrm(GetIt sl) {
     ..registerFactory(() => ImovelFormViewModel(sl(), sl(), sl()))
     ..registerFactory(() => ContatosViewModel(sl(), sl()))
     ..registerFactory(() => ContatoFormViewModel(sl()))
+    ..registerFactory(() => AcessoPortalViewModel(sl(), sl(), sl()))
     ..registerFactory(() => CruzamentoViewModel(sl(), sl(), sl()))
     ..registerFactory(
       () => CentralViewModel(sl(), sl(), sl(), sl(), sl(), sl()),
