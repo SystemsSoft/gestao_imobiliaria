@@ -47,8 +47,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final ok = await _vm.entrar(
-      _usuarioController.text,
-      _passwordController.text,
+      _usuarioController.text.trim(),
+      _passwordController.text.trim(),
     );
     if (!mounted) return;
     if (!ok) {

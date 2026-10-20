@@ -4,7 +4,7 @@ import 'package:marceloimob_gestao/core/di/injector.dart';
 import 'package:marceloimob_gestao/core/theme/app_theme.dart';
 import 'package:marceloimob_gestao/features/crm/presentation/pages/contato_form_page.dart';
 import 'package:marceloimob_gestao/features/crm/presentation/pages/imovel_form_page.dart';
-import 'package:marceloimob_gestao/features/financeiro/presentation/pages/lancamento_form_page.dart';
+import 'package:marceloimob_gestao/features/financeiro/presentation/widgets/lancamento_form_dialog.dart';
 import 'package:marceloimob_gestao/features/home/presentation/pages/home_page.dart';
 import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
 import 'package:marceloimob_gestao/features/locacao/presentation/pages/contrato_form_page.dart';
@@ -74,7 +74,7 @@ void main() {
       'contrato de locação': const ContratoFormPage(),
       'venda': const VendaFormPage(),
       'reserva': const ReservaFormPage(),
-      'lançamento': const LancamentoFormPage(),
+      'lançamento': const LancamentoFormDialog(),
     };
     for (final MapEntry(key: titulo, value: pagina) in formularios.entries) {
       testWidgets('formulário de $titulo cabe no celular ($nome)', (

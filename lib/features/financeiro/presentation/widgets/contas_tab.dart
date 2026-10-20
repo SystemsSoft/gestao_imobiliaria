@@ -7,9 +7,9 @@ import '../../../../core/widgets/competencia_selector.dart';
 import '../../../../core/widgets/form_widgets.dart';
 import '../../domain/entities/financeiro_enums.dart';
 import '../../domain/entities/lancamento.dart';
-import '../pages/lancamento_form_page.dart';
 import '../viewmodels/contas_viewmodel.dart';
 import 'baixa_dialog.dart';
+import 'lancamento_form_dialog.dart';
 
 /// Contas a pagar e a receber.
 class ContasTab extends StatefulWidget {
@@ -28,11 +28,8 @@ class _ContasTabState extends State<ContasTab> {
     super.dispose();
   }
 
-  void _abrir([Lancamento? l]) => Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      builder: (_) => LancamentoFormPage(lancamento: l, tipo: _vm.tipo),
-    ),
-  );
+  void _abrir([Lancamento? l]) =>
+      mostrarLancamentoFormDialog(context, lancamento: l, tipo: _vm.tipo);
 
   Future<void> _acao(Future<bool> Function() f, [String? sucesso]) async {
     final ok = await f();
@@ -64,12 +61,15 @@ class _ContasTabState extends State<ContasTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButton: goldFab(
-        icon: Icons.add_card,
-        label: _vm.tipo == TipoLancamento.receber
-            ? 'Nova conta a receber'
-            : 'Nova conta a pagar',
-        onPressed: _abrir,
+      floatingActionButton: ListenableBuilder(
+        listenable: _vm,
+        builder: (context, _) => goldFab(
+          icon: Icons.add_card,
+          label: _vm.tipo == TipoLancamento.receber
+              ? 'Nova conta a receber'
+              : 'Nova conta a pagar',
+          onPressed: _abrir,
+        ),
       ),
       body: ListenableBuilder(
         listenable: _vm,

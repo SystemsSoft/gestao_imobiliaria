@@ -9,9 +9,10 @@ class Entrar {
 
   Future<Usuario> call({required String usuario, required String senha}) {
     final u = usuario.trim();
+    final s = senha.trim();
     if (u.isEmpty) throw const DomainException('Informe seu usuário');
-    if (senha.isEmpty) throw const DomainException('Informe sua senha');
-    return _repository.entrar(usuario: u, senha: senha);
+    if (s.isEmpty) throw const DomainException('Informe sua senha');
+    return _repository.entrar(usuario: u, senha: s);
   }
 }
 
@@ -31,6 +32,9 @@ class AlterarSenha {
     required String nova,
     required String confirmacao,
   }) {
+    atual = atual.trim();
+    nova = nova.trim();
+    confirmacao = confirmacao.trim();
     if (atual.isEmpty) throw const DomainException('Informe a senha atual.');
     if (nova.length < 8) {
       throw const DomainException(
