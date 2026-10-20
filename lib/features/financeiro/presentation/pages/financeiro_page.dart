@@ -37,11 +37,8 @@ class FinanceiroPage extends StatelessWidget {
                         icon: Icon(Icons.swap_vert),
                         text: 'Contas a pagar e a receber',
                       ),
-                      Tab(icon: Icon(Icons.show_chart), text: 'Fluxo de caixa'),
-                      Tab(
-                        icon: Icon(Icons.account_balance_outlined),
-                        text: 'Conciliação bancária',
-                      ),
+                      Tab(icon: Icon(Icons.show_chart),
+                          text: 'Fluxo de caixa'),
                       Tab(
                         icon: Icon(Icons.qr_code_2),
                         text: 'Boletos e baixa automática',
