@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import '../widgets/abrir_banco.dart';
-import '../widgets/boletos_tab.dart';
-import '../widgets/conciliacao_tab.dart';
 import '../widgets/contas_tab.dart';
+import '../widgets/documentos_tab.dart';
 import '../widgets/encargos_tab.dart';
 import '../widgets/fluxo_caixa_tab.dart';
 
@@ -18,7 +17,7 @@ class FinanceiroPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: abaInicial,
-      length: 5,
+      length: 4,
       child: Column(
         children: [
           Material(
@@ -37,11 +36,10 @@ class FinanceiroPage extends StatelessWidget {
                         icon: Icon(Icons.swap_vert),
                         text: 'Contas a pagar e a receber',
                       ),
-                      Tab(icon: Icon(Icons.show_chart),
-                          text: 'Fluxo de caixa'),
+                      Tab(icon: Icon(Icons.show_chart), text: 'Fluxo de caixa'),
                       Tab(
-                        icon: Icon(Icons.qr_code_2),
-                        text: 'Boletos e baixa automática',
+                        icon: Icon(Icons.folder_copy_outlined),
+                        text: 'Documentos',
                       ),
                       Tab(
                         icon: Icon(Icons.percent),
@@ -62,8 +60,7 @@ class FinanceiroPage extends StatelessWidget {
               children: [
                 ContasTab(),
                 FluxoCaixaTab(),
-                ConciliacaoTab(),
-                BoletosTab(),
+                DocumentosTab(),
                 EncargosTab(),
               ],
             ),

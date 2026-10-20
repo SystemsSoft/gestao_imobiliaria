@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
       DestinoDashboard.repasses => (ModuloMenu.locacao, 3),
       DestinoDashboard.temporada => (ModuloMenu.temporada, 0),
       DestinoDashboard.financeiro => (ModuloMenu.financeiro, 0),
-      DestinoDashboard.boletos => (ModuloMenu.financeiro, 3),
+      DestinoDashboard.documentos => (ModuloMenu.financeiro, 2),
       DestinoDashboard.atividades => (ModuloMenu.equipeSeguranca, 2),
     };
     _vm.selecionar(modulo, aba: aba);

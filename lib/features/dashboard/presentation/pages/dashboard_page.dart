@@ -22,7 +22,7 @@ enum DestinoDashboard {
   agenda,
   oportunidades,
   financeiro,
-  boletos,
+  documentos,
   cobrancas,
   repasses,
   temporada,
@@ -546,10 +546,10 @@ class _DashboardPageState extends State<DashboardPage> {
         () => _abrir(const ContratoFormPage()),
       ),
       (
-        Icons.receipt_long_outlined,
-        'Emitir Boleto',
-        'Boleto',
-        () => _ir(DestinoDashboard.boletos),
+        Icons.folder_copy_outlined,
+        'Documentos',
+        'Documentos',
+        () => _ir(DestinoDashboard.documentos),
       ),
     ];
     if (compacto) {

@@ -5,18 +5,22 @@ import '../../core/api/status_conexao.dart';
 
 import 'data/datasources/financeiro_memory_datasource.dart';
 import 'data/documentos/pdf_boleto_gateway.dart';
+import 'data/repositories/documento_api_repository.dart';
+import 'data/repositories/documento_memoria_repository.dart';
 import 'data/repositories/financeiro_api_repositories.dart';
 import 'data/repositories/financeiro_repositories_impl.dart';
 import 'domain/repositories/boleto_impressao_gateway.dart';
+import 'domain/repositories/documento_repository.dart';
 import 'domain/repositories/financeiro_repositories.dart';
 import 'domain/services/atualizacao_monetaria.dart';
 import 'domain/services/conciliacao_service.dart';
 import 'domain/usecases/boleto_usecases.dart';
+import 'domain/usecases/documento_usecases.dart';
 import 'domain/usecases/financeiro_usecases.dart';
 import 'domain/usecases/lancamento_usecases.dart';
-import 'presentation/viewmodels/boletos_viewmodel.dart';
 import 'presentation/viewmodels/conciliacao_viewmodel.dart';
 import 'presentation/viewmodels/contas_viewmodel.dart';
+import 'presentation/viewmodels/documentos_viewmodel.dart';
 import 'presentation/viewmodels/encargos_viewmodel.dart';
 import 'presentation/viewmodels/fluxo_caixa_viewmodel.dart';
 import 'presentation/viewmodels/lancamento_form_viewmodel.dart';
@@ -41,6 +45,9 @@ void registrarFinanceiro(GetIt sl) {
       ..registerLazySingleton<IndiceRepository>(() => IndiceApiRepository(sl()))
       ..registerLazySingleton<ConfiguracaoFinanceiraRepository>(
         () => ConfiguracaoFinanceiraApiRepository(sl()),
+      )
+      ..registerLazySingleton<DocumentoRepository>(
+        () => DocumentoApiRepository(sl(), sl()),
       );
   } else {
     sl
@@ -62,6 +69,9 @@ void registrarFinanceiro(GetIt sl) {
       )
       ..registerLazySingleton<ConfiguracaoFinanceiraRepository>(
         () => ConfiguracaoFinanceiraRepositoryImpl(sl()),
+      )
+      ..registerLazySingleton<DocumentoRepository>(
+        DocumentoMemoriaRepository.new,
       );
   }
   sl
@@ -98,6 +108,15 @@ void registrarFinanceiro(GetIt sl) {
     ..registerFactory(() => CancelarBoleto(sl()))
     ..registerFactory(() => ProcessarRetornoBancario(sl(), sl(), sl()))
     ..registerFactory(() => ImprimirBoletoBancario(sl(), sl(), sl(), sl()))
+    ..registerFactory(() => ListarPastas(sl()))
+    ..registerFactory(() => SalvarPasta(sl()))
+    ..registerFactory(() => RemoverPasta(sl()))
+    ..registerFactory(() => ListarDocumentos(sl()))
+    ..registerFactory(() => EnviarDocumento(sl()))
+    ..registerFactory(() => SalvarDocumento(sl()))
+    ..registerFactory(() => SubstituirArquivoDocumento(sl()))
+    ..registerFactory(() => RemoverDocumento(sl()))
+    ..registerFactory(() => EnderecoDocumento(sl()))
     // ViewModels
     ..registerFactory(
       () =>
@@ -121,7 +140,17 @@ void registrarFinanceiro(GetIt sl) {
       ),
     )
     ..registerFactory(
-      () => BoletosViewModel(sl(), sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+      () => DocumentosViewModel(
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+        sl(),
+      ),
     )
     ..registerFactory(
       () => EncargosViewModel(sl(), sl(), sl(), sl(), sl(), sl()),
