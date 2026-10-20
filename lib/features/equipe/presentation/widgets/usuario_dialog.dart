@@ -170,7 +170,7 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
               usuario: UsuarioSistema(
                 id: _u?.id ?? gerarId(),
                 nome: _nome.text.trim(),
-                login: _login.text.trim(),
+                login: aparar(_login.text),
                 email: _email.text.trim(),
                 perfil: _perfil,
                 permissoes: mudouPerfil
@@ -182,7 +182,7 @@ class _UsuarioDialogState extends State<_UsuarioDialog> {
                 creci: _creci.text.trim(),
                 atendeNaFila: _atendeFila,
               ),
-              senha: _senha.text,
+              senha: aparar(_senha.text),
             ));
           },
           child: const Text('Salvar'),

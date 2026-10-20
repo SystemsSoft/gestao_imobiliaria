@@ -1,4 +1,5 @@
 import '../../../../core/errors/domain_exception.dart';
+import '../../../../core/utils/formatters.dart';
 import '../entities/usuario.dart';
 import '../repositories/auth_repository.dart';
 
@@ -8,8 +9,8 @@ class Entrar {
   final AuthRepository _repository;
 
   Future<Usuario> call({required String usuario, required String senha}) {
-    final u = usuario.trim();
-    final s = senha.trim();
+    final u = aparar(usuario);
+    final s = aparar(senha);
     if (u.isEmpty) throw const DomainException('Informe seu usuário');
     if (s.isEmpty) throw const DomainException('Informe sua senha');
     return _repository.entrar(usuario: u, senha: s);
@@ -32,9 +33,9 @@ class AlterarSenha {
     required String nova,
     required String confirmacao,
   }) {
-    atual = atual.trim();
-    nova = nova.trim();
-    confirmacao = confirmacao.trim();
+    atual = aparar(atual);
+    nova = aparar(nova);
+    confirmacao = aparar(confirmacao);
     if (atual.isEmpty) throw const DomainException('Informe a senha atual.');
     if (nova.length < 8) {
       throw const DomainException(

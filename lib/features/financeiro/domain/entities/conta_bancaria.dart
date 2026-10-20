@@ -8,6 +8,7 @@ class ContaBancaria {
     this.saldoInicial = 0,
     this.convenio = '',
     this.carteira = '',
+    this.linkInternetBanking = '',
   });
 
   final String id;
@@ -22,6 +23,9 @@ class ContaBancaria {
   /// Dados da cobrança bancária, usados na emissão de boletos.
   final String convenio;
   final String carteira;
+
+  /// Link do internet banking, aberto pelo botão "Abrir banco" do Financeiro.
+  final String linkInternetBanking;
 
   String get descricao => [
     nome,

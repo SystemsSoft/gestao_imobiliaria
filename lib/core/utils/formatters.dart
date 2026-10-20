@@ -1,6 +1,15 @@
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
+// Espaços e caracteres invisíveis que vêm junto ao copiar e colar (quebra de
+// linha, espaço sem quebra, espaço de largura zero, marcas de direção).
+final _borda = RegExp(
+  r'^[\s\u200B-\u200F\u2060\uFEFF]+|[\s\u200B-\u200F\u2060\uFEFF]+$',
+);
+
+/// Tira das pontas o que o usuário não digitou de propósito.
+String aparar(String texto) => texto.replaceAll(_borda, '');
+
 final _moneyFmt = NumberFormat.currency(locale: 'pt_BR', symbol: r'R$');
 final _plainMoneyFmt = NumberFormat('#,##0.00', 'pt_BR');
 final _dateFmt = DateFormat('dd/MM/yyyy');

@@ -25,6 +25,7 @@ class _ContaDialog extends StatefulWidget {
 }
 
 class _ContaDialogState extends State<_ContaDialog> {
+  final _form = GlobalKey<FormState>();
   ContaBancaria? get _c => widget.conta;
   late final _nome = TextEditingController(text: _c?.nome);
   late final _banco = TextEditingController(text: _c?.banco);
@@ -35,6 +36,7 @@ class _ContaDialogState extends State<_ContaDialog> {
   );
   late final _convenio = TextEditingController(text: _c?.convenio);
   late final _carteira = TextEditingController(text: _c?.carteira);
+  late final _link = TextEditingController(text: _c?.linkInternetBanking);
 
   @override
   void dispose() {
@@ -46,6 +48,7 @@ class _ContaDialogState extends State<_ContaDialog> {
       _saldo,
       _convenio,
       _carteira,
+      _link,
     ]) {
       c.dispose();
     }
@@ -60,39 +63,54 @@ class _ContaDialogState extends State<_ContaDialog> {
       content: SizedBox(
         width: 480,
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 4),
-              AppTextField(
-                label: 'Nome da conta *',
-                hint: 'Ex.: Itaú Empresa',
-                controller: _nome,
-              ),
-              const SizedBox(height: 12),
-              AppTextField(label: 'Banco', controller: _banco),
-              const SizedBox(height: 12),
-              FieldRow(
-                children: [
-                  AppTextField(label: 'Agência', controller: _agencia),
-                  AppTextField(label: 'Conta', controller: _conta),
-                ],
-              ),
-              const SizedBox(height: 12),
-              AppTextField.money(label: 'Saldo inicial', controller: _saldo),
-              const SizedBox(height: 12),
-              const Text(
-                'Cobrança bancária (boletos)',
-                style: TextStyle(color: Colors.white70, fontSize: 12),
-              ),
-              const SizedBox(height: 8),
-              FieldRow(
-                children: [
-                  AppTextField(label: 'Convênio', controller: _convenio),
-                  AppTextField(label: 'Carteira', controller: _carteira),
-                ],
-              ),
-            ],
+          child: Form(
+            key: _form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 4),
+                AppTextField(
+                  label: 'Nome da conta *',
+                  hint: 'Ex.: Itaú Empresa',
+                  controller: _nome,
+                ),
+                const SizedBox(height: 12),
+                AppTextField(label: 'Banco', controller: _banco),
+                const SizedBox(height: 12),
+                FieldRow(
+                  children: [
+                    AppTextField(label: 'Agência', controller: _agencia),
+                    AppTextField(label: 'Conta', controller: _conta),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                AppTextField.money(label: 'Saldo inicial', controller: _saldo),
+                const SizedBox(height: 12),
+                const Text(
+                  'Cobrança bancária (boletos)',
+                  style: TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+                const SizedBox(height: 8),
+                FieldRow(
+                  children: [
+                    AppTextField(label: 'Convênio', controller: _convenio),
+                    AppTextField(label: 'Carteira', controller: _carteira),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                AppTextField(
+                  label: 'Link do internet banking',
+                  hint: 'https://...',
+                  controller: _link,
+                  keyboardType: TextInputType.url,
+                  validator: (v) =>
+                      (v ?? '').trim().isEmpty ||
+                          (v ?? '').trim().startsWith('https://')
+                      ? null
+                      : 'Use um link que comece com https://',
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -106,19 +124,23 @@ class _ContaDialogState extends State<_ContaDialog> {
             backgroundColor: AppColors.gold,
             foregroundColor: AppColors.navyDark,
           ),
-          onPressed: () => Navigator.pop(
-            context,
-            ContaBancaria(
-              id: _c?.id ?? gerarId(),
-              nome: _nome.text.trim(),
-              banco: _banco.text.trim(),
-              agencia: _agencia.text.trim(),
-              conta: _conta.text.trim(),
-              saldoInicial: parseMoney(_saldo.text) ?? 0,
-              convenio: _convenio.text.trim(),
-              carteira: _carteira.text.trim(),
-            ),
-          ),
+          onPressed: () {
+            if (!_form.currentState!.validate()) return;
+            Navigator.pop(
+              context,
+              ContaBancaria(
+                id: _c?.id ?? gerarId(),
+                nome: _nome.text.trim(),
+                banco: _banco.text.trim(),
+                agencia: _agencia.text.trim(),
+                conta: _conta.text.trim(),
+                saldoInicial: parseMoney(_saldo.text) ?? 0,
+                convenio: _convenio.text.trim(),
+                carteira: _carteira.text.trim(),
+                linkInternetBanking: _link.text.trim(),
+              ),
+            );
+          },
           child: const Text('Salvar'),
         ),
       ],

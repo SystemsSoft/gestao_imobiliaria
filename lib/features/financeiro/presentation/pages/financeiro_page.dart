@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../widgets/abrir_banco.dart';
 import '../widgets/abrir_sicoob.dart';
 import '../widgets/boletos_tab.dart';
 import '../widgets/conciliacao_tab.dart';
@@ -55,7 +56,10 @@ class FinanceiroPage extends StatelessWidget {
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: BotaoAbrirSicoob(),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [BotaoAbrirBanco(), BotaoAbrirSicoob()],
+                  ),
                 ),
               ],
             ),

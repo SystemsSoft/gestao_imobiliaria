@@ -1,5 +1,6 @@
 import '../../../../core/errors/domain_exception.dart';
 import '../../../../core/presentation/view_model.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../domain/usecases/entrar.dart';
 
 class LoginViewModel extends ViewModel {
@@ -16,10 +17,10 @@ class LoginViewModel extends ViewModel {
   }
 
   String? validarUsuario(String? v) =>
-      (v?.trim().isEmpty ?? true) ? 'Informe seu usuário' : null;
+      aparar(v ?? '').isEmpty ? 'Informe seu usuário' : null;
 
   String? validarSenha(String? v) =>
-      (v == null || v.isEmpty) ? 'Informe sua senha' : null;
+      aparar(v ?? '').isEmpty ? 'Informe sua senha' : null;
 
   /// Retorna true quando o login foi aceito.
   Future<bool> entrar(String usuario, String senha) async {

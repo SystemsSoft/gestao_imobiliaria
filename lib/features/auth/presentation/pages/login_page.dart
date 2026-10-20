@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../home/presentation/pages/home_page.dart';
 import '../viewmodels/login_viewmodel.dart';
 
@@ -47,8 +48,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     final ok = await _vm.entrar(
-      _usuarioController.text.trim(),
-      _passwordController.text.trim(),
+      aparar(_usuarioController.text),
+      aparar(_passwordController.text),
     );
     if (!mounted) return;
     if (!ok) {
