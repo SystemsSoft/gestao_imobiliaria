@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 /// Identidade visual Marcelo Bonifácio: azul-marinho profundo + dourado.
 class AppColors {
-  static const navyDark = Color.fromARGB(255, 50, 59, 89);
+  static const navyDark = Color.fromARGB(255, 38, 49, 79);
   static const navy = Color.fromARGB(0, 48, 54, 75);
   static const blue = Color(0xFF244888);
   static const blueGlow = Color(0xFF2661AB);
