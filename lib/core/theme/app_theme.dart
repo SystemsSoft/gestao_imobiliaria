@@ -67,11 +67,11 @@ ThemeData buildAppTheme() {
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Colors.redAccent),
+        borderSide: const BorderSide(color: Color.fromARGB(255, 250, 98, 98)),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Colors.redAccent, width: 1.6),
+        borderSide: const BorderSide(color: Color.fromARGB(255, 241, 105, 105), width: 1.6),
       ),
     ),
   );
