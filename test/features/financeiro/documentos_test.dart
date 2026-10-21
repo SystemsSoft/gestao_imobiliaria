@@ -194,6 +194,60 @@ void main() {
     vm.dispose();
   });
 
+  test('duplicar cria a cópia na mesma pasta com o sufixo', () async {
+    final vm = await _vm();
+    await vm.salvarPasta('Boletos');
+    await vm.enviar([_arquivo('Liquidação 20102026.pdf', 25)]);
+    final original = vm.documentos.single;
+
+    expect(await vm.duplicar(original), isTrue);
+    expect(vm.ultimaCopia, 'Liquidação 20102026 (cópia)');
+    expect(await vm.duplicar(original), isTrue);
+    expect(vm.ultimaCopia, 'Liquidação 20102026 (cópia 2)');
+
+    final copia = vm.documentos.firstWhere(
+      (d) => d.nome == 'Liquidação 20102026 (cópia)',
+    );
+    expect(
+      (copia.arquivoNome, copia.tamanho, copia.pastaId),
+      ('Liquidação 20102026 (cópia).pdf', 25, original.pastaId),
+    );
+    expect(copia.arquivoId, isNot(original.arquivoId));
+    expect(vm.pasta!.documentos, 3);
+
+    await vm.remover(original);
+    expect(await sl<DocumentoRepository>().endereco(copia), isNotNull);
+    vm.dispose();
+  });
+
+  testWidgets('menu do documento tem Duplicar', (tester) async {
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    final repo = sl<DocumentoRepository>();
+    await repo.salvarPasta('p1', 'Boletos');
+    await repo.enviar('p1', Uint8List(10), 'Relatório.xlsx');
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: const Scaffold(body: DocumentosTab()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Boletos'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Opções do documento'));
+    await tester.pumpAndSettle();
+    expect(find.text('Duplicar'), findsOneWidget);
+    await tester.tap(find.text('Duplicar'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Relatório (cópia)'), findsOneWidget);
+    expect(find.text('Cópia criada: "Relatório (cópia)".'), findsOneWidget);
+    expect((await repo.documentos('p1')).length, 2);
+  });
+
   for (final (nome, tamanho) in [
     ('celular', const Size(360, 740)),
     ('computador', const Size(1400, 900)),

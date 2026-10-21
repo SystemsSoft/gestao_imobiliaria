@@ -108,6 +108,14 @@ class SalvarDocumento {
   }
 }
 
+/// Cria uma cópia do documento na mesma pasta, com "(cópia)" no nome.
+class DuplicarDocumento {
+  const DuplicarDocumento(this._repo);
+  final DocumentoRepository _repo;
+
+  Future<Documento> call(Documento d) => _repo.duplicar(d.id);
+}
+
 /// Troca o arquivo do documento, mantendo o nome e a pasta.
 class SubstituirArquivoDocumento {
   const SubstituirArquivoDocumento(this._repo);

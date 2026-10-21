@@ -119,6 +119,7 @@ void registrarFinanceiro(GetIt sl) {
     ..registerFactory(() => EnderecoDocumento(sl()))
     ..registerFactory(() => ListarDestinatarios(sl()))
     ..registerFactory(() => CompartilharPasta(sl()))
+    ..registerFactory(() => DuplicarDocumento(sl()))
     // ViewModels
     ..registerFactory(
       () =>
@@ -143,6 +144,7 @@ void registrarFinanceiro(GetIt sl) {
     )
     ..registerFactory(
       () => DocumentosViewModel(
+        sl(),
         sl(),
         sl(),
         sl(),

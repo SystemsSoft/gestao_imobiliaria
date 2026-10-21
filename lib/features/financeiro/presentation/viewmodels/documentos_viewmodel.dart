@@ -19,6 +19,7 @@ class DocumentosViewModel extends ViewModel {
     this._endereco,
     this._listarDestinatarios,
     this._compartilhar,
+    this._duplicar,
   ) {
     carregar();
   }
@@ -34,6 +35,7 @@ class DocumentosViewModel extends ViewModel {
   final EnderecoDocumento _endereco;
   final ListarDestinatarios _listarDestinatarios;
   final CompartilharPasta _compartilhar;
+  final DuplicarDocumento _duplicar;
 
   /// Inquilinos e proprietários, carregados ao abrir o compartilhamento.
   List<Destinatario> destinatarios = const [];
@@ -161,6 +163,14 @@ class DocumentosViewModel extends ViewModel {
 
   Future<bool> mover(Documento d, String pastaDestino) => executar(() async {
     await _salvar(d, pastaId: pastaDestino);
+    await _atualizar();
+  });
+
+  /// Nome da última cópia criada (para avisar a tela).
+  String? ultimaCopia;
+
+  Future<bool> duplicar(Documento d) => executar(() async {
+    ultimaCopia = (await _duplicar(d)).nome;
     await _atualizar();
   });
 

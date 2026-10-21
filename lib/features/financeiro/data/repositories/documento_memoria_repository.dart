@@ -118,6 +118,30 @@ class DocumentoMemoriaRepository implements DocumentoRepository {
   Future<Documento> salvar(Documento d) async => _docs[d.id] = d;
 
   @override
+  Future<Documento> duplicar(String id) async {
+    final d = _docs[id]!;
+    final nomes = {
+      for (final x in _docs.values)
+        if (x.pastaId == d.pastaId) x.nome,
+    };
+    var n = 1;
+    var sufixo = ' (cópia)';
+    while (nomes.contains('${d.nome}$sufixo')) {
+      sufixo = ' (cópia ${++n})';
+    }
+    final ext = d.extensao.isEmpty ? '' : '.${d.extensao}';
+    final base = d.arquivoNome.substring(0, d.arquivoNome.length - ext.length);
+    final copia = _novo(
+      gerarId(),
+      d.pastaId,
+      '${d.nome}$sufixo',
+      Uint8List.fromList(_conteudo[d.arquivoId] ?? const []),
+      '$base$sufixo$ext',
+    );
+    return _docs[copia.id] = copia;
+  }
+
+  @override
   Future<Documento> substituir(
     String id,
     Uint8List bytes,

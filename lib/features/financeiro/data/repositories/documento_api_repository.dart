@@ -100,6 +100,10 @@ class DocumentoApiRepository implements DocumentoRepository {
   );
 
   @override
+  Future<Documento> duplicar(String id) async =>
+      _documento(await _api.post('financeiro/documentos/$id/duplicar', null));
+
+  @override
   Future<Documento> substituir(
     String id,
     Uint8List bytes,

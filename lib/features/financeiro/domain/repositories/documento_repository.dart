@@ -25,6 +25,9 @@ abstract interface class DocumentoRepository {
   /// Renomeia e/ou move para outra pasta.
   Future<Documento> salvar(Documento d);
 
+  /// Cópia na mesma pasta, com o arquivo copiado e "(cópia)" no nome.
+  Future<Documento> duplicar(String id);
+
   /// Troca o arquivo do documento (o antigo é apagado).
   Future<Documento> substituir(String id, Uint8List bytes, String nomeArquivo);
 

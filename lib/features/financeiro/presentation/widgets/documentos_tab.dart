@@ -181,6 +181,17 @@ class _DocumentosTabState extends State<DocumentosTab> {
     }
   }
 
+  Future<void> _duplicar(Documento d) async {
+    final ok = await _vm.duplicar(d);
+    if (!mounted) return;
+    mostrarMensagem(
+      context,
+      ok
+          ? 'Cópia criada: "${_vm.ultimaCopia}".'
+          : _vm.erro ?? 'Não foi possível duplicar.',
+    );
+  }
+
   Future<void> _substituir(Documento d) async {
     final escolhido = await escolherArquivos(extensoes: extensoesDocumento);
     if (escolhido.isEmpty) return;
@@ -494,12 +505,14 @@ class _DocumentosTabState extends State<DocumentosTab> {
             color: AppColors.navy,
             onSelected: (v) => switch (v) {
               'renomear' => _renomear(d),
+              'duplicar' => _duplicar(d),
               'mover' => _mover(d),
               'substituir' => _substituir(d),
               _ => _excluir(d),
             },
             itemBuilder: (_) => const [
               PopupMenuItem(value: 'renomear', child: Text('Renomear')),
+              PopupMenuItem(value: 'duplicar', child: Text('Duplicar')),
               PopupMenuItem(
                 value: 'mover',
                 child: Text('Mover para outra pasta'),
