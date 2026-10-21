@@ -139,11 +139,11 @@ class _AcessoPortalSecaoState extends State<AcessoPortalSecao> {
       builder: (context, _) {
         final locatario =
             widget.papeis.contains(PapelContato.locatario) ||
-            _vm.inquilino.temContrato ||
+            _vm.inquilino.temContrato == true ||
             _vm.inquilino.ativo;
         final proprietario =
             widget.papeis.contains(PapelContato.proprietario) ||
-            _vm.proprietario.temContrato ||
+            _vm.proprietario.temContrato == true ||
             _vm.proprietario.ativo;
         return FormSection(
           title: 'Acesso ao portal (site)',
@@ -174,9 +174,9 @@ class _AcessoPortalSecaoState extends State<AcessoPortalSecao> {
                   papel: 'Locatário',
                   s: _vm.inquilino,
                   semContrato:
-                      'Este contato não é locatário de nenhum contrato. '
-                      'Cadastre o contrato em Administração de Locação para '
-                      'liberar.',
+                      'Sem contrato de locação: no portal ele vê os '
+                      'documentos compartilhados e os avisos. Pagamentos e '
+                      'chamados aparecem quando houver contrato.',
                   inquilino: true,
                 ),
               if (proprietario)
@@ -189,9 +189,9 @@ class _AcessoPortalSecaoState extends State<AcessoPortalSecao> {
                   papel: 'Proprietário',
                   s: _vm.proprietario,
                   semContrato:
-                      'Este contato não é proprietário (beneficiário) de '
-                      'nenhum contrato de locação, por isso o acesso ainda '
-                      'não pode ser liberado.',
+                      'Sem contrato de locação: no portal ele vê os '
+                      'documentos compartilhados e os imóveis em nome dele. '
+                      'Repasses aparecem quando houver contrato.',
                   inquilino: false,
                 ),
             ],
@@ -212,10 +212,7 @@ class _AcessoPortalSecaoState extends State<AcessoPortalSecao> {
   }) {
     final semDocumento = widget.contato.documento.trim().isEmpty;
     final podeLiberar =
-        s.erro == null &&
-        s.temContrato &&
-        !semDocumento &&
-        !widget.documentoAlterado;
+        s.erro == null && !semDocumento && !widget.documentoAlterado;
     final (situacao, cor) = switch (s) {
       SituacaoPortal(ativo: true, bloqueado: true) => (
         'Bloqueado por tentativas de senha',
@@ -272,8 +269,14 @@ class _AcessoPortalSecaoState extends State<AcessoPortalSecao> {
             ),
           if (s.erro != null)
             _Aviso(s.erro!)
-          else if (!s.temContrato && !s.ativo)
-            _Aviso(semContrato),
+          else if (s.temContrato == false)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                semContrato,
+                style: const TextStyle(color: Colors.white54, fontSize: 12),
+              ),
+            ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,

@@ -120,39 +120,49 @@ void main() {
     );
   });
 
-  testWidgets('valida o perfil: sem contrato ou sem CPF não libera', (
-    tester,
-  ) async {
+  testWidgets('sem contrato: basta o CPF/CNPJ para liberar', (tester) async {
     await _abrir(
       tester,
       _contato('caio', 'Caio Sem Contrato', {
         PapelContato.locatario,
         PapelContato.proprietario,
-      }),
+      }, doc: '390.533.447-05'),
       tamanho: const Size(360, 2400),
     );
     expect(find.text('Área do inquilino'), findsOneWidget);
     expect(find.text('Área do proprietário'), findsOneWidget);
     expect(
-      find.textContaining('não é locatário de nenhum contrato'),
-      findsOneWidget,
+      find.textContaining('Sem contrato de locação: no portal ele vê'),
+      findsNWidgets(2),
     );
+    await tester.tap(find.text('Liberar acesso').first);
+    await tester.pumpAndSettle();
+    expect(find.text('Acesso liberado'), findsOneWidget);
+    await tester.tap(find.text('Concluir'));
+    await tester.pumpAndSettle();
     expect(
-      find.textContaining('beneficiário) de nenhum contrato'),
-      findsOneWidget,
+      (await sl<PortalInquilinoRepository>().acessos()).single.contatoId,
+      'caio',
+    );
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('sem CPF/CNPJ salvo não libera', (tester) async {
+    await _abrir(
+      tester,
+      _contato('dani', 'Dani Sem CPF', {PapelContato.proprietario}),
     );
     expect(
       find.text('Cadastre e salve o CPF/CNPJ: ele é o login.'),
-      findsNWidgets(2),
+      findsOneWidget,
     );
-    final botoes = tester.widgetList<FilledButton>(
+    final botao = tester.widget<FilledButton>(
       find.ancestor(
         of: find.text('Liberar acesso'),
         matching: find.byWidgetPredicate((w) => w is FilledButton),
       ),
     );
-    expect(botoes.every((b) => b.onPressed == null), isTrue);
-    expect(tester.takeException(), isNull);
+    expect(botao.onPressed, isNull);
   });
 
   testWidgets('lead sem perfil de locatário/proprietário só recebe a dica', (

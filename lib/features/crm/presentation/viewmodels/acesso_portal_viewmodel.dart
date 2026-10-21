@@ -9,7 +9,7 @@ import '../../../portal_inquilino/domain/repositories/portal_repository.dart';
 /// Situação do contato em uma das áreas do portal (inquilino/proprietário).
 class SituacaoPortal {
   const SituacaoPortal({
-    this.temContrato = false,
+    this.temContrato,
     this.ativo = false,
     this.login = '',
     this.trocarSenha = false,
@@ -18,9 +18,9 @@ class SituacaoPortal {
     this.erro,
   });
 
-  /// Locatário ou beneficiário de algum contrato de locação (exigido pelo
-  /// servidor para liberar).
-  final bool temContrato;
+  /// Locatário ou beneficiário de algum contrato de locação (só informa o
+  /// que ele verá no portal; null = não foi possível consultar).
+  final bool? temContrato;
 
   /// Já tem acesso liberado.
   final bool ativo;
@@ -53,17 +53,17 @@ class AcessoPortalViewModel extends ViewModel {
 
   Future<void> carregar(String id) async {
     contatoId = id;
-    var locatario = false, beneficiario = false;
-    String? erroContratos;
+    bool? locatario, beneficiario;
     try {
-      for (final c in await _contratos.listar()) {
-        if (c.locatarioId == id) locatario = true;
-        if (c.beneficiarios.any((b) => b.contatoId == id)) beneficiario = true;
-      }
-    } on DomainException catch (e) {
-      erroContratos = e.mensagem;
+      final contratos = await _contratos.listar();
+      locatario = contratos.any((c) => c.locatarioId == id);
+      beneficiario = contratos.any(
+        (c) => c.beneficiarios.any((b) => b.contatoId == id),
+      );
+    } on DomainException {
+      // Sem permissão em Locação: o contrato não é exigido, só não se sabe.
     }
-    inquilino = await _situacao(erroContratos, locatario, () async {
+    inquilino = await _situacao(locatario, () async {
       final a = (await _portal.acessos())
           .where((a) => a.contatoId == id)
           .firstOrNull;
@@ -71,7 +71,7 @@ class AcessoPortalViewModel extends ViewModel {
           ? null
           : (a.ativo, a.login, a.trocarSenha, a.bloqueado, a.ultimoAcesso);
     });
-    proprietario = await _situacao(erroContratos, beneficiario, () async {
+    proprietario = await _situacao(beneficiario, () async {
       final p = (await _auditorias.proprietarios())
           .where((p) => p.contatoId == id)
           .firstOrNull;
@@ -85,11 +85,9 @@ class AcessoPortalViewModel extends ViewModel {
   }
 
   Future<SituacaoPortal> _situacao(
-    String? erroContratos,
-    bool temContrato,
+    bool? temContrato,
     Future<(bool, String, bool, bool, DateTime?)?> Function() acesso,
   ) async {
-    if (erroContratos != null) return SituacaoPortal(erro: erroContratos);
     try {
       final a = await acesso();
       return a == null
