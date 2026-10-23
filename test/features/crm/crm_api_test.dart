@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:marceloimob_gestao/core/api/api_client.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/core/utils/id.dart';
-import 'package:marceloimob_gestao/features/crm/data/datasources/crm_api_datasource.dart';
-import 'package:marceloimob_gestao/features/crm/data/models/crm_json.dart';
-import 'package:marceloimob_gestao/features/crm/data/repositories/crm_api_repositories.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/evento.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/imovel.dart';
+import 'package:gestao_imobiliaria/core/api/api_client.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/core/utils/id.dart';
+import 'package:gestao_imobiliaria/features/crm/data/datasources/crm_api_datasource.dart';
+import 'package:gestao_imobiliaria/features/crm/data/models/crm_json.dart';
+import 'package:gestao_imobiliaria/features/crm/data/repositories/crm_api_repositories.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/contato.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/evento.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/imovel.dart';
 import 'package:http/testing.dart';
 
 import '../../apoio/servidor_falso.dart';

@@ -4,7 +4,7 @@
 class ApiConfig {
   ApiConfig._();
 
-  static const producao = 'https://api.inovacloud.app';
+  static const producao = 'https://api.xn--associaoconectabci-7sb3f.com.br';
 
   static const url = String.fromEnvironment('API_URL', defaultValue: producao);
 }

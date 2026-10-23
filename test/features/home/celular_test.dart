@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/pwa/instalacao_app.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/auditoria/presentation/pages/auditorias_page.dart';
-import 'package:marceloimob_gestao/features/home/presentation/pages/home_page.dart';
-import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
-import 'package:marceloimob_gestao/features/home/presentation/widgets/navegacao_inferior.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/pwa/instalacao_app.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/auditoria/presentation/pages/auditorias_page.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/pages/home_page.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/viewmodels/home_viewmodel.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/widgets/navegacao_inferior.dart';
 
 /// Navegador simulado (sistema, navegador, instalado ou não).
 class _InstalacaoFalsa implements InstalacaoApp {

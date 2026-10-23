@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/domain/repositories/contato_repository.dart';
-import 'package:marceloimob_gestao/features/crm/domain/repositories/imovel_repository.dart';
-import 'package:marceloimob_gestao/features/crm/domain/usecases/sugerir_negocios.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/cadastros_crm_page.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/contato_form_page.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/imovel_form_page.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/repositories/contato_repository.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/repositories/imovel_repository.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/usecases/sugerir_negocios.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/cadastros_crm_page.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/contato_form_page.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/imovel_form_page.dart';
 
 Future<void> _pump(WidgetTester tester, Widget page) async {
   tester.view.physicalSize = const Size(1000, 9000);

@@ -8,13 +8,13 @@ import '../features/splash/presentation/pages/splash_page.dart';
 /// Permite voltar ao login de qualquer tela (ex.: sessão expirada).
 final navegadorGlobal = GlobalKey<NavigatorState>();
 
-class MarceloImobApp extends StatelessWidget {
-  const MarceloImobApp({super.key});
+class GestaoImobiliariaApp extends StatelessWidget {
+  const GestaoImobiliariaApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Marcelo Bonifácio - Gestão',
+      title: 'Gestão Imobiliária',
       navigatorKey: navegadorGlobal,
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),

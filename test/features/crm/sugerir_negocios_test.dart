@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/imovel.dart';
-import 'package:marceloimob_gestao/features/crm/domain/usecases/sugerir_negocios.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/contato.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/imovel.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/usecases/sugerir_negocios.dart';
 
 Imovel _imovel({
   Set<Finalidade> finalidades = const {Finalidade.venda},

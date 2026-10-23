@@ -1,25 +1,25 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
-import 'package:marceloimob_gestao/features/contratos/domain/entities/modelo_contrato.dart';
-import 'package:marceloimob_gestao/features/contratos/domain/repositories/modelo_contrato_repository.dart';
-import 'package:marceloimob_gestao/features/contratos/domain/usecases/modelo_usecases.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/imovel.dart';
-import 'package:marceloimob_gestao/features/crm/domain/repositories/contato_repository.dart';
-import 'package:marceloimob_gestao/features/crm/domain/repositories/imovel_repository.dart';
-import 'package:marceloimob_gestao/features/vendas/data/documentos/pdf_documentos_venda_gateway.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/documentos_venda.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/venda.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/venda_enums.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/repositories/parcela_repository.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/repositories/venda_repository.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/services/calculadora_financiamento.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/usecases/montar_contrato_venda.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/usecases/parcela_usecases.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/usecases/venda_usecases.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/errors/domain_exception.dart';
+import 'package:gestao_imobiliaria/features/contratos/domain/entities/modelo_contrato.dart';
+import 'package:gestao_imobiliaria/features/contratos/domain/repositories/modelo_contrato_repository.dart';
+import 'package:gestao_imobiliaria/features/contratos/domain/usecases/modelo_usecases.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/contato.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/imovel.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/repositories/contato_repository.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/repositories/imovel_repository.dart';
+import 'package:gestao_imobiliaria/features/vendas/data/documentos/pdf_documentos_venda_gateway.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/documentos_venda.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/venda.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/venda_enums.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/repositories/parcela_repository.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/repositories/venda_repository.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/services/calculadora_financiamento.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/usecases/montar_contrato_venda.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/usecases/parcela_usecases.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/usecases/venda_usecases.dart';
 
 const _calc = CalculadoraFinanciamento();
 

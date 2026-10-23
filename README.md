@@ -1,6 +1,7 @@
-# marceloimob_gestao
+# Gestão Imobiliária
 
-Marcelo imóveis
+App de gestão (Flutter) do sistema multi-imobiliária. A API fica em
+`https://api.xn--associaoconectabci-7sb3f.com.br` (`lib/core/api/api_config.dart`).
 
 ## Getting Started
 
@@ -18,20 +19,21 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Servidor
 
-Por padrão o app usa o servidor de produção na AWS (`https://api.inovacloud.app`,
-definido em `lib/core/api/api_config.dart`):
+Por padrão o app usa o servidor de produção na AWS
+(`https://api.xn--associaoconectabci-7sb3f.com.br`, definido em
+`lib/core/api/api_config.dart`):
 
 ```bash
 flutter run -d chrome
 ```
 
-Para usar o servidor local (`python main.py` no `marceloimob_servidor`):
+Para usar o servidor local (`python main.py` no `servidor`, repositório `SystemsSoft/conectabco-servidor-`):
 
 ```bash
 flutter run -d chrome --dart-define=API_URL=http://localhost:8000
 ```
 
-Para publicar o app web em outro endereço (ex.: `https://gestao.inovacloud.app`),
+Para publicar o app web em outro endereço (ex.: `https://gestao.associaçãoconectabci.com.br`),
 inclua esse endereço em `CORS_ORIGINS` no `.env` do servidor.
 
 ## App web e instalação no Android

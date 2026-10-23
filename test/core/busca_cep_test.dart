@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:marceloimob_gestao/core/cep/busca_cep.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/contato_form_page.dart';
+import 'package:gestao_imobiliaria/core/cep/busca_cep.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/errors/domain_exception.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/contato_form_page.dart';
 
 /// ViaCEP simulada: conhece só o CEP de Icaraí.
 final _viaCep = MockClient((r) async {

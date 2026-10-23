@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/imovel.dart';
-import 'package:marceloimob_gestao/features/crm/domain/repositories/imovel_repository.dart';
-import 'package:marceloimob_gestao/features/site/data/repositories/site_repositories.dart';
-import 'package:marceloimob_gestao/features/site/domain/entities/configuracao_site.dart';
-import 'package:marceloimob_gestao/features/site/domain/entities/lead_site.dart';
-import 'package:marceloimob_gestao/features/site/domain/repositories/site_repository.dart';
-import 'package:marceloimob_gestao/features/site/domain/usecases/site_usecases.dart';
-import 'package:marceloimob_gestao/features/site/presentation/pages/site_page.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/errors/domain_exception.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/imovel.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/repositories/imovel_repository.dart';
+import 'package:gestao_imobiliaria/features/site/data/repositories/site_repositories.dart';
+import 'package:gestao_imobiliaria/features/site/domain/entities/configuracao_site.dart';
+import 'package:gestao_imobiliaria/features/site/domain/entities/lead_site.dart';
+import 'package:gestao_imobiliaria/features/site/domain/repositories/site_repository.dart';
+import 'package:gestao_imobiliaria/features/site/domain/usecases/site_usecases.dart';
+import 'package:gestao_imobiliaria/features/site/presentation/pages/site_page.dart';
 
 import '../../apoio/servidor_falso.dart';
 

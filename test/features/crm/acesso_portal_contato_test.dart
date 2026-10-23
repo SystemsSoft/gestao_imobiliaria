@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/auditoria/data/repositories/auditoria_repositories.dart';
-import 'package:marceloimob_gestao/features/auditoria/domain/entities/auditoria.dart';
-import 'package:marceloimob_gestao/features/auditoria/domain/repositories/auditoria_repository.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/contato_form_page.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/contrato_locacao.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/repositories/contrato_locacao_repository.dart';
-import 'package:marceloimob_gestao/features/portal_inquilino/domain/repositories/portal_repository.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/auditoria/data/repositories/auditoria_repositories.dart';
+import 'package:gestao_imobiliaria/features/auditoria/domain/entities/auditoria.dart';
+import 'package:gestao_imobiliaria/features/auditoria/domain/repositories/auditoria_repository.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/contato.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/contato_form_page.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/contrato_locacao.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/repositories/contrato_locacao_repository.dart';
+import 'package:gestao_imobiliaria/features/portal_inquilino/domain/repositories/portal_repository.dart';
 
 Contato _contato(
   String id,

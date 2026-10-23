@@ -2,15 +2,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/arquivos/arquivo_repository.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/domain/repositories/contato_repository.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/repositories/documento_repository.dart';
-import 'package:marceloimob_gestao/features/financeiro/presentation/viewmodels/documentos_viewmodel.dart';
-import 'package:marceloimob_gestao/features/financeiro/presentation/widgets/documentos_tab.dart';
+import 'package:gestao_imobiliaria/core/arquivos/arquivo_repository.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/contato.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/repositories/contato_repository.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/repositories/documento_repository.dart';
+import 'package:gestao_imobiliaria/features/financeiro/presentation/viewmodels/documentos_viewmodel.dart';
+import 'package:gestao_imobiliaria/features/financeiro/presentation/widgets/documentos_tab.dart';
 
 ArquivoEscolhido _arquivo(String nome, [int tamanho = 10]) => ArquivoEscolhido(
   nome: nome,

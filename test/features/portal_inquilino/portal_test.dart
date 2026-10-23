@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/contrato_locacao.dart';
-import 'package:marceloimob_gestao/features/manutencao/data/models/manutencao_json.dart';
-import 'package:marceloimob_gestao/features/manutencao/domain/entities/manutencao.dart';
-import 'package:marceloimob_gestao/features/manutencao/domain/repositories/manutencao_repository.dart';
-import 'package:marceloimob_gestao/features/manutencao/domain/usecases/manutencao_usecases.dart';
-import 'package:marceloimob_gestao/features/portal_inquilino/data/repositories/portal_repositories.dart';
-import 'package:marceloimob_gestao/features/portal_inquilino/domain/entities/portal.dart';
-import 'package:marceloimob_gestao/features/portal_inquilino/domain/repositories/portal_repository.dart';
-import 'package:marceloimob_gestao/features/portal_inquilino/domain/usecases/portal_usecases.dart';
-import 'package:marceloimob_gestao/features/portal_inquilino/presentation/pages/portal_contrato_page.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/errors/domain_exception.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/contato.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/contrato_locacao.dart';
+import 'package:gestao_imobiliaria/features/manutencao/data/models/manutencao_json.dart';
+import 'package:gestao_imobiliaria/features/manutencao/domain/entities/manutencao.dart';
+import 'package:gestao_imobiliaria/features/manutencao/domain/repositories/manutencao_repository.dart';
+import 'package:gestao_imobiliaria/features/manutencao/domain/usecases/manutencao_usecases.dart';
+import 'package:gestao_imobiliaria/features/portal_inquilino/data/repositories/portal_repositories.dart';
+import 'package:gestao_imobiliaria/features/portal_inquilino/domain/entities/portal.dart';
+import 'package:gestao_imobiliaria/features/portal_inquilino/domain/repositories/portal_repository.dart';
+import 'package:gestao_imobiliaria/features/portal_inquilino/domain/usecases/portal_usecases.dart';
+import 'package:gestao_imobiliaria/features/portal_inquilino/presentation/pages/portal_contrato_page.dart';
 
 final _contrato = ContratoLocacao(
   id: 'c1',

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/auth/presentation/pages/login_page.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/cadastros_crm_page.dart';
-import 'package:marceloimob_gestao/features/dashboard/presentation/pages/dashboard_page.dart';
-import 'package:marceloimob_gestao/features/home/presentation/pages/home_page.dart';
-import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/auth/presentation/pages/login_page.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/cadastros_crm_page.dart';
+import 'package:gestao_imobiliaria/features/dashboard/presentation/pages/dashboard_page.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/pages/home_page.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/viewmodels/home_viewmodel.dart';
 
 /// Tela alta o bastante para o botão ENTRAR ficar visível mesmo depois que
 /// a logo (carregada de forma assíncrona) aumenta a altura da página.

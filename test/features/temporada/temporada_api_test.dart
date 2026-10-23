@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/api_client.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/core/utils/id.dart';
-import 'package:marceloimob_gestao/features/temporada/data/repositories/reserva_api_repository.dart';
-import 'package:marceloimob_gestao/features/temporada/domain/entities/reserva.dart';
-import 'package:marceloimob_gestao/features/temporada/domain/entities/reserva_enums.dart';
-import 'package:marceloimob_gestao/features/temporada/domain/usecases/reserva_usecases.dart';
+import 'package:gestao_imobiliaria/core/api/api_client.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/core/utils/id.dart';
+import 'package:gestao_imobiliaria/features/temporada/data/repositories/reserva_api_repository.dart';
+import 'package:gestao_imobiliaria/features/temporada/domain/entities/reserva.dart';
+import 'package:gestao_imobiliaria/features/temporada/domain/entities/reserva_enums.dart';
+import 'package:gestao_imobiliaria/features/temporada/domain/usecases/reserva_usecases.dart';
 
 import '../../apoio/servidor_falso.dart';
 

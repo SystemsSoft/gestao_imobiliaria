@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:marceloimob_gestao/core/api/api_client.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/integracao_sicoob/data/repositories/sicoob_repositories.dart';
-import 'package:marceloimob_gestao/features/integracao_sicoob/domain/entities/sicoob.dart';
-import 'package:marceloimob_gestao/features/integracao_sicoob/domain/repositories/sicoob_repository.dart';
-import 'package:marceloimob_gestao/features/integracao_sicoob/presentation/pages/integracao_sicoob_page.dart';
-import 'package:marceloimob_gestao/features/integracao_sicoob/presentation/viewmodels/integracao_sicoob_viewmodel.dart';
+import 'package:gestao_imobiliaria/core/api/api_client.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/integracao_sicoob/data/repositories/sicoob_repositories.dart';
+import 'package:gestao_imobiliaria/features/integracao_sicoob/domain/entities/sicoob.dart';
+import 'package:gestao_imobiliaria/features/integracao_sicoob/domain/repositories/sicoob_repository.dart';
+import 'package:gestao_imobiliaria/features/integracao_sicoob/presentation/pages/integracao_sicoob_page.dart';
+import 'package:gestao_imobiliaria/features/integracao_sicoob/presentation/viewmodels/integracao_sicoob_viewmodel.dart';
 
 void main() {
   setUp(configurarDependencias);

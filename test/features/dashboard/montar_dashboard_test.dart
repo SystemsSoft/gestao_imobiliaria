@@ -1,19 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/contato.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/evento.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/imovel.dart';
-import 'package:marceloimob_gestao/features/dashboard/domain/entities/dashboard.dart';
-import 'package:marceloimob_gestao/features/dashboard/domain/services/montar_dashboard.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/entities/financeiro_enums.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/entities/lancamento.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/cobranca.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/contrato_locacao.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/locacao_enums.dart';
-import 'package:marceloimob_gestao/features/temporada/domain/entities/reserva.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/parcela.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/venda.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/venda_enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/contato.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/evento.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/imovel.dart';
+import 'package:gestao_imobiliaria/features/dashboard/domain/entities/dashboard.dart';
+import 'package:gestao_imobiliaria/features/dashboard/domain/services/montar_dashboard.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/entities/financeiro_enums.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/entities/lancamento.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/cobranca.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/contrato_locacao.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/locacao_enums.dart';
+import 'package:gestao_imobiliaria/features/temporada/domain/entities/reserva.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/parcela.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/venda.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/venda_enums.dart';
 
 final agora = DateTime(2026, 10, 15, 12);
 

@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/core/utils/id.dart';
-import 'package:marceloimob_gestao/features/vendas/data/repositories/vendas_api_repositories.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/parcela.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/venda.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/entities/venda_enums.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/usecases/parcela_usecases.dart';
-import 'package:marceloimob_gestao/features/vendas/domain/usecases/venda_usecases.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/core/utils/id.dart';
+import 'package:gestao_imobiliaria/features/vendas/data/repositories/vendas_api_repositories.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/parcela.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/venda.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/entities/venda_enums.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/usecases/parcela_usecases.dart';
+import 'package:gestao_imobiliaria/features/vendas/domain/usecases/venda_usecases.dart';
 
 import '../../apoio/servidor_falso.dart';
 

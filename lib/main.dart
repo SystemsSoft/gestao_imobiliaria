@@ -17,5 +17,5 @@ Future<void> main() async {
           (_) => false,
         );
   }
-  runApp(const MarceloImobApp());
+  runApp(const GestaoImobiliariaApp());
 }

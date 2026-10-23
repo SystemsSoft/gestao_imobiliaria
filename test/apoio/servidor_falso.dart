@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:marceloimob_gestao/core/api/api_client.dart';
-import 'package:marceloimob_gestao/core/api/sessao_api.dart';
+import 'package:gestao_imobiliaria/core/api/api_client.dart';
+import 'package:gestao_imobiliaria/core/api/sessao_api.dart';
 
 /// Servidor falso que imita a API: guarda o JSON recebido em PUT /{id},
 /// devolve nas listagens e gera os campos do servidor (datas, códigos).

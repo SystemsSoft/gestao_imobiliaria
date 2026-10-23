@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/theme/app_theme.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/contato_form_page.dart';
-import 'package:marceloimob_gestao/features/crm/presentation/pages/imovel_form_page.dart';
-import 'package:marceloimob_gestao/features/financeiro/presentation/widgets/lancamento_form_dialog.dart';
-import 'package:marceloimob_gestao/features/home/presentation/pages/home_page.dart';
-import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
-import 'package:marceloimob_gestao/features/locacao/presentation/pages/contrato_form_page.dart';
-import 'package:marceloimob_gestao/features/temporada/presentation/pages/reserva_form_page.dart';
-import 'package:marceloimob_gestao/features/vendas/presentation/pages/venda_form_page.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/theme/app_theme.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/contato_form_page.dart';
+import 'package:gestao_imobiliaria/features/crm/presentation/pages/imovel_form_page.dart';
+import 'package:gestao_imobiliaria/features/financeiro/presentation/widgets/lancamento_form_dialog.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/pages/home_page.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/viewmodels/home_viewmodel.dart';
+import 'package:gestao_imobiliaria/features/locacao/presentation/pages/contrato_form_page.dart';
+import 'package:gestao_imobiliaria/features/temporada/presentation/pages/reserva_form_page.dart';
+import 'package:gestao_imobiliaria/features/vendas/presentation/pages/venda_form_page.dart';
 
 /// Celulares comuns (largura × altura lógicas).
 const _telas = [Size(360, 740), Size(412, 915)];

@@ -1,8 +1,8 @@
 {
     "id": "./",
-    "name": "Marcelo Bonifácio - Gestão",
-    "short_name": "MB Gestão",
-    "description": "Sistema de gestão imobiliária Marcelo Bonifácio",
+    "name": "Gestão Imobiliária",
+    "short_name": "Gestão Imob.",
+    "description": "Sistema de gestão imobiliária",
     "lang": "pt-BR",
     "start_url": "./",
     "scope": "./",

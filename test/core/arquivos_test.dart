@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/sessao_api.dart';
-import 'package:marceloimob_gestao/core/arquivos/arquivo_repository.dart';
-import 'package:marceloimob_gestao/core/arquivos/arquivo_repository_api.dart';
-import 'package:marceloimob_gestao/core/arquivos/arquivo_repository_memoria.dart';
-import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
-import 'package:marceloimob_gestao/features/crm/domain/entities/enums.dart';
-import 'package:marceloimob_gestao/features/crm/domain/usecases/imovel_usecases.dart';
+import 'package:gestao_imobiliaria/core/api/sessao_api.dart';
+import 'package:gestao_imobiliaria/core/arquivos/arquivo_repository.dart';
+import 'package:gestao_imobiliaria/core/arquivos/arquivo_repository_api.dart';
+import 'package:gestao_imobiliaria/core/arquivos/arquivo_repository_memoria.dart';
+import 'package:gestao_imobiliaria/core/errors/domain_exception.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/entities/enums.dart';
+import 'package:gestao_imobiliaria/features/crm/domain/usecases/imovel_usecases.dart';
 
 import '../apoio/servidor_falso.dart';
 

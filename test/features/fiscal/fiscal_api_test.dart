@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/features/fiscal/data/repositories/declarante_api_repository.dart';
-import 'package:marceloimob_gestao/features/fiscal/domain/entities/declarante_dimob.dart';
-import 'package:marceloimob_gestao/features/fiscal/domain/usecases/fiscal_usecases.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/features/fiscal/data/repositories/declarante_api_repository.dart';
+import 'package:gestao_imobiliaria/features/fiscal/domain/entities/declarante_dimob.dart';
+import 'package:gestao_imobiliaria/features/fiscal/domain/usecases/fiscal_usecases.dart';
 
 import '../../apoio/servidor_falso.dart';
 

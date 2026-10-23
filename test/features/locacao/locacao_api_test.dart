@@ -1,16 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/core/utils/id.dart';
-import 'package:marceloimob_gestao/features/locacao/data/datasources/locacao_api_datasource.dart';
-import 'package:marceloimob_gestao/features/locacao/data/repositories/locacao_api_repositories.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/cobranca.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/contrato_locacao.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/despesa.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/entities/locacao_enums.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/repositories/repasse_repository.dart';
-import 'package:marceloimob_gestao/features/locacao/domain/usecases/contrato_usecases.dart';
-import 'package:marceloimob_gestao/features/manutencao/data/repositories/manutencao_api_repository.dart';
-import 'package:marceloimob_gestao/features/manutencao/domain/entities/manutencao.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/core/utils/id.dart';
+import 'package:gestao_imobiliaria/features/locacao/data/datasources/locacao_api_datasource.dart';
+import 'package:gestao_imobiliaria/features/locacao/data/repositories/locacao_api_repositories.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/cobranca.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/contrato_locacao.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/despesa.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/entities/locacao_enums.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/repositories/repasse_repository.dart';
+import 'package:gestao_imobiliaria/features/locacao/domain/usecases/contrato_usecases.dart';
+import 'package:gestao_imobiliaria/features/manutencao/data/repositories/manutencao_api_repository.dart';
+import 'package:gestao_imobiliaria/features/manutencao/domain/entities/manutencao.dart';
 
 import '../../apoio/servidor_falso.dart';
 

@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/config/empresa_info.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
-import 'package:marceloimob_gestao/core/pdf/pdf_kit.dart';
-import 'package:marceloimob_gestao/features/contratos/domain/entities/campos_modelo.dart';
-import 'package:marceloimob_gestao/features/personalizacao/domain/usecases/personalizacao_usecases.dart';
+import 'package:gestao_imobiliaria/core/config/empresa_info.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/core/errors/domain_exception.dart';
+import 'package:gestao_imobiliaria/core/pdf/pdf_kit.dart';
+import 'package:gestao_imobiliaria/features/contratos/domain/entities/campos_modelo.dart';
+import 'package:gestao_imobiliaria/features/personalizacao/domain/usecases/personalizacao_usecases.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 /// PNG 1x1 válido.

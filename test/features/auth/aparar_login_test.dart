@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/errors/domain_exception.dart';
-import 'package:marceloimob_gestao/core/utils/formatters.dart';
-import 'package:marceloimob_gestao/features/auth/domain/entities/usuario.dart';
-import 'package:marceloimob_gestao/features/auth/domain/repositories/auth_repository.dart';
-import 'package:marceloimob_gestao/features/auth/domain/usecases/entrar.dart';
+import 'package:gestao_imobiliaria/core/errors/domain_exception.dart';
+import 'package:gestao_imobiliaria/core/utils/formatters.dart';
+import 'package:gestao_imobiliaria/features/auth/domain/entities/usuario.dart';
+import 'package:gestao_imobiliaria/features/auth/domain/repositories/auth_repository.dart';
+import 'package:gestao_imobiliaria/features/auth/domain/usecases/entrar.dart';
 
 class _RepoFalso implements AuthRepository {
   String? usuario;

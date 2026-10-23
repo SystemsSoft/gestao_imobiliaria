@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/core/utils/id.dart';
-import 'package:marceloimob_gestao/features/contratos/data/repositories/modelo_contrato_api_repository.dart';
-import 'package:marceloimob_gestao/features/contratos/domain/entities/modelo_contrato.dart';
-import 'package:marceloimob_gestao/features/contratos/domain/entities/parametro_modelo.dart';
-import 'package:marceloimob_gestao/features/contratos/domain/usecases/modelo_usecases.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/core/utils/id.dart';
+import 'package:gestao_imobiliaria/features/contratos/data/repositories/modelo_contrato_api_repository.dart';
+import 'package:gestao_imobiliaria/features/contratos/domain/entities/modelo_contrato.dart';
+import 'package:gestao_imobiliaria/features/contratos/domain/entities/parametro_modelo.dart';
+import 'package:gestao_imobiliaria/features/contratos/domain/usecases/modelo_usecases.dart';
 
 import '../../apoio/servidor_falso.dart';
 

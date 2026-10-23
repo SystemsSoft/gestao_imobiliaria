@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/di/injector.dart';
-import 'package:marceloimob_gestao/features/equipe/domain/entities/equipe_enums.dart';
-import 'package:marceloimob_gestao/features/equipe/domain/entities/permissoes.dart';
-import 'package:marceloimob_gestao/features/equipe/domain/entities/usuario_sistema.dart';
-import 'package:marceloimob_gestao/features/equipe/domain/repositories/equipe_repositories.dart';
-import 'package:marceloimob_gestao/features/equipe/presentation/pages/equipe_seguranca_page.dart';
-import 'package:marceloimob_gestao/features/home/presentation/viewmodels/home_viewmodel.dart';
-import 'package:marceloimob_gestao/features/financeiro/presentation/pages/financeiro_page.dart';
-import 'package:marceloimob_gestao/features/financeiro/presentation/widgets/abrir_sicoob.dart';
+import 'package:gestao_imobiliaria/core/di/injector.dart';
+import 'package:gestao_imobiliaria/features/equipe/domain/entities/equipe_enums.dart';
+import 'package:gestao_imobiliaria/features/equipe/domain/entities/permissoes.dart';
+import 'package:gestao_imobiliaria/features/equipe/domain/entities/usuario_sistema.dart';
+import 'package:gestao_imobiliaria/features/equipe/domain/repositories/equipe_repositories.dart';
+import 'package:gestao_imobiliaria/features/equipe/presentation/pages/equipe_seguranca_page.dart';
+import 'package:gestao_imobiliaria/features/home/presentation/viewmodels/home_viewmodel.dart';
+import 'package:gestao_imobiliaria/features/financeiro/presentation/pages/financeiro_page.dart';
+import 'package:gestao_imobiliaria/features/financeiro/presentation/widgets/abrir_sicoob.dart';
 
 void main() {
   setUp(configurarDependencias);

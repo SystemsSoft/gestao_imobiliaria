@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/api/status_conexao.dart';
-import 'package:marceloimob_gestao/core/utils/id.dart';
-import 'package:marceloimob_gestao/features/financeiro/data/repositories/financeiro_api_repositories.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/entities/conta_bancaria.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/entities/financeiro_enums.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/entities/indice_mensal.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/entities/lancamento.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/entities/linha_extrato.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/usecases/boleto_usecases.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/usecases/financeiro_usecases.dart';
-import 'package:marceloimob_gestao/features/financeiro/domain/usecases/lancamento_usecases.dart';
+import 'package:gestao_imobiliaria/core/api/status_conexao.dart';
+import 'package:gestao_imobiliaria/core/utils/id.dart';
+import 'package:gestao_imobiliaria/features/financeiro/data/repositories/financeiro_api_repositories.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/entities/conta_bancaria.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/entities/financeiro_enums.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/entities/indice_mensal.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/entities/lancamento.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/entities/linha_extrato.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/usecases/boleto_usecases.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/usecases/financeiro_usecases.dart';
+import 'package:gestao_imobiliaria/features/financeiro/domain/usecases/lancamento_usecases.dart';
 
 import '../../apoio/servidor_falso.dart';
 

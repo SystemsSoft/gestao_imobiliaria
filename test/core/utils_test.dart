@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:marceloimob_gestao/core/utils/extenso.dart';
-import 'package:marceloimob_gestao/core/utils/formatters.dart';
+import 'package:gestao_imobiliaria/core/utils/extenso.dart';
+import 'package:gestao_imobiliaria/core/utils/formatters.dart';
 
 void main() {
   group('valorPorExtenso', () {
