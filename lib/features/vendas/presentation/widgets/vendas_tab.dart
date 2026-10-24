@@ -121,7 +121,7 @@ class _VendasTabState extends State<VendasTab> {
                   children: [
                     Text(
                       v.numero,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w800,
                       ),
@@ -150,7 +150,7 @@ class _VendasTabState extends State<VendasTab> {
                 Text(
                   '${formatMoney(v.valorVenda)} • ${formatDate(v.dataVenda)}'
                   '${v.financiamentoProprio ? ' • ${r.quantidadePagas}/${r.quantidade} pagas • saldo ${formatMoney(r.saldoDevedor)}' : ''}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w600,
                   ),

@@ -606,7 +606,7 @@ class _DashboardPageState extends State<DashboardPage> {
         color: AppColors.gold.withValues(alpha: 0.05),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: AppColors.gold, width: 1.2),
+          side: BorderSide(color: AppColors.gold, width: 1.2),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(8),

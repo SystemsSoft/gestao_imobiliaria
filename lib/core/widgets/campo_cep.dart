@@ -70,7 +70,7 @@ class _CampoCepState extends State<CampoCep> {
         errorText: _aviso,
         errorMaxLines: 3,
         suffixIcon: _buscando
-            ? const Padding(
+            ? Padding(
                 padding: EdgeInsets.all(12),
                 child: SizedBox(
                   width: 16,

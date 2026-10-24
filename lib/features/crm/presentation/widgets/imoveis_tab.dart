@@ -215,7 +215,7 @@ class _ImovelCard extends StatelessWidget {
                         padding: const EdgeInsets.only(top: 4),
                         child: Text(
                           valores.join('  |  '),
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: AppColors.goldLight,
                             fontWeight: FontWeight.w700,
                           ),
@@ -247,7 +247,7 @@ class _FotoPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: AppColors.blue.withValues(alpha: 0.4),
-      child: const Icon(Icons.apartment, color: AppColors.gold, size: 36),
+      child: Icon(Icons.apartment, color: AppColors.gold, size: 36),
     );
   }
 }

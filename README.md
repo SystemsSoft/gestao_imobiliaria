@@ -36,6 +36,22 @@ flutter run -d chrome --dart-define=API_URL=http://localhost:8000
 Para publicar o app web em outro endereço (ex.: `https://gestao.associaçãoconectabci.com.br`),
 inclua esse endereço em `CORS_ORIGINS` no `.env` do servidor.
 
+## Imobiliária em uso
+
+O mesmo app atende todas as imobiliárias da plataforma; cada uma tem o seu
+banco. Ao abrir, ele não mostra nome nem logotipo até descobrir qual é:
+
+1. **Pelo domínio**: publicado pelo servidor em `/gestao` de cada domínio
+   (ex.: `https://joaoimoveis.com.br/gestao/`), pergunta a `/api/v1/marca`
+   do próprio endereço e o servidor reconhece a imobiliária;
+2. **Pelo código**: fora do domínio de uma (endereço do servidor, Netlify,
+   desenvolvimento), pede o código dela (ex.: `joao`) e o guarda no aparelho
+   ("Trocar de imobiliária" no login esquece o código).
+
+Identificada, o app aplica o nome, a paleta e o logotipo cadastrados no
+painel da plataforma (`lib/core/marca/`) e manda `X-Imobiliaria` em todas as
+chamadas à API.
+
 ## App web e instalação no Android
 
 O app fica publicado em `https://api.inovacloud.app/gestao/`:

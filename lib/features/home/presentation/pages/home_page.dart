@@ -277,12 +277,11 @@ class _Rodape extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: EmpresaInfo.nome,
-                    style: const TextStyle(color: AppColors.gold),
+                    style: TextStyle(color: AppColors.gold),
                   ),
-                  TextSpan(
-                    text:
-                        ' · ${EmpresaInfo.atividade}  |  ${EmpresaInfo.creci}',
-                  ),
+                  if (EmpresaInfo.atual.atividadeECreci case final a
+                      when a.isNotEmpty)
+                    TextSpan(text: ' · $a'),
                 ],
               ),
               style: estilo,

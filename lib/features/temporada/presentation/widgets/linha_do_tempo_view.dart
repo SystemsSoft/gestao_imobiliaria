@@ -61,7 +61,7 @@ class LinhaDoTempoView extends StatelessWidget {
               children: [
                 Text(
                   i.codigo,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.gold,
                     fontWeight: FontWeight.w800,
                     fontSize: 12,
@@ -215,7 +215,7 @@ class LinhaDoTempoView extends StatelessWidget {
               nomeHospede(r),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.navyDark,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,

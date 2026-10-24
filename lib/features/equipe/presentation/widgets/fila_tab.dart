@@ -116,7 +116,7 @@ class _FilaTabState extends State<FilaTab> {
             const SizedBox(height: 8),
             Text(
               'Fila (${_vm.fila.length}) • ${_vm.atendimentosHojeTotal} atendimento(s) hoje',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.gold,
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
@@ -132,7 +132,7 @@ class _FilaTabState extends State<FilaTab> {
             for (var i = 0; i < _vm.fila.length; i++) _item(i, _vm.fila[i]),
             if (_vm.emAndamento.isNotEmpty) ...[
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Em atendimento',
                 style: TextStyle(
                   color: AppColors.gold,
@@ -145,7 +145,7 @@ class _FilaTabState extends State<FilaTab> {
             ],
             if (_vm.historico.isNotEmpty) ...[
               const SizedBox(height: 16),
-              const Text(
+              Text(
                 'Últimos atendimentos',
                 style: TextStyle(
                   color: AppColors.gold,
@@ -187,7 +187,7 @@ class _FilaTabState extends State<FilaTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'PRÓXIMO DA VEZ',
                   style: TextStyle(
                     color: AppColors.gold,
@@ -260,7 +260,7 @@ class _FilaTabState extends State<FilaTab> {
             width: 30,
             child: Text(
               '${i + 1}º',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.gold,
                 fontWeight: FontWeight.w800,
                 fontSize: 16,
@@ -449,7 +449,7 @@ class _ChamarDialogState extends State<_ChamarDialog> {
               if (proximo != null)
                 Text(
                   'Será encaminhado a ${widget.vm.nome(proximo.usuarioId)}.',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w700,
                   ),

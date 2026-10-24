@@ -227,7 +227,7 @@ class _UsuariosTabState extends State<UsuariosTab> {
                     if (online)
                       const GoldChip('Online', color: Colors.greenAccent),
                     if (u.atendeNaFila)
-                      const GoldChip('Na fila', color: AppColors.blueGlow),
+                      GoldChip('Na fila', color: AppColors.blueGlow),
                     if (u.creci.isNotEmpty)
                       GoldChip('CRECI ${u.creci}', color: Colors.white54),
                   ],

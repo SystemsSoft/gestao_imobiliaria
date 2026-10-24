@@ -148,10 +148,7 @@ class _ConciliacaoTabState extends State<ConciliacaoTab> {
                 ),
                 IconButton(
                   tooltip: 'Nova conta bancária',
-                  icon: const Icon(
-                    Icons.add_circle_outline,
-                    color: AppColors.gold,
-                  ),
+                  icon: Icon(Icons.add_circle_outline, color: AppColors.gold),
                   onPressed: _novaConta,
                 ),
                 IconButton(
@@ -230,7 +227,7 @@ class _ConciliacaoTabState extends State<ConciliacaoTab> {
             const SizedBox(height: 16),
             Text(
               'Extrato • ${_vm.pendentes} pendente(s)',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.gold,
                 fontWeight: FontWeight.w700,
                 fontSize: 16,
@@ -291,10 +288,7 @@ class _ConciliacaoTabState extends State<ConciliacaoTab> {
                 else if (sugestao != null)
                   Text(
                     'Sugestão: ${sugestao.descricao} (${formatDate(sugestao.dataBaixa)})',
-                    style: const TextStyle(
-                      color: AppColors.goldLight,
-                      fontSize: 12,
-                    ),
+                    style: TextStyle(color: AppColors.goldLight, fontSize: 12),
                   ),
               ],
             ),

@@ -347,7 +347,7 @@ class _VendaFormPageState extends State<VendaFormPage> {
         if (_forma != FormaPagamento.aVista)
           Text(
             'Saldo a financiar: ${formatMoney(financiado < 0 ? 0 : financiado)}',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.goldLight,
               fontWeight: FontWeight.w700,
             ),
@@ -457,7 +457,7 @@ class _VendaFormPageState extends State<VendaFormPage> {
       ),
       Text(
         'Valor da comissão: ${formatMoney(_valorVenda * (parseDecimal(_comissao.text) ?? 0) / 100)}',
-        style: const TextStyle(
+        style: TextStyle(
           color: AppColors.goldLight,
           fontWeight: FontWeight.w700,
         ),
@@ -490,13 +490,13 @@ class _TabelaSimulacao extends StatelessWidget {
         tilePadding: EdgeInsets.zero,
         title: Text(
           'Ver tabela de ${tabela.length} parcelas',
-          style: const TextStyle(color: AppColors.gold),
+          style: TextStyle(color: AppColors.gold),
         ),
         children: [
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
-              headingTextStyle: const TextStyle(
+              headingTextStyle: TextStyle(
                 color: AppColors.gold,
                 fontWeight: FontWeight.w700,
               ),

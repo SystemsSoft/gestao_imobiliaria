@@ -119,10 +119,7 @@ class ManutencaoDetalhePage extends StatelessWidget {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        const Icon(
-                          Icons.menu_book_outlined,
-                          color: AppColors.gold,
-                        ),
+                        Icon(Icons.menu_book_outlined, color: AppColors.gold),
                         const SizedBox(width: 10),
                         Text('Diário', style: estiloTitulo(tamanho: 22)),
                       ],
@@ -251,7 +248,7 @@ class ManutencaoDetalhePage extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.event_outlined, size: 18, color: AppColors.gold),
+              Icon(Icons.event_outlined, size: 18, color: AppColors.gold),
               const SizedBox(width: 6),
               Text(
                 formatDate(r.data),

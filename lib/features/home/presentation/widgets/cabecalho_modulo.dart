@@ -6,6 +6,7 @@ import '../../../../core/api/sessao_api.dart';
 import '../../../../core/di/injector.dart';
 import '../../../auth/presentation/widgets/alterar_senha_dialog.dart';
 
+import '../../../../core/marca/logo_marca.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../viewmodels/home_viewmodel.dart';
@@ -68,7 +69,10 @@ class CabecalhoModulo extends StatelessWidget {
                 ),
               ),
             ] else ...[
-              Image.asset('assets/logo_icone.png', height: 38),
+              LogoMarca(
+                altura: 38,
+                semLogo: Icon(Icons.apartment, size: 38, color: AppColors.gold),
+              ),
               const Spacer(),
             ],
           ] else ...[
@@ -128,7 +132,7 @@ class _Busca extends StatelessWidget {
           border: borda,
           enabledBorder: borda,
           focusedBorder: borda.copyWith(
-            borderSide: const BorderSide(color: AppColors.gold),
+            borderSide: BorderSide(color: AppColors.gold),
           ),
         ),
       ),
@@ -225,10 +229,7 @@ class _Avisos extends StatelessWidget {
             child: ListTile(
               dense: true,
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(
-                Icons.event_note_outlined,
-                color: AppColors.gold,
-              ),
+              leading: Icon(Icons.event_note_outlined, color: AppColors.gold),
               title: Text(
                 e.titulo,
                 maxLines: 1,
@@ -238,7 +239,7 @@ class _Avisos extends StatelessWidget {
             ),
           ),
         const PopupMenuDivider(),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 0,
           child: Text(
             'Abrir Central de Relacionamento',
@@ -395,7 +396,7 @@ class _BotaoBaixar extends StatelessWidget {
       return IconButton(
         tooltip: 'Baixar para desktop',
         onPressed: onTap,
-        icon: const Icon(Icons.install_desktop, color: AppColors.gold),
+        icon: Icon(Icons.install_desktop, color: AppColors.gold),
       );
     }
     return OutlinedButton.icon(

@@ -50,7 +50,7 @@ class PdfDocumentosVendaGateway implements DocumentosVendaGateway {
         child: PdfKit.rotuloValor(rotulo, valor, destaque: destaque),
       );
 
-  pw.Widget _cupom(ParcelasDocumento d, Parcela p, pw.MemoryImage logo) {
+  pw.Widget _cupom(ParcelasDocumento d, Parcela p, pw.MemoryImage? logo) {
     final canhoto = pw.Container(
       width: 150,
       padding: const pw.EdgeInsets.only(right: 10),
@@ -95,8 +95,10 @@ class PdfDocumentosVendaGateway implements DocumentosVendaGateway {
           children: [
             pw.Row(
               children: [
-                pw.Image(logo, width: 28, height: 28),
-                pw.SizedBox(width: 6),
+                if (logo != null) ...[
+                  pw.Image(logo, width: 28, height: 28),
+                  pw.SizedBox(width: 6),
+                ],
                 pw.Expanded(
                   child: pw.Text(
                     '${EmpresaInfo.nome.toUpperCase()} • ${EmpresaInfo.creci}',

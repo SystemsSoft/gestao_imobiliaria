@@ -197,7 +197,7 @@ class _ManutencaoTabState extends State<ManutencaoTab> {
           const SizedBox(width: 8),
           Text(
             formatMoney(m.total),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.goldLight,
               fontWeight: FontWeight.w800,
             ),

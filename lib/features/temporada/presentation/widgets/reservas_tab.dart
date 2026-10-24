@@ -129,7 +129,7 @@ class _ReservasTabState extends State<ReservasTab> {
                   children: [
                     Text(
                       r.bloqueio ? 'BLOQUEIO' : r.numero,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w800,
                       ),
@@ -166,7 +166,7 @@ class _ReservasTabState extends State<ReservasTab> {
                 Text(
                   '${formatDate(r.checkIn)} → ${formatDate(r.checkOut)} • ${r.noites} noite(s)'
                   '${r.bloqueio ? '' : ' • ${formatMoney(r.total)} (pago ${formatMoney(r.valorPago)})'}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w600,
                   ),

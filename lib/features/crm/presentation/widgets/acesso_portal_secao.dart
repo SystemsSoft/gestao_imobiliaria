@@ -243,7 +243,7 @@ class _AcessoPortalSecaoState extends State<AcessoPortalSecao> {
             children: [
               Text(
                 titulo,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.gold,
                   fontWeight: FontWeight.w700,
                 ),

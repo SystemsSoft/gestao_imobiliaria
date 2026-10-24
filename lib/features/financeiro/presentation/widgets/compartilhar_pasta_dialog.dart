@@ -113,7 +113,7 @@ class _CompartilharDialogState extends State<_CompartilharDialog> {
                 value: todosMarcados,
                 title: Text(
                   'Marcar todos da lista (${visiveis.length})',
-                  style: const TextStyle(color: AppColors.goldLight),
+                  style: TextStyle(color: AppColors.goldLight),
                 ),
                 onChanged: (v) => setState(() {
                   final ids = visiveis.map((d) => d.id);

@@ -683,7 +683,7 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
                         ListTile(
                           dense: true,
                           contentPadding: EdgeInsets.zero,
-                          leading: const Icon(
+                          leading: Icon(
                             Icons.star_outline,
                             color: AppColors.gold,
                           ),
@@ -871,7 +871,7 @@ class _ImovelFormPageState extends State<ImovelFormPage> {
                             children: [
                               if (_anexos[i].tipo == AnexoTipo.foto)
                                 _anexos[i] == _capa
-                                    ? const Tooltip(
+                                    ? Tooltip(
                                         message: 'Capa do imóvel',
                                         child: Padding(
                                           padding: EdgeInsets.all(8),

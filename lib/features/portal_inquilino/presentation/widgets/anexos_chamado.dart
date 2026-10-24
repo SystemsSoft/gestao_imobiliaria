@@ -37,10 +37,7 @@ class _AnexosChamadoState extends State<AnexosChamado> {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.photo_library_outlined,
-                    color: AppColors.gold,
-                  ),
+                  Icon(Icons.photo_library_outlined, color: AppColors.gold),
                   const SizedBox(width: 10),
                   Text(
                     'Fotos e vídeos do inquilino',
@@ -63,7 +60,7 @@ class _AnexosChamadoState extends State<AnexosChamado> {
                           dimension: 110,
                           child: ImagemAnexo(
                             a.referencia,
-                            alternativa: const ColoredBox(
+                            alternativa: ColoredBox(
                               color: AppColors.navy,
                               child: Icon(
                                 Icons.play_circle_outline,

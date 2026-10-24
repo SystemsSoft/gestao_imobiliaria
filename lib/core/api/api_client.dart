@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../errors/domain_exception.dart';
+import '../marca/marca.dart';
 import 'sessao_api.dart';
 
 /// Falha de comunicação com o servidor, com mensagem pronta para o usuário.
@@ -32,7 +33,13 @@ class ApiClient {
   Map<String, String> get _cabecalhos => {
     'Content-Type': 'application/json; charset=utf-8',
     'Accept': 'application/json',
+    ..._identificacao,
+  };
+
+  /// Token do login e imobiliária em uso (cada uma tem o seu banco).
+  Map<String, String> get _identificacao => {
     if (sessao?.token case final t?) 'Authorization': 'Bearer $t',
+    'X-Imobiliaria': ?MarcaAtual.imobiliaria,
   };
 
   Uri _uri(String caminho, [Map<String, Object?>? query]) {
@@ -71,10 +78,7 @@ class ApiClient {
     Map<String, String> campos = const {},
   }) => _enviar(() async {
     final req = http.MultipartRequest('POST', _uri(caminho))
-      ..headers.addAll({
-        'Accept': 'application/json',
-        if (sessao?.token case final t?) 'Authorization': 'Bearer $t',
-      })
+      ..headers.addAll({'Accept': 'application/json', ..._identificacao})
       ..fields.addAll(campos)
       ..files.add(
         http.MultipartFile.fromBytes('arquivo', bytes, filename: nomeArquivo),

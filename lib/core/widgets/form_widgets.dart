@@ -37,7 +37,7 @@ class FormSection extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.gold,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
@@ -612,7 +612,7 @@ class _ChipFiltro extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (selecionado) ...const [
+                if (selecionado) ...[
                   Icon(Icons.check, size: 18, color: AppColors.navyDark),
                   SizedBox(width: 8),
                 ],

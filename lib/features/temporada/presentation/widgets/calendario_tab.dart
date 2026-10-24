@@ -262,7 +262,7 @@ class _CalendarioTabState extends State<CalendarioTab> {
                     ),
                     Text(
                       '${(o.taxa * 100).round()}%',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w800,
                       ),

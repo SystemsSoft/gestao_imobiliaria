@@ -411,7 +411,7 @@ class _ModeloEditorPageState extends State<ModeloEditorPage> {
                       ),
                       Text(
                         p.marcador,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppColors.goldLight,
                           fontFamily: 'monospace',
                           fontSize: 12,
@@ -430,7 +430,7 @@ class _ModeloEditorPageState extends State<ModeloEditorPage> {
                 ),
                 IconButton(
                   tooltip: 'Inserir no texto',
-                  icon: const Icon(Icons.input, color: AppColors.gold),
+                  icon: Icon(Icons.input, color: AppColors.gold),
                   onPressed: () => _inserir(p.marcador),
                 ),
                 IconButton(

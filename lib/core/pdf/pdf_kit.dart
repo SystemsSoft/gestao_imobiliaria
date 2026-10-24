@@ -17,7 +17,6 @@ class PdfKit {
   static const fundo = PdfColor.fromInt(0xFFF3F5FA);
 
   static pw.ThemeData? _tema;
-  static pw.MemoryImage? _logo;
 
   /// Roboto embutida para suportar acentuação.
   static Future<pw.ThemeData> tema() async => _tema ??= pw.ThemeData.withFont(
@@ -25,18 +24,13 @@ class PdfKit {
     bold: pw.Font.ttf(await rootBundle.load('assets/fonts/Roboto-Bold.ttf')),
   );
 
-  /// Logotipo da Personalização ou, sem ele, o logotipo padrão do sistema.
-  static Future<pw.MemoryImage> logo() async {
+  /// Logotipo da Personalização (sem ele, o cabeçalho sai só com o nome).
+  static Future<pw.MemoryImage?> logo() async {
     final personalizado = EmpresaInfo.logo;
-    if (personalizado != null) return pw.MemoryImage(personalizado);
-    return _logo ??= pw.MemoryImage(
-      (await rootBundle.load(
-        'assets/logo_marcelo_bonifacio.png',
-      )).buffer.asUint8List(),
-    );
+    return personalizado == null ? null : pw.MemoryImage(personalizado);
   }
 
-  static pw.Widget cabecalho(pw.MemoryImage logo, String titulo) {
+  static pw.Widget cabecalho(pw.MemoryImage? logo, String titulo) {
     final empresa = EmpresaInfo.atual;
     return pw.Container(
       padding: const pw.EdgeInsets.only(bottom: 8),
@@ -47,8 +41,10 @@ class PdfKit {
       child: pw.Row(
         crossAxisAlignment: pw.CrossAxisAlignment.center,
         children: [
-          pw.Image(logo, width: 48, height: 48, fit: pw.BoxFit.contain),
-          pw.SizedBox(width: 10),
+          if (logo != null) ...[
+            pw.Image(logo, width: 48, height: 48, fit: pw.BoxFit.contain),
+            pw.SizedBox(width: 10),
+          ],
           pw.Expanded(
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,

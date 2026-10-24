@@ -170,7 +170,7 @@ class _CobrancasTabState extends State<CobrancasTab> {
                   children: [
                     Text(
                       contrato?.numero ?? '—',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w800,
                       ),
@@ -200,7 +200,7 @@ class _CobrancasTabState extends State<CobrancasTab> {
                             '${c.multa + c.juros > 0 ? ' (multa ${formatMoney(c.multa)} + juros ${formatMoney(c.juros)})' : ''}'
                             '${c.desconto > 0 ? ' (desconto ${formatMoney(c.desconto)})' : ''}'
                       : 'Vence em ${formatDate(c.vencimento)} • ${formatMoney(c.total)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w600,
                   ),

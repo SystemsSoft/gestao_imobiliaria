@@ -164,7 +164,7 @@ class _DocumentosTabState extends State<DocumentosTab> {
               onPressed: () => Navigator.pop(ctx, p),
               child: Row(
                 children: [
-                  const Icon(Icons.folder_outlined, color: AppColors.gold),
+                  Icon(Icons.folder_outlined, color: AppColors.gold),
                   const SizedBox(width: 12),
                   Expanded(child: Text(p.nome)),
                 ],
@@ -252,7 +252,7 @@ class _DocumentosTabState extends State<DocumentosTab> {
       children: [
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
                 'Pastas',
                 style: TextStyle(
@@ -382,14 +382,14 @@ class _DocumentosTabState extends State<DocumentosTab> {
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () => _abrirPasta(null),
                   ),
-                const Icon(Icons.folder_open, color: AppColors.gold),
+                Icon(Icons.folder_open, color: AppColors.gold),
                 const SizedBox(width: 8),
                 Flexible(
                   child: Text(
                     pasta.nome,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.w700,
                       fontSize: 18,

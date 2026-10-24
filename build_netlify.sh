@@ -3,17 +3,18 @@
 # raiz do domínio (ex.: https://marcelo-bonifacio-imob.netlify.app/).
 # Uso: ./build_netlify.sh [pasta_destino] [api_url]
 #   pasta_destino  onde ficam os arquivos (padrão: ../netlify_gestao_imobiliaria)
-#   api_url        servidor da API (padrão: o de produção, em ApiConfig)
+#   api_url        servidor da API (padrão: o de produção)
 # A pasta sai idêntica a build/web, pronta para arrastar em
 # Netlify › Deploy manually. O domínio da Netlify precisa estar em
-# CORS_ORIGINS no .env do servidor.
+# CORS_ORIGINS no .env do servidor. Fora do domínio de uma imobiliária, o
+# app pede o código dela no primeiro acesso. O normal agora é o app sair do
+# próprio servidor, em /gestao de cada domínio (deploy.sh do servidor).
 set -euo pipefail
 cd "$(dirname "$0")"
 DESTINO=${1:-../netlify_gestao_imobiliaria}
-API_URL=${2:-}
+API_URL=${2:-https://api.xn--associaoconectabci-7sb3f.com.br}
 
-flutter build web --release --base-href / \
-  ${API_URL:+--dart-define=API_URL=$API_URL}
+flutter build web --release --base-href / --dart-define=API_URL="$API_URL"
 
 # Sem isso, recarregar uma página interna dá 404 na Netlify.
 if [ ! -f build/web/_redirects ]; then

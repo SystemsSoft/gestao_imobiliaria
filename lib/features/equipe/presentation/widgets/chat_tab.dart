@@ -111,11 +111,7 @@ class _ChatTabState extends State<ChatTab> {
       color: Colors.black.withValues(alpha: 0.12),
       child: Row(
         children: [
-          const Icon(
-            Icons.manage_accounts_outlined,
-            color: AppColors.gold,
-            size: 20,
-          ),
+          Icon(Icons.manage_accounts_outlined, color: AppColors.gold, size: 20),
           const SizedBox(width: 8),
           const Text(
             'Conversando como:',
@@ -165,7 +161,7 @@ class _ChatTabState extends State<ChatTab> {
             selected: c.id == _vm.conversaId,
             selectedTileColor: AppColors.gold.withValues(alpha: 0.1),
             leading: c.usuario == null
-                ? const CircleAvatar(
+                ? CircleAvatar(
                     backgroundColor: Color(0x33F5C432),
                     foregroundColor: AppColors.gold,
                     child: Icon(Icons.groups_outlined),
@@ -197,7 +193,7 @@ class _ChatTabState extends State<ChatTab> {
                     backgroundColor: AppColors.gold,
                     child: Text(
                       '${c.naoLidas}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.navyDark,
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
@@ -238,7 +234,7 @@ class _ChatTabState extends State<ChatTab> {
                   icon: const Icon(Icons.arrow_back),
                 ),
               if (c.usuario == null)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(8),
                   child: Icon(Icons.groups_outlined, color: AppColors.gold),
                 )
@@ -379,7 +375,7 @@ class _ChatTabState extends State<ChatTab> {
               if (geral && !minha)
                 Text(
                   _vm.nome(m.remetenteId),
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w800,
                     fontSize: 12,
@@ -415,7 +411,7 @@ class _ChatTabState extends State<ChatTab> {
                           );
                         }
                       },
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.only(left: 6),
                         child: Icon(
                           Icons.delete_outline,

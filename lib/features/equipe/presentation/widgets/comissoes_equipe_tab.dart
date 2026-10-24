@@ -158,7 +158,7 @@ class _ComissoesEquipeTabState extends State<ComissoesEquipeTab> {
                 width: 26,
                 child: Text(
                   '${i + 1}º',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.gold,
                     fontWeight: FontWeight.w800,
                   ),
@@ -462,7 +462,7 @@ class _LancamentoDialogState extends State<_LancamentoDialog> {
                 const SizedBox(height: 8),
                 Text(
                   'Comissão do corretor: ${formatMoney(_calculado)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w800,
                   ),

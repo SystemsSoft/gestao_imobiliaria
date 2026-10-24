@@ -1,15 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-/// Identidade visual Marcelo Bonifácio: azul-marinho profundo + dourado.
+/// Paleta do app: a padrão do sistema (azul-marinho + dourado) até a
+/// imobiliária ser identificada; depois, a dela (cadastrada no painel da
+/// plataforma), aplicada com [aplicarPaleta] antes de desenhar as telas.
 class AppColors {
-  static const navyDark = Color.fromARGB(255, 38, 49, 79);
-  static const navy = Color.fromARGB(152, 48, 54, 75);
-  static const blue = Color(0xFF244888);
-  static const blueGlow = Color(0xFF2661AB);
-  static const gold = Color(0xFFDCBC5C);
-  static const goldLight = Color(0xFFD0B864);
-  static const goldDark = Color(0xFFB29043);
+  static const _navyDark = Color.fromARGB(255, 38, 49, 79);
+  static const _navy = Color.fromARGB(152, 48, 54, 75);
+  static const _blue = Color(0xFF244888);
+  static const _blueGlow = Color(0xFF2661AB);
+  static const _gold = Color(0xFFDCBC5C);
+  static const _goldLight = Color(0xFFD0B864);
+  static const _goldDark = Color(0xFFB29043);
+  static const _fundoMenu = Color(0xFF071430);
+
+  static Color navyDark = _navyDark;
+  static Color navy = _navy;
+  static Color blue = _blue;
+  static Color blueGlow = _blueGlow;
+  static Color gold = _gold;
+  static Color goldLight = _goldLight;
+  static Color goldDark = _goldDark;
+
+  /// Fundo mais escuro (topo do menu lateral).
+  static Color fundoMenu = _fundoMenu;
+
+  /// Paleta da imobiliária a partir das duas cores do cadastro; sem uma
+  /// delas, aquela parte segue a padrão.
+  static void aplicarPaleta({Color? primaria, Color? destaque}) {
+    restaurarPaleta();
+    if (primaria != null) {
+      navyDark = Color.lerp(primaria, Colors.black, 0.35)!;
+      navy = Color.lerp(primaria, Colors.black, 0.2)!.withValues(alpha: 0.6);
+      blue = Color.lerp(primaria, Colors.white, 0.12)!;
+      blueGlow = Color.lerp(primaria, Colors.white, 0.3)!;
+      fundoMenu = Color.lerp(primaria, Colors.black, 0.6)!;
+    }
+    if (destaque != null) {
+      gold = destaque;
+      goldLight = Color.lerp(destaque, Colors.white, 0.2)!;
+      goldDark = Color.lerp(destaque, Colors.black, 0.2)!;
+    }
+  }
+
+  static void restaurarPaleta() {
+    navyDark = _navyDark;
+    navy = _navy;
+    blue = _blue;
+    blueGlow = _blueGlow;
+    gold = _gold;
+    goldLight = _goldLight;
+    goldDark = _goldDark;
+    fundoMenu = _fundoMenu;
+  }
 }
 
 ThemeData buildAppTheme() {
@@ -63,7 +106,7 @@ ThemeData buildAppTheme() {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: AppColors.gold, width: 1.6),
+        borderSide: BorderSide(color: AppColors.gold, width: 1.6),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
@@ -71,7 +114,10 @@ ThemeData buildAppTheme() {
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: Color.fromARGB(255, 241, 105, 105), width: 1.6),
+        borderSide: const BorderSide(
+          color: Color.fromARGB(255, 241, 105, 105),
+          width: 1.6,
+        ),
       ),
     ),
   );
@@ -87,10 +133,10 @@ TextStyle estiloTitulo({double tamanho = 30, Color cor = Colors.white}) =>
     );
 
 /// Fonte manuscrita para frases de destaque.
-TextStyle estiloManuscrito({double tamanho = 24, Color cor = AppColors.gold}) =>
+TextStyle estiloManuscrito({double tamanho = 24, Color? cor}) =>
     GoogleFonts.dancingScript(
       fontSize: tamanho,
       fontWeight: FontWeight.w700,
-      color: cor,
+      color: cor ?? AppColors.gold,
       height: 1.1,
     );

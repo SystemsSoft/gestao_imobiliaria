@@ -138,7 +138,7 @@ class _PixSicoobTabState extends State<PixSicoobTab> {
                   for (final p in _vm.pix)
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.pix, color: AppColors.gold),
+                      leading: Icon(Icons.pix, color: AppColors.gold),
                       title: Text(
                         '${formatMoney(p.valor)}'
                         '${p.devedorNome.isNotEmpty ? ' · ${p.devedorNome}' : ''}',

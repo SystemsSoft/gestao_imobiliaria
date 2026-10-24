@@ -314,7 +314,7 @@ class _PortalContratoPageState extends State<PortalContratoPage> {
     onTap: () => abrirAnexo(context, a.referencia),
     child: Row(
       children: [
-        const Icon(Icons.picture_as_pdf_outlined, color: AppColors.gold),
+        Icon(Icons.picture_as_pdf_outlined, color: AppColors.gold),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -378,7 +378,7 @@ class _PortalContratoPageState extends State<PortalContratoPage> {
                 dimension: 110,
                 child: ImagemAnexo(
                   a.referencia,
-                  alternativa: const ColoredBox(
+                  alternativa: ColoredBox(
                     color: AppColors.navy,
                     child: Icon(
                       Icons.play_circle_outline,
@@ -398,7 +398,7 @@ class _PortalContratoPageState extends State<PortalContratoPage> {
     onTap: () => _abrirChamado(m),
     child: Row(
       children: [
-        const Icon(Icons.handyman_outlined, color: AppColors.gold),
+        Icon(Icons.handyman_outlined, color: AppColors.gold),
         const SizedBox(width: 12),
         Expanded(
           child: Column(

@@ -100,7 +100,7 @@ Future<void> mostrarPreviaDialog(
                   Expanded(
                     child: Text(
                       titulo,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w700,
                         fontSize: 16,

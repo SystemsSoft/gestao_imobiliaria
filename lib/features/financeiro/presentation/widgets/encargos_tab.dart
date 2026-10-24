@@ -298,7 +298,7 @@ class _EncargosTabState extends State<EncargosTab> {
           ListTile(
             dense: true,
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(Icons.show_chart, color: AppColors.gold),
+            leading: Icon(Icons.show_chart, color: AppColors.gold),
             title: Text('${i.indice.label} • ${nomeMes(i.mes)}/${i.ano}'),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,

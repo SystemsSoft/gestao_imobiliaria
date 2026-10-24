@@ -278,7 +278,12 @@ class _ImagemLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => logo == null
-      ? Image.asset('assets/logo_marcelo_bonifacio.png', fit: BoxFit.contain)
+      ? const Center(
+          child: Icon(
+            Icons.image_not_supported_outlined,
+            color: Colors.white38,
+          ),
+        )
       : Image.memory(logo!, fit: BoxFit.contain);
 }
 

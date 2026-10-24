@@ -8,6 +8,7 @@ import '../api/status_conexao.dart';
 import '../arquivos/arquivo_repository.dart';
 import '../arquivos/arquivo_repository_api.dart';
 import '../arquivos/arquivo_repository_memoria.dart';
+import '../marca/descobrir_marca.dart';
 
 import '../../features/auditoria/auditoria_injection.dart';
 import '../../features/auth/auth_injection.dart';
@@ -42,6 +43,7 @@ Future<void> configurarDependencias({String? apiUrl}) async {
     sl
       ..registerLazySingleton(SessaoApi.new)
       ..registerLazySingleton(() => ApiClient(apiUrl, sessao: sl()))
+      ..registerLazySingleton(() => DescobrirMarca(apiUrl))
       ..registerLazySingleton<ArquivoRepository>(
         () => ArquivoRepositoryApi(sl()),
       );

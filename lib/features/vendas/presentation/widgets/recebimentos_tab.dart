@@ -145,7 +145,7 @@ class _RecebimentosTabState extends State<RecebimentosTab> {
                   children: [
                     Text(
                       '${v?.numero ?? '—'} • ${p.rotulo}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w800,
                       ),
@@ -165,7 +165,7 @@ class _RecebimentosTabState extends State<RecebimentosTab> {
                   p.status == StatusParcela.paga
                       ? 'Pago ${formatMoney(p.valorPago)} em ${formatDate(p.dataPagamento)}'
                       : 'Vence em ${formatDate(p.vencimento)} • ${formatMoney(p.valor)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w600,
                   ),

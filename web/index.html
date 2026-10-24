@@ -43,20 +43,6 @@
     * https://docs.flutter.dev/platform-integration/web/initialization
   -->
   <script>
-    // O video_player web só zera o volume; o navegador exige o atributo
-    // `muted` para liberar o autoplay do vídeo de abertura.
-    (function () {
-      var originalPlay = HTMLMediaElement.prototype.play;
-      HTMLMediaElement.prototype.play = function () {
-        if (this.currentSrc && this.currentSrc.indexOf('splash_marcelo_bonifacio') !== -1) {
-          this.muted = true;
-          this.setAttribute('playsinline', '');
-        }
-        return originalPlay.apply(this, arguments);
-      };
-    })();
-  </script>
-  <script>
     // Instalação do app (PWA) no Android: o Chrome oferece o convite
     // (beforeinstallprompt), que o menu "Baixar app" abre quando o usuário
     // pede.

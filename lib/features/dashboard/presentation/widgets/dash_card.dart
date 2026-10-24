@@ -116,19 +116,16 @@ class LinkAcao extends StatelessWidget {
 
 /// Ícone dourado dentro de um círculo com borda.
 class IconeCirculo extends StatelessWidget {
-  const IconeCirculo(
-    this.icone, {
-    super.key,
-    this.tamanho = 44,
-    this.cor = AppColors.gold,
-  });
+  const IconeCirculo(this.icone, {super.key, this.tamanho = 44, Color? cor})
+    : _cor = cor;
 
   final IconData icone;
   final double tamanho;
-  final Color cor;
+  final Color? _cor;
 
   @override
   Widget build(BuildContext context) {
+    final cor = _cor ?? AppColors.gold;
     return Container(
       width: tamanho,
       height: tamanho,

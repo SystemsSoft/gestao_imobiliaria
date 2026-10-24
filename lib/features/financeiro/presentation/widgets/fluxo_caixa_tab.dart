@@ -119,7 +119,7 @@ class _FluxoCaixaTabState extends State<FluxoCaixaTab> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
-        headingTextStyle: const TextStyle(
+        headingTextStyle: TextStyle(
           color: AppColors.gold,
           fontWeight: FontWeight.w700,
         ),

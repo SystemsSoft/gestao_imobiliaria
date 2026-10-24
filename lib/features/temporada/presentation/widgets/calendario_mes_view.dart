@@ -125,7 +125,7 @@ class CalendarioMesView extends StatelessWidget {
                   ),
                 ),
                 if (d.viradaDeHospede)
-                  const Positioned(
+                  Positioned(
                     right: 2,
                     top: 2,
                     child: Icon(
@@ -143,7 +143,7 @@ class CalendarioMesView extends StatelessWidget {
                       rotulo,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
                         color: AppColors.navyDark,

@@ -130,7 +130,7 @@ class _IrFiscalTabState extends State<IrFiscalTab> {
               ),
               IconButton(
                 tooltip: 'Informe de rendimentos (PDF)',
-                icon: const Icon(
+                icon: Icon(
                   Icons.picture_as_pdf_outlined,
                   color: AppColors.goldLight,
                 ),
@@ -159,7 +159,7 @@ class _IrFiscalTabState extends State<IrFiscalTab> {
                 headingRowHeight: 34,
                 dataRowMinHeight: 32,
                 dataRowMaxHeight: 36,
-                headingTextStyle: const TextStyle(
+                headingTextStyle: TextStyle(
                   color: AppColors.gold,
                   fontWeight: FontWeight.w700,
                   fontSize: 12,
@@ -227,7 +227,7 @@ class _IrFiscalTabState extends State<IrFiscalTab> {
                 width: 90,
                 child: Text(
                   formatDate(d.vencimento),
-                  style: const TextStyle(color: AppColors.goldLight),
+                  style: TextStyle(color: AppColors.goldLight),
                 ),
               ),
               Expanded(

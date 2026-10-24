@@ -162,7 +162,7 @@ class _LancamentoFormDialogState extends State<LancamentoFormDialog> {
                       _novo
                           ? 'Nova conta ${_tipo.label.toLowerCase()}'
                           : 'Editar conta',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
@@ -172,7 +172,7 @@ class _LancamentoFormDialogState extends State<LancamentoFormDialog> {
                   IconButton(
                     tooltip: 'Fechar',
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close, color: AppColors.gold),
+                    icon: Icon(Icons.close, color: AppColors.gold),
                   ),
                 ],
               ),

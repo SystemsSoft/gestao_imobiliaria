@@ -123,7 +123,7 @@ class _AtividadesTabState extends State<AtividadesTab> {
                 Expanded(
                   child: Text(
                     '${lista.length} registro(s)',
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.gold,
                       fontWeight: FontWeight.w700,
                     ),
@@ -237,7 +237,7 @@ class _AtividadesTabState extends State<AtividadesTab> {
           ),
           Text(
             hora,
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.goldLight,
               fontWeight: FontWeight.w700,
             ),

@@ -1,8 +1,10 @@
+import '../api/api_config.dart';
 import 'instalacao_app_stub.dart'
     if (dart.library.js_interop) 'instalacao_app_web.dart';
 
-/// Endereço oficial do app web (onde ele pode ser instalado).
-const enderecoAppWeb = 'https://api.inovacloud.app/gestao/';
+/// Endereço do app web (onde ele pode ser instalado): `/gestao/` do mesmo
+/// endereço da API — no domínio de cada imobiliária, o app dela.
+String get enderecoAppWeb => '${ApiConfig.url}/gestao/';
 
 enum ResultadoInstalacao {
   /// O usuário confirmou a instalação.

@@ -49,7 +49,7 @@ class RetornoSicoobCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
               Icon(Icons.upload_file, color: AppColors.gold),
               SizedBox(width: 12),

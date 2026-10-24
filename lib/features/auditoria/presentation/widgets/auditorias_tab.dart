@@ -171,7 +171,7 @@ class _AuditoriasTabState extends State<AuditoriasTab> {
           if (a.nota != null) Estrelas(nota: a.nota, tamanho: 16),
           const SizedBox(width: 8),
           if (a.publicada)
-            const Tooltip(
+            Tooltip(
               message: 'Publicada na Área do proprietário',
               child: Icon(Icons.public, color: AppColors.gold, size: 20),
             ),

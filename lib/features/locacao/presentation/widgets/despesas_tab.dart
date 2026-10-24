@@ -146,7 +146,7 @@ class _DespesasTabState extends State<DespesasTab> {
           ),
           Text(
             formatMoney(d.valor),
-            style: const TextStyle(
+            style: TextStyle(
               color: AppColors.goldLight,
               fontWeight: FontWeight.w800,
             ),

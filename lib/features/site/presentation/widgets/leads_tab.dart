@@ -181,7 +181,7 @@ class _LeadsTabState extends State<LeadsTab> {
               padding: const EdgeInsets.only(top: 4),
               child: Text(
                 'Visita desejada: ${formatDateTime(l.dataVisita)}',
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.gold,
                   fontWeight: FontWeight.w600,
                 ),

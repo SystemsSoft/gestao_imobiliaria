@@ -211,7 +211,7 @@ class _ConfiguracaoSicoobTabState extends State<ConfiguracaoSicoobTab> {
             child: ListView(
               padding: EdgeInsets.fromLTRB(m, 20, m, 64),
               children: [
-                const CardPadrao(
+                CardPadrao(
                   child: Row(
                     children: [
                       Icon(Icons.science_outlined, color: AppColors.gold),
@@ -420,7 +420,7 @@ class ChamadasSicoobTab extends StatelessWidget {
             Expanded(
               child: Text(
                 titulo,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.gold,
                   fontWeight: FontWeight.w700,
                 ),

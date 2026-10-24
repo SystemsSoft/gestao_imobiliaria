@@ -60,7 +60,7 @@ void main() {
     await sl<SalvarDadosEmpresa>()(dados);
     await sl<SalvarLogo>()(_png);
     final logo = await PdfKit.logo();
-    expect(logo.bytes, _png);
+    expect(logo!.bytes, _png);
     final doc = pw.Document(theme: await PdfKit.tema())
       ..addPage(pw.Page(build: (_) => PdfKit.cabecalho(logo, 'RECIBO')));
     final bytes = await doc.save();

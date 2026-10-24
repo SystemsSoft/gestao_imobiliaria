@@ -559,7 +559,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
             Expanded(
               child: Text(
                 area,
-                style: const TextStyle(
+                style: TextStyle(
                   color: AppColors.gold,
                   fontWeight: FontWeight.w800,
                   fontSize: 15,
@@ -595,7 +595,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
               for (final m in widget.modelos)
                 PopupMenuItem(value: m, child: Text(m.nome)),
             ],
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -648,7 +648,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
                   onSelected: ro ? null : (_) => _vm.avaliar(i, e),
                 ),
               if (i.manutencaoId != null)
-                const Tooltip(
+                Tooltip(
                   message: 'Manutenção criada',
                   child: Icon(Icons.handyman, color: AppColors.gold, size: 18),
                 ),
@@ -887,7 +887,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
             child: SizedBox.square(
               dimension: tamanho,
               child: m.video
-                  ? const ColoredBox(
+                  ? ColoredBox(
                       color: AppColors.navy,
                       child: Icon(
                         Icons.play_circle_outline,
@@ -898,7 +898,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
                   : ImagemAnexo(
                       m.referencia,
                       largura: 320,
-                      alternativa: const ColoredBox(
+                      alternativa: ColoredBox(
                         color: AppColors.navy,
                         child: Icon(
                           Icons.image_outlined,
@@ -1026,7 +1026,7 @@ class _AuditoriaPageState extends State<AuditoriaPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'O que foi dito no vídeo',
                     style: TextStyle(
                       color: AppColors.gold,

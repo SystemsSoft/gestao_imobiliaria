@@ -75,7 +75,7 @@ class _InserirDialogState extends State<_InserirDialog> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 8, 0),
                 child: Row(
                   children: [
-                    const Expanded(
+                    Expanded(
                       child: Text(
                         'Inserir no texto',
                         style: TextStyle(
@@ -102,7 +102,7 @@ class _InserirDialogState extends State<_InserirDialog> {
                   ),
                 ),
               ),
-              const TabBar(
+              TabBar(
                 indicatorColor: AppColors.gold,
                 labelColor: AppColors.gold,
                 unselectedLabelColor: Colors.white70,
@@ -123,7 +123,7 @@ class _InserirDialogState extends State<_InserirDialog> {
                             padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
                             child: Text(
                               e.key,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: AppColors.gold,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -195,7 +195,7 @@ class _InserirDialogState extends State<_InserirDialog> {
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              trailing: const Icon(
+                              trailing: Icon(
                                 Icons.add_circle_outline,
                                 color: AppColors.gold,
                               ),

@@ -31,9 +31,9 @@ const _empresa = [
     'empresa_nome',
     'Nome da imobiliária/corretor',
     'Imobiliária',
-    'Marcelo Bonifácio',
+    'Imobiliária Exemplo',
   ),
-  CampoModelo('empresa_creci', 'CRECI', 'Imobiliária', 'CRECI 065655 RJ'),
+  CampoModelo('empresa_creci', 'CRECI', 'Imobiliária', 'CRECI 00000 UF'),
   CampoModelo(
     'empresa_documento',
     'CNPJ/CPF da imobiliária',

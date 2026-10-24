@@ -97,7 +97,7 @@ class BoletosSicoobTab extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.receipt_long_outlined,
                             color: AppColors.gold,
                           ),

@@ -15,11 +15,8 @@ class DadosEmpresa {
     this.chavePix = '',
   });
 
-  static const padrao = DadosEmpresa(
-    nome: 'Marcelo Bonifácio',
-    atividade: 'Corretor de Imóveis',
-    creci: 'CRECI 065655 RJ',
-  );
+  /// Até a imobiliária ser identificada: sem nome (nenhuma marca fixa).
+  static const padrao = DadosEmpresa(nome: '');
 
   final String nome;
   final String atividade;
@@ -33,7 +30,7 @@ class DadosEmpresa {
   final String site;
   final String chavePix;
 
-  /// "Corretor de Imóveis • CRECI 065655 RJ".
+  /// "Corretor de Imóveis • CRECI 00000 UF".
   String get atividadeECreci =>
       [atividade, creci].where((e) => e.isNotEmpty).join(' • ');
 

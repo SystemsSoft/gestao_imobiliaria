@@ -127,7 +127,7 @@ class _ImpostoRendaTabState extends State<ImpostoRendaTab> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(
-        headingTextStyle: const TextStyle(
+        headingTextStyle: TextStyle(
           color: AppColors.gold,
           fontWeight: FontWeight.w700,
         ),

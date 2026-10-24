@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/di/injector.dart';
 import '../../../../core/pwa/instalacao_app.dart';
+import '../../../../core/marca/logo_marca.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/form_widgets.dart';
 
@@ -186,7 +187,14 @@ class _Instrucoes extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(14),
-                  child: Image.asset('assets/logo_icone.png', height: 52),
+                  child: LogoMarca(
+                    altura: 52,
+                    semLogo: Icon(
+                      Icons.apartment,
+                      size: 52,
+                      color: AppColors.gold,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -231,15 +239,13 @@ class _Instrucoes extends StatelessWidget {
               ),
               TextButton.icon(
                 onPressed: () async {
-                  await Clipboard.setData(
-                    const ClipboardData(text: enderecoAppWeb),
-                  );
+                  await Clipboard.setData(ClipboardData(text: enderecoAppWeb));
                   if (context.mounted) {
                     mostrarMensagem(context, 'Endereço copiado.');
                   }
                 },
                 icon: const Icon(Icons.copy, size: 18),
-                label: const Text(enderecoAppWeb),
+                label: Text(enderecoAppWeb),
               ),
             ] else
               FilledButton(

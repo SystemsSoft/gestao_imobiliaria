@@ -127,14 +127,14 @@ class _ComissoesTabState extends State<ComissoesTab> {
                     ),
                     Text(
                       formatMoney(l.valor),
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.goldLight,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
                     IconButton(
                       tooltip: 'Recibo de comissão (PDF)',
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.picture_as_pdf_outlined,
                         color: AppColors.goldLight,
                       ),

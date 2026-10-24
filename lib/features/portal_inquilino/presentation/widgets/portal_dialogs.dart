@@ -173,7 +173,7 @@ Future<void> mostrarSenhaProvisoria(
             const SizedBox(height: 6),
             SelectableText(
               'Senha provisória: ${senha.senha}',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.gold,
                 fontWeight: FontWeight.w700,
                 fontSize: 18,

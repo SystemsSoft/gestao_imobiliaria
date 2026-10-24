@@ -140,7 +140,7 @@ class _ContratosTabState extends State<ContratosTab> {
                   children: [
                     Text(
                       c.numero,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.gold,
                         fontWeight: FontWeight.w800,
                       ),
@@ -171,7 +171,7 @@ class _ContratosTabState extends State<ContratosTab> {
                 Text(
                   '${formatMoney(c.valorAluguel)} • vence dia ${c.diaVencimento} • '
                   '${formatDate(c.dataInicio)} a ${formatDate(c.dataFim)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w600,
                   ),

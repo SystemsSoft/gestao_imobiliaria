@@ -301,7 +301,7 @@ class _DimobTabState extends State<DimobTab> {
                     children: [
                       TextSpan(
                         text: '${p.referencia}: ',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w700,
                           color: AppColors.gold,
                         ),
@@ -424,7 +424,7 @@ class _DimobTabState extends State<DimobTab> {
         headingRowHeight: 32,
         dataRowMinHeight: 30,
         dataRowMaxHeight: 34,
-        headingTextStyle: const TextStyle(
+        headingTextStyle: TextStyle(
           color: AppColors.gold,
           fontWeight: FontWeight.w700,
           fontSize: 12,
@@ -451,7 +451,7 @@ class _DimobTabState extends State<DimobTab> {
                 DataCell(
                   Text(
                     formatMoney(e.value.fold<double>(0, (s, v) => s + v)),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w800,
                       color: AppColors.goldLight,
                     ),

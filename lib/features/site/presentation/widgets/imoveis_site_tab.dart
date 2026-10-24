@@ -97,13 +97,13 @@ class _ImoveisSiteTabState extends State<ImoveisSiteTab> {
             child: SizedBox.square(
               dimension: 72,
               child: foto == null
-                  ? const ColoredBox(
+                  ? ColoredBox(
                       color: AppColors.navy,
                       child: Icon(Icons.home_outlined, color: Colors.white38),
                     )
                   : ImagemAnexo(
                       foto,
-                      alternativa: const ColoredBox(color: AppColors.navy),
+                      alternativa: ColoredBox(color: AppColors.navy),
                     ),
             ),
           ),

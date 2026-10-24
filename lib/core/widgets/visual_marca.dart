@@ -13,7 +13,7 @@ class FundoMarca extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
@@ -133,7 +133,7 @@ class AbasModulo extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: estreito ? 4 : 16),
         labelPadding: EdgeInsets.symmetric(horizontal: estreito ? 14 : 26),
         indicatorSize: TabBarIndicatorSize.tab,
-        indicator: const UnderlineTabIndicator(
+        indicator: UnderlineTabIndicator(
           borderSide: BorderSide(color: AppColors.gold, width: 3),
         ),
         dividerColor: Colors.transparent,

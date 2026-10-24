@@ -253,10 +253,7 @@ class _VendaDetalhePageState extends State<VendaDetalhePage> {
               if (p.status == StatusParcela.aberta)
                 IconButton(
                   tooltip: 'Registrar pagamento',
-                  icon: const Icon(
-                    Icons.payments_outlined,
-                    color: AppColors.gold,
-                  ),
+                  icon: Icon(Icons.payments_outlined, color: AppColors.gold),
                   onPressed: () => _pagar(p),
                 )
               else if (p.status == StatusParcela.paga)
@@ -317,7 +314,7 @@ class _VendaDetalhePageState extends State<VendaDetalhePage> {
               ),
               IconButton(
                 tooltip: 'Recibo de comissão',
-                icon: const Icon(
+                icon: Icon(
                   Icons.picture_as_pdf_outlined,
                   color: AppColors.goldLight,
                 ),

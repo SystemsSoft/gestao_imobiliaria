@@ -47,7 +47,7 @@ class BotaoAbrirSite extends StatelessWidget {
     return OutlinedButton.icon(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.gold,
-        side: const BorderSide(color: AppColors.gold),
+        side: BorderSide(color: AppColors.gold),
       ),
       onPressed: onPressed,
       icon: const Icon(Icons.open_in_new, size: 18),

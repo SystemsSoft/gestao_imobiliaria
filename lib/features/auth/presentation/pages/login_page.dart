@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app.dart';
 import '../../../../core/di/injector.dart';
+import '../../../../core/marca/descobrir_marca.dart';
+import '../../../../core/marca/logo_marca.dart';
+import '../../../../core/marca/marca.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../home/presentation/pages/home_page.dart';
@@ -63,11 +67,21 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  /// Esquece o código guardado e volta à escolha da imobiliária.
+  void _trocarImobiliaria() {
+    sl<DescobrirMarca>().esquecer();
+    MarcaAtual.aplicar(null);
+    navegadorGlobal.currentState?.pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: (_) => const InicioApp()),
+      (_) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
@@ -77,12 +91,6 @@ class _LoginPageState extends State<LoginPage> {
         ),
         child: Stack(
           children: [
-            // Brilho azul no canto inferior, como no vídeo de abertura.
-            Positioned(
-              left: -120,
-              bottom: -120,
-              child: Container(width: 360, height: 360),
-            ),
             SafeArea(
               child: Center(
                 child: SingleChildScrollView(
@@ -95,12 +103,25 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        _Logo(),
+                        const LogoMarca(altura: 150),
                         const SizedBox(height: 24),
                         ListenableBuilder(
                           listenable: _vm,
                           builder: (context, _) => _buildCard(context),
                         ),
+                        if (MarcaAtual.atual case final m?
+                            when !m.peloDominio &&
+                                sl.isRegistered<DescobrirMarca>())
+                          TextButton.icon(
+                            onPressed: _trocarImobiliaria,
+                            icon: const Icon(Icons.swap_horiz, size: 18),
+                            label: Text(
+                              'Não é ${m.nome}? Trocar de imobiliária',
+                            ),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white70,
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -133,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
+            Text(
               'Acesse sua conta',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -184,8 +205,8 @@ class _LoginPageState extends State<LoginPage> {
                     content: const Text(
                       'Peça a um administrador para definir uma nova senha em '
                       'Equipe e Segurança > Usuários.\n\n'
-                      'Se você é o administrador, rode no servidor:\n'
-                      'python gerenciar.py criar-admin',
+                      'Se você é o administrador, peça ao suporte da '
+                      'plataforma para redefinir a sua senha.',
                     ),
                     actions: [
                       TextButton(
@@ -214,23 +235,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-/// Logo em formato de selo, com o mesmo fundo azul e brilho dourado da marca.
-class _Logo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 340,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(23),
-        child: Image.asset(
-          'assets/logo_marcelo_bonifacio.png',
-          fit: BoxFit.contain,
-        ),
-      ),
-    );
-  }
-}
-
 class _GoldButton extends StatelessWidget {
   const _GoldButton({
     required this.label,
@@ -247,7 +251,7 @@ class _GoldButton extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [AppColors.goldLight, AppColors.gold, AppColors.goldDark],
         ),
         boxShadow: [
@@ -270,7 +274,7 @@ class _GoldButton extends StatelessWidget {
           ),
         ),
         child: loading
-            ? const SizedBox(
+            ? SizedBox(
                 width: 22,
                 height: 22,
                 child: CircularProgressIndicator(

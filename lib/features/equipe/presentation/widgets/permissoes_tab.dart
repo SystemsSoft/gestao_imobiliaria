@@ -176,7 +176,7 @@ class _PermissoesTabState extends State<PermissoesTab> {
       scrollDirection: Axis.horizontal,
       child: DataTable(
         columnSpacing: 22,
-        headingTextStyle: const TextStyle(
+        headingTextStyle: TextStyle(
           color: AppColors.gold,
           fontWeight: FontWeight.w700,
         ),

@@ -51,7 +51,7 @@ class _RepassesTabState extends State<RepassesTab> {
                 ),
                 Text(
                   'A repassar: ${formatMoney(_vm.totalAPagar)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.gold,
                     fontSize: 16,
                     fontWeight: FontWeight.w800,
@@ -96,7 +96,7 @@ class _RepassesTabState extends State<RepassesTab> {
         children: [
           Row(
             children: [
-              const Icon(Icons.person_outline, color: AppColors.gold),
+              Icon(Icons.person_outline, color: AppColors.gold),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(

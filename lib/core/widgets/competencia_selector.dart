@@ -41,7 +41,7 @@ class CompetenciaSelector extends StatelessWidget {
         children: [
           IconButton(
             tooltip: anual ? 'Ano anterior' : 'Mês anterior',
-            icon: const Icon(Icons.chevron_left, color: AppColors.gold),
+            icon: Icon(Icons.chevron_left, color: AppColors.gold),
             onPressed: () => mover(-1),
           ),
           SizedBox(
@@ -49,7 +49,7 @@ class CompetenciaSelector extends StatelessWidget {
             child: Text(
               anual ? '${value.year}' : '${nomeMes(value.month)}/${value.year}',
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppColors.gold,
                 fontWeight: FontWeight.w700,
               ),
@@ -57,7 +57,7 @@ class CompetenciaSelector extends StatelessWidget {
           ),
           IconButton(
             tooltip: anual ? 'Próximo ano' : 'Próximo mês',
-            icon: const Icon(Icons.chevron_right, color: AppColors.gold),
+            icon: Icon(Icons.chevron_right, color: AppColors.gold),
             onPressed: () => mover(1),
           ),
         ],

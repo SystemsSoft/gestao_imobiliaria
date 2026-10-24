@@ -249,7 +249,7 @@ class _ContasTabState extends State<ContasTab> {
                       ? '${l.tipo.baixadoLabel} ${formatMoney(l.valorBaixa)} em ${formatDate(l.dataBaixa)}'
                             '${l.multa + l.juros + l.correcao > 0 ? ' (inclui ${formatMoney(l.multa + l.juros + l.correcao)} de encargos)' : ''}'
                       : 'Vence em ${formatDate(l.vencimento)} • ${formatMoney(l.valor)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     color: AppColors.goldLight,
                     fontWeight: FontWeight.w600,
                   ),

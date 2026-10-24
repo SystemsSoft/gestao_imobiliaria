@@ -132,7 +132,7 @@ class RoscaConversao extends StatelessWidget {
           child: Container(
             width: tamanho * 0.52,
             height: tamanho * 0.52,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: AppColors.navyDark,
             ),

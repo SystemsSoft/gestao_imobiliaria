@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/marca/logo_marca.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/skyline.dart';
 import '../viewmodels/home_viewmodel.dart';
@@ -36,10 +37,10 @@ class MenuLateral extends StatelessWidget {
     return Container(
       width: 260,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFF071430), AppColors.navyDark],
+          colors: [AppColors.fundoMenu, AppColors.navyDark],
         ),
         border: Border(
           right: BorderSide(color: AppColors.blueGlow.withValues(alpha: 0.18)),
@@ -49,11 +50,7 @@ class MenuLateral extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(18, compacto ? 10 : 18, 18, 6),
-            child: Image.asset(
-              'assets/logo_marcelo_bonifacio.png',
-              height: compacto ? 84 : 130,
-              fit: BoxFit.contain,
-            ),
+            child: LogoMarca(altura: compacto ? 84 : 130),
           ),
           Expanded(
             child: ListView(
@@ -140,9 +137,7 @@ class _ItemMenu extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             gradient: selecionado
-                ? const LinearGradient(
-                    colors: [AppColors.goldLight, AppColors.gold],
-                  )
+                ? LinearGradient(colors: [AppColors.goldLight, AppColors.gold])
                 : null,
           ),
           child: InkWell(
@@ -214,7 +209,7 @@ class _ItemAcao extends StatelessWidget {
                     texto,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.gold,
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
